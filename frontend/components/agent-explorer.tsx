@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Image from "next/image";
-import { FaRobot, FaCode, FaBug, FaEdit } from "react-icons/fa";
+import { FaRobot } from "react-icons/fa";
 
 export default function AgentExplorer() {
   const [objective, setObjective] = useState("");
