@@ -1,0 +1,7 @@
+.vercel
+screenshots/
+*.log
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
