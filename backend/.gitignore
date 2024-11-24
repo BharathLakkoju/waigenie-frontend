@@ -19,3 +19,4 @@ parts/
 sdist/
 var/
 *.egg-info/
+.env
