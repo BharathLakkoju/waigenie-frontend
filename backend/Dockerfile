@@ -25,8 +25,6 @@ COPY requirements.txt .
 
 # Install Python dependencies
 RUN pip install --upgrade pip && \
-    # Install any packages that might need Rust first
-    pip install --no-cache-dir cryptography && \
     # Then install the rest of the requirements
     pip install --no-cache-dir -r requirements.txt
 
