@@ -1,5 +1,5 @@
-# Use Python 3.9 slim image as base
-FROM python:3.9-slim
+# Use Python 3 image as base
+FROM python:3
 
 # Set working directory in container
 WORKDIR /app
@@ -8,7 +8,7 @@ WORKDIR /app
 COPY requirements.txt .
 
 # Install dependencies
-RUN python -m pip install --no-cache-dir -r requirements.txt
+RUN python -m pip install --upgrade pip && python -m pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application
 COPY . .
