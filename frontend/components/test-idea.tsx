@@ -26,7 +26,7 @@ export default function TestIdea() {
     setManualTestCases("");
     try {
       const response = await axios.post(
-        "https://waigenie-backend.vercel.app/api/generate-scenarios",
+        "https://favourable-rea-bharath07-7294baab.koyeb.app//api/generate-scenarios",
         {
           url,
           selectedElements,

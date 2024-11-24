@@ -16,7 +16,9 @@ export default function AutomationCodeGenerator() {
   const startBrowser = async () => {
     setLoading(true);
     try {
-      await axios.post("https://waigenie-backend.vercel.app/api/start-browser");
+      await axios.post(
+        "https://favourable-rea-bharath07-7294baab.koyeb.app//api/start-browser"
+      );
       setBrowserStarted(true);
     } catch (error) {
       console.error("Error starting browser:", error);
@@ -27,7 +29,9 @@ export default function AutomationCodeGenerator() {
   const stopBrowser = async () => {
     setLoading(true);
     try {
-      await axios.post("https://waigenie-backend.vercel.app/api/stop-browser");
+      await axios.post(
+        "https://favourable-rea-bharath07-7294baab.koyeb.app//api/stop-browser"
+      );
       setBrowserStarted(false);
       setScreenshot("");
     } catch (error) {
@@ -43,7 +47,7 @@ export default function AutomationCodeGenerator() {
       await stopBrowser();
       await startBrowser();
       const response = await axios.post(
-        "https://waigenie-backend.vercel.app/api/generate-code",
+        "https://favourable-rea-bharath07-7294baab.koyeb.app//api/generate-code",
         {
           url,
           featureContent,
@@ -64,7 +68,7 @@ export default function AutomationCodeGenerator() {
       interval = setInterval(async () => {
         try {
           const response = await axios.get(
-            "https://waigenie-backend.vercel.app/api/get-screenshot"
+            "https://favourable-rea-bharath07-7294baab.koyeb.app//api/get-screenshot"
           );
           setScreenshot(`data:image/png;base64,${response.data.screenshot}`);
         } catch (error) {

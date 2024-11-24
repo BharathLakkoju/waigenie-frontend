@@ -16,7 +16,7 @@ const BrowserView: React.FC<BrowserViewProps> = ({
 
   useEffect(() => {
     setProxyUrl(
-      `https://waigenie-backend.vercel.app/proxy?url=${encodeURIComponent(
+      `https://favourable-rea-bharath07-7294baab.koyeb.app//proxy?url=${encodeURIComponent(
         currentUrl
       )}`
     );
@@ -35,7 +35,7 @@ const BrowserView: React.FC<BrowserViewProps> = ({
 
   const handleReload = () => {
     setProxyUrl(
-      `https://waigenie-backend.vercel.app/proxy?url=${encodeURIComponent(
+      `https://favourable-rea-bharath07-7294baab.koyeb.app//proxy?url=${encodeURIComponent(
         currentUrl
       )}`
     );
