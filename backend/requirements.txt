@@ -187,7 +187,7 @@ python-jwt==2.0.1
 python-multipart==0.0.9
 pytz==2024.1
 PyVirtualDisplay==3.0
-pywin32==308
+# pywin32==308
 PyYAML==6.0.2
 pyzmq==26.1.0
 rank-bm25==0.2.2
