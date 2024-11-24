@@ -29,7 +29,7 @@ export default function IdentifyEl() {
     setError("");
     try {
       const response = await axios.post(
-        "https://favourable-rea-bharath07-7294baab.koyeb.app//api/proxy",
+        "https://https://favourable-rea-bharath07-7294baab.koyeb.app/api/proxy",
         {
           url,
         }
@@ -68,7 +68,7 @@ export default function IdentifyEl() {
   const downloadCsv = async () => {
     try {
       const response = await axios.post(
-        "https://favourable-rea-bharath07-7294baab.koyeb.app//api/generate-csv",
+        "https://https://favourable-rea-bharath07-7294baab.koyeb.app/api/generate-csv",
         { elements: identifiedElements, filename: outputFileName },
         { responseType: "blob" }
       );
