@@ -94,11 +94,11 @@ langchain-community==0.0.38
 langchain-core==0.1.52
 langchain-text-splitters==0.0.2
 langsmith==0.1.98
-lavague==1.1.19
+# lavague==1.1.19
 lavague-contexts-openai==0.2.4
 lavague-core==0.2.33
 lavague-drivers-selenium==0.2.12
-lavague-gradio==0.2.8
+# lavague-gradio==0.2.8
 llama-cloud==0.0.13
 llama-index==0.10.56
 llama-index-agent-openai==0.2.9
@@ -139,7 +139,7 @@ nbclient==0.10.0
 nbconvert==7.16.4
 nbformat==5.10.4
 nest-asyncio==1.6.0
-networkx==3.3
+# networkx==3.3
 nltk==3.8.1
 numpy==1.26.4
 oauth2client>=2.0.1,<5
