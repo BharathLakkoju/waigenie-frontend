@@ -13,7 +13,15 @@ def create_app(config_class=Config):
     app.config.from_object(config_class)
     
     # Configure CORS to allow all origins for all routes
-    CORS(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
+    CORS(app, 
+         resources={
+             r"/*": {
+                 "origins": "*",
+                 "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+                 "allow_headers": ["Content-Type", "Authorization", "X-Requested-With"]
+             }
+         },
+         supports_credentials=True)
 
     app.register_blueprint(proxy_bp)
     app.register_blueprint(test_idea_bp)
