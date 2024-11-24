@@ -18,7 +18,7 @@ export default function AgentExplorer() {
     setLoading(true);
     try {
       await axios.post(
-        "https://https://https://favourable-rea-bharath07-7294baab.koyeb.appapi/agent-explorer/start-browser",
+        "https://favourable-rea-bharath07-7294baab.koyeb.app/api/agent-explorer/start-browser",
         { url }
       );
       setBrowserStarted(true);
@@ -35,7 +35,7 @@ export default function AgentExplorer() {
     setLoading(true);
     try {
       await axios.post(
-        "https://https://favourable-rea-bharath07-7294baab.koyeb.app/api/agent-explorer/stop-browser"
+        "https://favourable-rea-bharath07-7294baab.koyeb.app/api/agent-explorer/stop-browser"
       );
       setBrowserStarted(false);
       setScreenshot("");
@@ -55,7 +55,7 @@ export default function AgentExplorer() {
 
     try {
       const response = await axios.post(
-        "https://https://favourable-rea-bharath07-7294baab.koyeb.app/api/agent-explorer/run-web-agent",
+        "https://favourable-rea-bharath07-7294baab.koyeb.app/api/agent-explorer/run-web-agent",
         {
           objective,
         }
@@ -77,7 +77,7 @@ export default function AgentExplorer() {
       interval = setInterval(async () => {
         try {
           const response = await axios.get(
-            "https://https://favourable-rea-bharath07-7294baab.koyeb.app/api/agent-explorer/get-screenshot"
+            "https://favourable-rea-bharath07-7294baab.koyeb.app/api/agent-explorer/get-screenshot"
           );
           setScreenshot(`data:image/png;base64,${response.data.screenshot}`);
         } catch (error) {

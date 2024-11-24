@@ -16,7 +16,7 @@ const BrowserView: React.FC<BrowserViewProps> = ({
 
   useEffect(() => {
     setProxyUrl(
-      `https://https://favourable-rea-bharath07-7294baab.koyeb.app/proxy?url=${encodeURIComponent(
+      `https://favourable-rea-bharath07-7294baab.koyeb.appproxy?url=${encodeURIComponent(
         currentUrl
       )}`
     );
@@ -35,7 +35,7 @@ const BrowserView: React.FC<BrowserViewProps> = ({
 
   const handleReload = () => {
     setProxyUrl(
-      `https://https://favourable-rea-bharath07-7294baab.koyeb.app/proxy?url=${encodeURIComponent(
+      `https://favourable-rea-bharath07-7294baab.koyeb.appproxy?url=${encodeURIComponent(
         currentUrl
       )}`
     );
