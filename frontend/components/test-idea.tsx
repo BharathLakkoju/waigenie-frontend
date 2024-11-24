@@ -26,7 +26,7 @@ export default function TestIdea() {
     setManualTestCases("");
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/generate-scenarios",
+        "https://waigenie-backend.vercel.app/api/generate-scenarios",
         {
           url,
           selectedElements,

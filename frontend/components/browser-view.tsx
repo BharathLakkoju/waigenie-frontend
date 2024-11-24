@@ -16,7 +16,9 @@ const BrowserView: React.FC<BrowserViewProps> = ({
 
   useEffect(() => {
     setProxyUrl(
-      `http://localhost:5000/proxy?url=${encodeURIComponent(currentUrl)}`
+      `https://waigenie-backend.vercel.app/proxy?url=${encodeURIComponent(
+        currentUrl
+      )}`
     );
   }, [currentUrl]);
 
@@ -33,7 +35,9 @@ const BrowserView: React.FC<BrowserViewProps> = ({
 
   const handleReload = () => {
     setProxyUrl(
-      `http://localhost:5000/proxy?url=${encodeURIComponent(currentUrl)}`
+      `https://waigenie-backend.vercel.app/proxy?url=${encodeURIComponent(
+        currentUrl
+      )}`
     );
   };
 

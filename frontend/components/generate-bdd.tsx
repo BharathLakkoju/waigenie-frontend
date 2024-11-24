@@ -18,7 +18,7 @@ export default function GenerateBDD() {
     setManualTestCases("");
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/generate-gherkin",
+        "https://waigenie-backend.vercel.app/api/generate-gherkin",
         {
           userStory,
           detailLevel,

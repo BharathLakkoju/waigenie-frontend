@@ -28,9 +28,12 @@ export default function IdentifyEl() {
     setLoading(true);
     setError("");
     try {
-      const response = await axios.post("http://localhost:5000/api/proxy", {
-        url,
-      });
+      const response = await axios.post(
+        "https://waigenie-backend.vercel.app/api/proxy",
+        {
+          url,
+        }
+      );
       setProxyHtml(response.data.html);
     } catch (error) {
       console.error("Error loading URL:", error);
@@ -65,7 +68,7 @@ export default function IdentifyEl() {
   const downloadCsv = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/generate-csv",
+        "https://waigenie-backend.vercel.app/api/generate-csv",
         { elements: identifiedElements, filename: outputFileName },
         { responseType: "blob" }
       );
