@@ -1,5 +1,4 @@
 venv/
-.vercelignore
 .vercel/
 screenshots/
 __pycache__/
