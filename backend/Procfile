@@ -1,1 +1,1 @@
-web: gunicorn --bind :$PORT run:app
+web: waitress-serve --listen=*:5080 run:app
