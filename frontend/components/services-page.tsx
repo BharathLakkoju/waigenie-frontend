@@ -17,6 +17,8 @@ import {
   TestTube,
   FileText,
   Terminal,
+  Cog,
+  Wand2,
 } from "lucide-react";
 
 interface SideTextProps {
@@ -354,25 +356,25 @@ function ListComp() {
       title: "Intelligent Element Inspector",
       description:
         "Automatically identify and analyze web elements with precision.",
-      image: (<ElementInspector/>),
+      image: <ElementInspector />,
     },
     {
       title: "Gherkin Feature Generator",
       description:
         "Transform user stories into clear, concise Gherkin feature files.",
-      image: (<GherkinAnimation/>),
+      image: <GherkinAnimation />,
     },
     {
       title: "Automated Code Generation",
       description:
         "Generate test automation scripts in multiple languages automatically.",
-      image: (<CodeAnimation/>),
+      image: <CodeGeneration />,
     },
     {
       title: "Web Agent Explorer",
       description:
         "Leverage AI to automatically explore and test complex user journeys.",
-      image: "/placeholder.svg",
+      image: <WebMazeAnimation />,
     },
     {
       title: "Custom Integration Solutions",
@@ -383,10 +385,10 @@ function ListComp() {
   ];
   return (
     <>
-      <div className="grid grid-cols-3 justify-center items-center max-w-6xl mx-auto gap-10 my-20 pb-10">
+      <div className="grid grid-cols-3 justify-center items-center max-w-[85rem] mx-auto gap-10 my-20 pb-10">
         {arr.map((item, index) => (
           <div
-            className="border-2 rounded-lg min-w-[300px] min-h-[350px]"
+            className="border-2 rounded-lg min-w-[400px] min-h-[400px]"
             key={index}
           >
             {item.image}
@@ -401,126 +403,267 @@ function ListComp() {
   );
 }
 
-const ElementInspector = () => {
-  const [isScanning, setIsScanning] = useState(false);
+const WebMazeAnimation: React.FC = () => {
+  const svgRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setIsScanning(prev => !prev);
-    }, 3000);
+    if (svgRef.current) {
+      const svg = svgRef.current;
+      const nodes = svg.querySelectorAll(".node");
+      const lines = svg.querySelectorAll(".line");
+      const path = svg.querySelector(".path") as SVGPathElement;
 
-    return () => clearInterval(interval);
+      // Animate nodes
+      nodes.forEach((node, index) => {
+        node.animate(
+          [
+            { opacity: 0, transform: "scale(0)" },
+            { opacity: 1, transform: "scale(1)" },
+          ],
+          { duration: 1000, delay: index * 100, fill: "forwards" }
+        );
+      });
+
+      // Animate lines
+      lines.forEach((line, index) => {
+        line.animate([{ strokeDashoffset: 100 }, { strokeDashoffset: 0 }], {
+          duration: 1000,
+          delay: 500 + index * 100,
+          fill: "forwards",
+        });
+      });
+
+      // Animate path
+      if (path) {
+        const length = path.getTotalLength();
+        path.style.strokeDasharray = `${length}`;
+        path.style.strokeDashoffset = `${length}`;
+        path.animate([{ strokeDashoffset: length }, { strokeDashoffset: 0 }], {
+          duration: 3000,
+          delay: 1500,
+          fill: "forwards",
+        });
+      }
+    }
   }, []);
 
   return (
-    <div className="relative w-full h-[400px] bg-transparent rounded-xl overflow-hidden">
-      <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:30px_30px]" />
-      
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="relative z-10 w-full h-full flex items-center justify-center"
-      >
-        <InspectorSVG isScanning={isScanning} />
-      </motion.div>
+    <svg
+      ref={svgRef}
+      className="w-full h-full"
+      viewBox="0 0 400 400"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      {/* Background */}
+      <rect width="400" height="300" fill="#fff" />
 
-      {/* <FeatureIcons /> */}
-    </div>
-  );
-};
+      {/* Nodes */}
+      <circle className="node" cx="50" cy="50" r="10" fill="#4a5568" />
+      <circle className="node" cx="150" cy="100" r="10" fill="#4a5568" />
+      <circle className="node" cx="250" cy="50" r="10" fill="#4a5568" />
+      <circle className="node" cx="350" cy="100" r="10" fill="#4a5568" />
+      <circle className="node" cx="50" cy="200" r="10" fill="#4a5568" />
+      <circle className="node" cx="150" cy="250" r="10" fill="#4a5568" />
+      <circle className="node" cx="250" cy="300" r="10" fill="#4a5568" />
+      <circle className="node" cx="350" cy="350" r="10" fill="#4a5568" />
 
-const features = [
-  { Icon: Search, label: "Detect" },
-  { Icon: Code2, label: "Analyze" },
-  { Icon: Scan, label: "Inspect" }
-];
-
-export const FeatureIcons = () => {
-  return (
-    <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-8">
-      {features.map(({ Icon, label }, index) => (
-        <motion.div
-          key={index}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: index * 0.2 }}
-          className="flex flex-col items-center gap-2"
-        >
-          <div className="p-3 rounded-full bg-gray-800/50 backdrop-blur-sm">
-            <Icon className="w-6 h-6 text-primary" />
-          </div>
-          <span className="text-sm text-gray-300">{label}</span>
-        </motion.div>
-      ))}
-    </div>
-  );
-};
-
-
-interface InspectorSVGProps {
-  isScanning: boolean;
-}
-
-export const InspectorSVG = ({ isScanning }: InspectorSVGProps) => {
-  return (
-    <svg width="400" height="300" viewBox="0 0 400 300">
-      <motion.rect
-        x="50"
-        y="50"
-        width="300"
-        height="200"
-        rx="8"
-        fill="none"
-        stroke="hsl(var(--primary))"
-        strokeWidth="2"
-        initial={{ pathLength: 0 }}
-        animate={{ pathLength: 1 }}
-        transition={{ duration: 2, repeat: Infinity }}
-      />
-      
-      <motion.line
+      {/* Lines */}
+      <line
+        className="line"
         x1="50"
-        y1={isScanning ? "50" : "250"}
-        x2="350"
-        y2={isScanning ? "50" : "250"}
-        stroke="hsl(var(--primary))"
+        y1="50"
+        x2="150"
+        y2="100"
+        stroke="#718096"
         strokeWidth="2"
-        initial={{ opacity: 0 }}
-        animate={{ 
-          opacity: [0, 1, 1, 0],
-          y: isScanning ? [0, 200] : [200, 0]
-        }}
-        transition={{ 
-          duration: 3,
-          repeat: Infinity,
-          ease: "linear"
-        }}
       />
-      
-      {[
-        { x: 100, y: 100 },
-        { x: 200, y: 150 },
-        { x: 300, y: 100 }
-      ].map((point, index) => (
-        <motion.circle
-          key={index}
-          cx={point.x}
-          cy={point.y}
-          r="4"
-          fill="hsl(var(--primary))"
-          initial={{ scale: 0 }}
-          animate={{ 
-            scale: [0, 1.5, 1],
-            opacity: [0, 1, 0.5]
-          }}
-          transition={{
-            duration: 2,
-            delay: index * 0.5,
-            repeat: Infinity
-          }}
-        />
-      ))}
+      <line
+        className="line"
+        x1="150"
+        y1="100"
+        x2="250"
+        y2="50"
+        stroke="#718096"
+        strokeWidth="2"
+      />
+      <line
+        className="line"
+        x1="250"
+        y1="50"
+        x2="350"
+        y2="100"
+        stroke="#718096"
+        strokeWidth="2"
+      />
+      <line
+        className="line"
+        x1="50"
+        y1="50"
+        x2="50"
+        y2="200"
+        stroke="#718096"
+        strokeWidth="2"
+      />
+      <line
+        className="line"
+        x1="150"
+        y1="100"
+        x2="150"
+        y2="250"
+        stroke="#718096"
+        strokeWidth="2"
+      />
+      <line
+        className="line"
+        x1="250"
+        y1="50"
+        x2="250"
+        y2="300"
+        stroke="#718096"
+        strokeWidth="2"
+      />
+      <line
+        className="line"
+        x1="350"
+        y1="100"
+        x2="350"
+        y2="350"
+        stroke="#718096"
+        strokeWidth="2"
+      />
+      <line
+        className="line"
+        x1="50"
+        y1="200"
+        x2="150"
+        y2="250"
+        stroke="#718096"
+        strokeWidth="2"
+      />
+      <line
+        className="line"
+        x1="150"
+        y1="250"
+        x2="250"
+        y2="300"
+        stroke="#718096"
+        strokeWidth="2"
+      />
+      <line
+        className="line"
+        x1="250"
+        y1="300"
+        x2="350"
+        y2="350"
+        stroke="#718096"
+        strokeWidth="2"
+      />
+
+      {/* Path */}
+      <path
+        className="path"
+        d="M50,50 L150,100 L250,50 L350,100 L350,350 L250,300 L150,250 L50,200"
+        fill="none"
+        stroke="#48bb78"
+        strokeWidth="4"
+      />
     </svg>
+  );
+};
+
+const ElementInspector = () => {
+  const duration = 3;
+  const delay = 0.3;
+
+  const fadeInOut = {
+    opacity: [0, 1, 1, 0],
+    transition: {
+      duration: duration,
+      times: [0, 0.2, 0.8, 1],
+      repeat: Infinity,
+    },
+  };
+
+  const scanLine = {
+    y: [0, 160, 160, 0],
+    opacity: [0, 1, 1, 0],
+    transition: {
+      duration: duration,
+      times: [0, 0.2, 0.8, 1],
+      repeat: Infinity,
+    },
+  };
+
+  return (
+    <div className="relative w-full h-[400px] bg-transparent rounded-xl backdrop-blur-sm overflow-hidden flex items-center justify-center">
+      <div className="absolute inset-0 flex items-center justify-between gap-2 px-6">
+        <svg width="300" height="200" viewBox="0 0 300 200">
+          <motion.rect
+            x="50"
+            y="20"
+            width="200"
+            height="160"
+            rx="10"
+            ry="10"
+            fill="white"
+            stroke="black"
+            strokeWidth="2"
+            animate={fadeInOut}
+          />
+          <motion.rect
+            x="60"
+            y="30"
+            width="180"
+            height="30"
+            rx="5"
+            ry="5"
+            fill="#e0e0e0"
+            animate={fadeInOut}
+            transition={{ ...fadeInOut.transition, delay: delay }}
+          />
+          <motion.rect
+            x="60"
+            y="70"
+            width="180"
+            height="20"
+            rx="5"
+            ry="5"
+            fill="#f0f0f0"
+            animate={fadeInOut}
+            transition={{ ...fadeInOut.transition, delay: delay * 2 }}
+          />
+          <motion.rect
+            x="60"
+            y="100"
+            width="180"
+            height="20"
+            rx="5"
+            ry="5"
+            fill="#f0f0f0"
+            animate={fadeInOut}
+            transition={{ ...fadeInOut.transition, delay: delay * 3 }}
+          />
+          <motion.rect
+            x="60"
+            y="130"
+            width="80"
+            height="40"
+            rx="5"
+            ry="5"
+            fill="#d0d0d0"
+            animate={fadeInOut}
+            transition={{ ...fadeInOut.transition, delay: delay * 4 }}
+          />
+          <motion.line
+            x1="50"
+            x2="250"
+            strokeWidth="2"
+            stroke="red"
+            animate={scanLine}
+          />
+        </svg>
+      </div>
+    </div>
   );
 };
 
@@ -533,7 +676,7 @@ export function GherkinAnimation() {
           initial={{ x: -50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="w-42 h-54 bg-white rounded-lg shadow-xl p-6 transform -rotate-3"
+          className="w-40 h-54 bg-white rounded-lg shadow-xl p-6 transform -rotate-3"
         >
           <FileText className="w-8 h-8 text-blue-600 mb-4" />
           <div className="space-y-4">
@@ -580,7 +723,7 @@ export function GherkinAnimation() {
           initial={{ x: 50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ delay: 0.8, duration: 0.5 }}
-          className="w-42 h-54 bg-slate-800 rounded-lg shadow-xl p-2 transform rotate-3 text-green-400 font-mono"
+          className="w-44 h-52 bg-slate-800 rounded-lg shadow-xl p-4 transform rotate-3 text-green-400 font-mono"
         >
           <motion.div
             initial={{ opacity: 0 }}
@@ -596,9 +739,15 @@ export function GherkinAnimation() {
               className="pl-1 text-xs"
             >
               <div className="text-purple-400">Scenario: Successful Login</div>
-              <div className="pl-4 text-blue-300">Given I am on the login page</div>
-              <div className="pl-4 text-yellow-300">When I enter valid credentials</div>
-              <div className="pl-4 text-green-300">Then I should be logged in</div>
+              <div className="pl-4 text-blue-300">
+                Given I am on the login page
+              </div>
+              <div className="pl-4 text-yellow-300">
+                When I enter valid credentials
+              </div>
+              <div className="pl-4 text-green-300">
+                Then I should be logged in
+              </div>
             </motion.div>
           </motion.div>
         </motion.div>
@@ -612,7 +761,10 @@ export function GherkinAnimation() {
         className="absolute inset-0 overflow-hidden"
       >
         <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10" />
-        <svg className="absolute w-full h-full" xmlns="http://www.w3.org/2000/svg">
+        <svg
+          className="absolute w-full h-full"
+          xmlns="http://www.w3.org/2000/svg"
+        >
           <defs>
             <pattern
               id="grid"
@@ -636,94 +788,104 @@ export function GherkinAnimation() {
   );
 }
 
-const CodeAnimation = () => {
-  const [codeStreams, setCodeStreams] = useState<Array<{ id: number; delay: number }>>([]);
-
-  useEffect(() => {
-    const streams = Array.from({ length: 5 }, (_, i) => ({
-      id: i,
-      delay: i * 0.5,
-    }));
-    setCodeStreams(streams);
-  }, []);
-
-  return (
-    <div className="absolute inset-0 overflow-hidden">
-      {codeStreams.map(({ id, delay }) => (
-        <motion.div
-          key={id}
-          className="absolute"
-          initial={{ y: "-100%", x: `${(id * 20) + 10}%` }}
-          animate={{
-            y: "200%",
-            transition: {
-              duration: 8,
-              delay,
-              repeat: Infinity,
-              ease: "linear",
-            },
-          }}
-        >
-          <div className="flex flex-col items-center space-y-4 opacity-50">
-            {Array.from({ length: 10 }).map((_, index) => (
-              <div key={index} className="text-emerald-400">
-                {index % 2 === 0 ? <Code2 size={24} /> : <Terminal size={24} />}
-              </div>
-            ))}
-          </div>
-        </motion.div>
-      ))}
-      
-      <div className="absolute inset-0 bg-gradient-to-t from-gray-800/80 via-transparent to-gray-800/80" />
-    </div>
-  );
-};
-
-const languages = [
-  { name: "Python", color: "bg-blue-500" },
-  { name: "JavaScript", color: "bg-yellow-400" },
-  { name: "Java", color: "bg-red-500" },
-  { name: "C#", color: "bg-purple-500" },
-  { name: "Ruby", color: "bg-red-600" },
-];
-
-export const LanguageCircles = () => {
+export function CodeGeneration() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     setIsVisible(true);
   }, []);
-
   return (
-    <div className="absolute inset-0 flex items-center justify-center">
-      {languages.map((lang, index) => (
-        <motion.div
-          key={lang.name}
-          className="absolute"
-          initial={{ scale: 0, opacity: 0 }}
-          animate={isVisible ? {
-            scale: 1,
-            opacity: 1,
-            x: Math.cos(((2 * Math.PI) / languages.length) * index) * 150,
-            y: Math.sin(((2 * Math.PI) / languages.length) * index) * 150,
-          } : {}}
-          transition={{
-            type: "spring",
-            stiffness: 100,
-            damping: 15,
-            delay: index * 0.1,
-          }}
+    <>
+      <div className="relative w-full h-[300px] md:h-[400px]">
+        {/* SVG Animation Container */}
+        <svg
+          className={`w-full h-full ${
+            isVisible ? "opacity-100" : "opacity-0"
+          } transition-opacity duration-1000`}
+          viewBox="0 0 400 400"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          <motion.div
-            className={`w-16 h-16 rounded-full ${lang.color} flex items-center justify-center
-              shadow-lg cursor-pointer hover:scale-110 transition-transform duration-200`}
-            whileHover={{ scale: 1.2 }}
-            whileTap={{ scale: 0.95 }}
+          {/* Central Cog */}
+          <g
+            className="animate-spin-slow"
+            style={{ transformOrigin: "center" }}
           >
-            <span className="text-white font-semibold text-sm">{lang.name}</span>
-          </motion.div>
-        </motion.div>
-      ))}
-    </div>
+            <circle
+              cx="200"
+              cy="200"
+              r="80"
+              className="fill-blue-500/20 stroke-blue-500"
+              strokeWidth="2"
+            />
+            <circle
+              cx="200"
+              cy="200"
+              r="60"
+              className="fill-violet-500/20 stroke-violet-500"
+              strokeWidth="2"
+            />
+          </g>
+
+          {/* Orbiting Code Blocks */}
+          {[0, 120, 240].map((angle, i) => (
+            <g
+              key={i}
+              className="animate-orbit"
+              style={{
+                transformOrigin: "200px 200px",
+                animationDelay: `${i * -2}s`,
+              }}
+            >
+              <rect
+                x="320"
+                y="180"
+                width="40"
+                height="40"
+                rx="8"
+                className={`fill-${
+                  i === 0 ? "blue" : i === 1 ? "violet" : "indigo"
+                }-500/30 stroke-${
+                  i === 0 ? "blue" : i === 1 ? "violet" : "indigo"
+                }-500`}
+                strokeWidth="2"
+                transform={`rotate(${angle} 200 200)`}
+              >
+                <animate
+                  attributeName="opacity"
+                  values="0.5;1;0.5"
+                  dur="3s"
+                  repeatCount="indefinite"
+                  begin={`${i * 1}s`}
+                />
+              </rect>
+            </g>
+          ))}
+
+          {/* Connecting Lines */}
+          <g className="stroke-gray-500/30">
+            {[0, 120, 240].map((angle, i) => (
+              <line
+                key={`line-${i}`}
+                x1="200"
+                y1="200"
+                x2="340"
+                y2="200"
+                strokeWidth="1"
+                transform={`rotate(${angle} 200 200)`}
+                className="animate-pulse"
+              >
+                <animate
+                  attributeName="opacity"
+                  values="0.2;0.5;0.2"
+                  dur="2s"
+                  repeatCount="indefinite"
+                  begin={`${i * 0.6}s`}
+                />
+              </line>
+            ))}
+          </g>
+        </svg>
+      </div>
+    </>
   );
-};
+}
