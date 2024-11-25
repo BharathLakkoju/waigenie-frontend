@@ -123,7 +123,7 @@ export default function ServicesPage() {
           </div>
           <div>
             <Image
-              src="/About_Graphic.png"
+              src="/about_graphic.png"
               alt="About_Graphic"
               width={500}
               height={500}
