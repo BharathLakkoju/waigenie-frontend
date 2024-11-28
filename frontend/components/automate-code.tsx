@@ -17,7 +17,8 @@ export default function AutomationCodeGenerator() {
     setLoading(true);
     try {
       await axios.post(
-        "https://favourable-rea-bharath07-7294baab.koyeb.app/api/start-browser"
+        // "https://favourable-rea-bharath07-7294baab.koyeb.app/api/start-browser"
+        "https://waigenie-delpoyment-test.onrender.com/api/start-browser"
       );
       setBrowserStarted(true);
     } catch (error) {
@@ -30,7 +31,8 @@ export default function AutomationCodeGenerator() {
     setLoading(true);
     try {
       await axios.post(
-        "https://favourable-rea-bharath07-7294baab.koyeb.app/api/stop-browser"
+        // "https://favourable-rea-bharath07-7294baab.koyeb.app/api/stop-browser"
+        "https://waigenie-delpoyment-test.onrender.com/api/stop-browser"
       );
       setBrowserStarted(false);
       setScreenshot("");
@@ -47,7 +49,8 @@ export default function AutomationCodeGenerator() {
       await stopBrowser();
       await startBrowser();
       const response = await axios.post(
-        "https://favourable-rea-bharath07-7294baab.koyeb.app/api/generate-code",
+        // "https://favourable-rea-bharath07-7294baab.koyeb.app/api/generate-code",
+        "https://waigenie-delpoyment-test.onrender.com/api/generate-code",
         {
           url,
           featureContent,
@@ -68,7 +71,8 @@ export default function AutomationCodeGenerator() {
       interval = setInterval(async () => {
         try {
           const response = await axios.get(
-            "https://favourable-rea-bharath07-7294baab.koyeb.app/api/get-screenshot"
+            // "https://favourable-rea-bharath07-7294baab.koyeb.app/api/get-screenshot"
+            "https://waigenie-delpoyment-test.onrender.com/api/get-screenshot"
           );
           setScreenshot(`data:image/png;base64,${response.data.screenshot}`);
         } catch (error) {

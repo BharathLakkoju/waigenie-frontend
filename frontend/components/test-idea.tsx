@@ -26,7 +26,9 @@ export default function TestIdea() {
     setManualTestCases("");
     try {
       const response = await axios.post(
-        "https://favourable-rea-bharath07-7294baab.koyeb.app/api/generate-scenarios",
+        // "https://favourable-rea-bharath07-7294baab.koyeb.app/api/generate-scenarios",
+        "https://waigenie-delpoyment-test.onrender.com/api/generate-scenarios",
+        // "http://localhost:5000/api/generate-scenarios",
         {
           url,
           selectedElements,

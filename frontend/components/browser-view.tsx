@@ -16,7 +16,10 @@ const BrowserView: React.FC<BrowserViewProps> = ({
 
   useEffect(() => {
     setProxyUrl(
-      `https://favourable-rea-bharath07-7294baab.koyeb.app/proxy?url=${encodeURIComponent(
+      // `https://favourable-rea-bharath07-7294baab.koyeb.app/proxy?url=${encodeURIComponent(
+      //   currentUrl
+      // )}`
+      `https://waigenie-delpoyment-test.onrender.com/proxy?url=${encodeURIComponent(
         currentUrl
       )}`
     );
@@ -35,7 +38,10 @@ const BrowserView: React.FC<BrowserViewProps> = ({
 
   const handleReload = () => {
     setProxyUrl(
-      `https://favourable-rea-bharath07-7294baab.koyeb.app/proxy?url=${encodeURIComponent(
+      // `https://favourable-rea-bharath07-7294baab.koyeb.app/proxy?url=${encodeURIComponent(
+      //   currentUrl
+      // )}`
+      `https://waigenie-delpoyment-test.onrender.com/proxy?url=${encodeURIComponent(
         currentUrl
       )}`
     );
