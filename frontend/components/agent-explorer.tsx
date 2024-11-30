@@ -19,7 +19,8 @@ export default function AgentExplorer() {
     try {
       await axios.post(
         // "https://favourable-rea-bharath07-7294baab.koyeb.app/api/agent-explorer/start-browser",
-        "https://waigenie-delpoyment-test.onrender.com/api/agent-explorer/start-browser",
+        // "https://waigenie-delpoyment-test.onrender.com/api/agent-explorer/start-browser",
+        "https://qa-sdet.onrender.com/api/agent-explorer/start-browser",
         { url }
       );
       setBrowserStarted(true);
@@ -37,7 +38,8 @@ export default function AgentExplorer() {
     try {
       await axios.post(
         // "https://favourable-rea-bharath07-7294baab.koyeb.app/api/agent-explorer/stop-browser",
-        "https://waigenie-delpoyment-test.onrender.com/api/agent-explorer/stop-browser"
+        // "https://waigenie-delpoyment-test.onrender.com/api/agent-explorer/stop-browser",
+        "https://qa-sdet.onrender.com/api/agent-explorer/stop-browser",
       );
       setBrowserStarted(false);
       setScreenshot("");
@@ -58,7 +60,8 @@ export default function AgentExplorer() {
     try {
       const response = await axios.post(
         // "https://favourable-rea-bharath07-7294baab.koyeb.app/api/agent-explorer/run-web-agent",
-        "https://waigenie-delpoyment-test.onrender.com/api/agent-explorer/run-web-agent",
+        // "https://waigenie-delpoyment-test.onrender.com/api/agent-explorer/run-web-agent",
+        "https://qa-sdet.onrender.com/api/agent-explorer/run-web-agent",
         {
           objective,
         }
@@ -81,7 +84,8 @@ export default function AgentExplorer() {
         try {
           const response = await axios.get(
             // "https://favourable-rea-bharath07-7294baab.koyeb.app/api/agent-explorer/get-screenshot"
-            "https://waigenie-delpoyment-test.onrender.com/api/agent-explorer/get-screenshot"
+            // "https://waigenie-delpoyment-test.onrender.com/api/agent-explorer/get-screenshot"
+            "https://qa-sdet.onrender.com/api/agent-explorer/get-screenshot"
           );
           setScreenshot(`data:image/png;base64,${response.data.screenshot}`);
         } catch (error) {

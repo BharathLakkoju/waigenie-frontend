@@ -19,9 +19,10 @@ const BrowserView: React.FC<BrowserViewProps> = ({
       // `https://favourable-rea-bharath07-7294baab.koyeb.app/proxy?url=${encodeURIComponent(
       //   currentUrl
       // )}`
-      `https://waigenie-delpoyment-test.onrender.com/proxy?url=${encodeURIComponent(
-        currentUrl
-      )}`
+      // "https://waigenie-delpoyment-test.onrender.com/proxy?url=${encodeURIComponent(
+      //   currentUrl
+      // )}"
+      `https://qa-sdet.onrender.com/proxy?url=${encodeURIComponent(currentUrl)}`
     );
   }, [currentUrl]);
 
@@ -41,9 +42,10 @@ const BrowserView: React.FC<BrowserViewProps> = ({
       // `https://favourable-rea-bharath07-7294baab.koyeb.app/proxy?url=${encodeURIComponent(
       //   currentUrl
       // )}`
-      `https://waigenie-delpoyment-test.onrender.com/proxy?url=${encodeURIComponent(
-        currentUrl
-      )}`
+      // `https://waigenie-delpoyment-test.onrender.com/proxy?url=${encodeURIComponent(
+      //   currentUrl
+      // )}`
+      `https://qa-sdet.onrender.com/proxy?url=${encodeURIComponent(currentUrl)}`
     );
   };
 
