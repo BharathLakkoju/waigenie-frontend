@@ -27,8 +27,8 @@ export default function TestIdea() {
     try {
       const response = await axios.post(
         // "https://favourable-rea-bharath07-7294baab.koyeb.app/api/generate-scenarios",
-        // "https://waigenie-delpoyment-test.onrender.com/api/generate-scenarios",
-        "https://qa-sdet.onrender.com/api/generate-scenarios",
+        "https://waigenie-delpoyment-test.onrender.com/api/generate-scenarios",
+        // "https://qa-sdet.onrender.com/api/generate-scenarios",
         // "http://localhost:5000/api/generate-scenarios",
         {
           url,

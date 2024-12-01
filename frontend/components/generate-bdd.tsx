@@ -19,8 +19,8 @@ export default function GenerateBDD() {
     try {
       const response = await axios.post(
         // "https://favourable-rea-bharath07-7294baab.koyeb.app/api/generate-gherkin",
-        // "https://waigenie-delpoyment-test.onrender.com/api/generate-gherkin",
-        "https://qa-sdet.onrender.com/api/generate-gherkin",
+        "https://waigenie-delpoyment-test.onrender.com/api/generate-gherkin",
+        // "https://qa-sdet.onrender.com/api/generate-gherkin",
         {
           userStory,
           detailLevel,
