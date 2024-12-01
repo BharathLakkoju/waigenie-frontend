@@ -31,7 +31,7 @@ export default function IdentifyEl() {
       const response = await axios.post(
         // "https://favourable-rea-bharath07-7294baab.koyeb.app/api/proxy",
         // "https://waigenie-delpoyment-test.onrender.com/api/proxy",
-        "https://qa-sdet-latest.onrender.com/api/proxy",
+        "https://qa-sdet.onrender.com/api/proxy",
         {
           url,
         }
@@ -72,7 +72,7 @@ export default function IdentifyEl() {
       const response = await axios.post(
         // "https://favourable-rea-bharath07-7294baab.koyeb.app/api/generate-csv",
         // "https://waigenie-delpoyment-test.onrender.com/api/generate-csv",
-        "https://qa-sdet-latest.onrender.com/api/generate-csv",
+        "https://qa-sdet.onrender.com/api/generate-csv",
         { elements: identifiedElements, filename: outputFileName },
         { responseType: "blob" }
       );
