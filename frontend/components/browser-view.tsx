@@ -22,7 +22,7 @@ const BrowserView: React.FC<BrowserViewProps> = ({
       // "https://waigenie-delpoyment-test.onrender.com/proxy?url=${encodeURIComponent(
       //   currentUrl
       // )}"
-      `https://qa-sdet.onrender.com/proxy?url=${encodeURIComponent(currentUrl)}`
+      `https://qa-sdet-latest.onrender.com/proxy?url=${encodeURIComponent(currentUrl)}`
     );
   }, [currentUrl]);
 
@@ -42,10 +42,10 @@ const BrowserView: React.FC<BrowserViewProps> = ({
       // `https://favourable-rea-bharath07-7294baab.koyeb.app/proxy?url=${encodeURIComponent(
       //   currentUrl
       // )}`
-      `https://waigenie-delpoyment-test.onrender.com/proxy?url=${encodeURIComponent(
-        currentUrl
-      )}`
-      // `https://qa-sdet.onrender.com/proxy?url=${encodeURIComponent(currentUrl)}`
+      // `https://waigenie-delpoyment-test.onrender.com/proxy?url=${encodeURIComponent(
+      //   currentUrl
+      // )}`
+      `https://qa-sdet-latest.onrender.com/proxy?url=${encodeURIComponent(currentUrl)}`
     );
   };
 
@@ -79,7 +79,7 @@ const BrowserView: React.FC<BrowserViewProps> = ({
           width: "100%",
           border: "none",
         }}
-        sandbox="allow-scripts allow-same-origin"
+        sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
         className="w-full h-[calc(100vh-100px)] rounded-md"
       />
     </div>

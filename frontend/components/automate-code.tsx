@@ -9,6 +9,7 @@ export default function AutomationCodeGenerator() {
   const [featureContent, setFeatureContent] = useState("");
   const [language, setLanguage] = useState("Python");
   const [generatedCode, setGeneratedCode] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [screenshot, setScreenshot] = useState("");
   const [browserStarted, setBrowserStarted] = useState(false);
@@ -17,13 +18,22 @@ export default function AutomationCodeGenerator() {
     setLoading(true);
     try {
       await axios.post(
-        // "https://favourable-rea-bharath07-7294baab.koyeb.app/api/start-browser"
-        "https://waigenie-delpoyment-test.onrender.com/api/start-browser",
-        // "https://qa-sdet.onrender.com/api/start-browser"
+        "https://qa-sdet-latest.onrender.com/api/start-browser",
+        { url },
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        }
       );
       setBrowserStarted(true);
     } catch (error) {
       console.error("Error starting browser:", error);
+      setError(
+        "An error occurred while starting the browser. Please try again."
+      );
     }
     setLoading(false);
   };
@@ -32,9 +42,15 @@ export default function AutomationCodeGenerator() {
     setLoading(true);
     try {
       await axios.post(
-        // "https://favourable-rea-bharath07-7294baab.koyeb.app/api/stop-browser"
-        "https://waigenie-delpoyment-test.onrender.com/api/stop-browser",
-        // "https://qa-sdet.onrender.com/api/stop-browser"
+        "https://qa-sdet-latest.onrender.com/api/stop-browser",
+        {},
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        }
       );
       setBrowserStarted(false);
       setScreenshot("");
@@ -51,13 +67,18 @@ export default function AutomationCodeGenerator() {
       await stopBrowser();
       await startBrowser();
       const response = await axios.post(
-        // "https://favourable-rea-bharath07-7294baab.koyeb.app/api/generate-code",
-        "https://waigenie-delpoyment-test.onrender.com/api/generate-code",
-        // "https://qa-sdet.onrender.com/api/generate-code",
+        "https://qa-sdet-latest.onrender.com/api/generate-code",
         {
           url,
           featureContent,
           language,
+        },
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
         }
       );
       setGeneratedCode(response.data.code);
@@ -74,9 +95,14 @@ export default function AutomationCodeGenerator() {
       interval = setInterval(async () => {
         try {
           const response = await axios.get(
-            // "https://favourable-rea-bharath07-7294baab.koyeb.app/api/get-screenshot"
-            "https://waigenie-delpoyment-test.onrender.com/api/get-screenshot"
-            // "https://qa-sdet.onrender.com/api/get-screenshot"
+            "https://qa-sdet-latest.onrender.com/api/get-screenshot",
+            {
+              withCredentials: true,
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+              },
+            }
           );
           setScreenshot(`data:image/png;base64,${response.data.screenshot}`);
         } catch (error) {

@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Image from "next/image";
 import { FaRobot } from "react-icons/fa";
 
 export default function AgentExplorer() {
@@ -18,10 +17,15 @@ export default function AgentExplorer() {
     setLoading(true);
     try {
       await axios.post(
-        // "https://favourable-rea-bharath07-7294baab.koyeb.app/api/agent-explorer/start-browser",
-        "https://waigenie-delpoyment-test.onrender.com/api/agent-explorer/start-browser",
-        // "https://qa-sdet.onrender.com/api/agent-explorer/start-browser",
-        { url }
+        "https://qa-sdet-latest.onrender.com/api/agent-explorer/start-browser",
+        { url },
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        }
       );
       setBrowserStarted(true);
     } catch (error) {
@@ -37,9 +41,15 @@ export default function AgentExplorer() {
     setLoading(true);
     try {
       await axios.post(
-        // "https://favourable-rea-bharath07-7294baab.koyeb.app/api/agent-explorer/stop-browser",
-        "https://waigenie-delpoyment-test.onrender.com/api/agent-explorer/stop-browser",
-        // "https://qa-sdet.onrender.com/api/agent-explorer/stop-browser"
+        "https://qa-sdet-latest.onrender.com/api/agent-explorer/stop-browser",
+        {},
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        }
       );
       setBrowserStarted(false);
       setScreenshot("");
@@ -58,12 +68,29 @@ export default function AgentExplorer() {
     setResults([]);
 
     try {
+      if (!url) {
+        setError("Please enter a URL");
+        return;
+      }
+
+      // Ensure URL has protocol
+      let processedUrl = url;
+      if (!url.startsWith("http://") && !url.startsWith("https://")) {
+        processedUrl = `https://${url}`;
+      }
+
       const response = await axios.post(
-        // "https://favourable-rea-bharath07-7294baab.koyeb.app/api/agent-explorer/run-web-agent",
-        "https://waigenie-delpoyment-test.onrender.com/api/agent-explorer/run-web-agent",
-        // "https://qa-sdet.onrender.com/api/agent-explorer/run-web-agent",
+        "https://qa-sdet-latest.onrender.com/api/agent-explorer/run-web-agent",
         {
           objective,
+          url: processedUrl,
+        },
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
         }
       );
       setResults(response.data);
@@ -83,11 +110,18 @@ export default function AgentExplorer() {
       interval = setInterval(async () => {
         try {
           const response = await axios.get(
-            // "https://favourable-rea-bharath07-7294baab.koyeb.app/api/agent-explorer/get-screenshot"
-            "https://waigenie-delpoyment-test.onrender.com/api/agent-explorer/get-screenshot"
-            // "https://qa-sdet.onrender.com/api/agent-explorer/get-screenshot"
+            "https://qa-sdet-latest.onrender.com/api/agent-explorer/get-screenshot",
+            {
+              withCredentials: true,
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+              },
+            }
           );
-          setScreenshot(`data:image/png;base64,${response.data.screenshot}`);
+          if (response.data && response.data.screenshot) {
+            setScreenshot(`data:image/png;base64,${response.data.screenshot}`);
+          }
         } catch (error) {
           console.error("Error fetching screenshot:", error);
         }
@@ -157,13 +191,11 @@ export default function AgentExplorer() {
           )}
         </div>
 
-        <div className="w-2/3 bg-blue-50 rounded-md h-[calc(100vh-100px)] shadow-lg">
+        <div className="w-2/3 bg-blue-50 rounded-md h-[calc(100vh-100px)] shadow-lg overflow-hidden">
           {browserStarted && screenshot && (
-            <Image
+            <img
               src={screenshot}
               alt="Browser view"
-              width={800}
-              height={600}
               className="w-full h-full object-contain"
             />
           )}
