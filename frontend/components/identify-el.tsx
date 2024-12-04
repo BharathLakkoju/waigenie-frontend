@@ -351,465 +351,480 @@ export default function IdentifyEl() {
       ) : (
         identifiedElements.length > 0 && (
           <>
-            <div className="container mx-auto px-4 py-8 w-screen flex flex-col gap-4">
-              {/* Advanced Features Toggle */}
-              <div className="flex justify-end mb-4">
-                <button
-                  onClick={() => setShowAdvancedFeatures(!showAdvancedFeatures)}
-                  className="bg-purple-600 text-white px-4 py-2 rounded-md"
-                >
-                  {showAdvancedFeatures ? "Hide" : "Show"} Advanced Features
-                </button>
-                <button
-                  onClick={() => setCompareMode(!compareMode)}
-                  className="ml-4 bg-blue-600 text-white px-4 py-2 rounded-md"
-                >
-                  {compareMode ? "Exit" : "Enter"} Compare Mode
-                </button>
-              </div>
-
-              {/* Filters Section */}
-              <div className="bg-white p-4 rounded-lg shadow-md">
-                <div className="flex flex-wrap gap-4 items-center">
-                  <div className="flex-1">
-                    <div className="relative">
-                      <FaSearch className="absolute left-3 top-3 text-gray-400" />
-                      <input
-                        type="text"
-                        value={filterText}
-                        onChange={(e) => setFilterText(e.target.value)}
-                        placeholder="Search elements..."
-                        className="w-full pl-10 pr-4 py-2 border rounded-md"
-                      />
-                    </div>
-                  </div>
-                  <select
-                    value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="border rounded-md px-4 py-2"
-                  >
-                    <option value="all">All Elements</option>
-                    <option value="interactive">Interactive Elements</option>
-                    <option value="text">Text Elements</option>
-                    <option value="media">Media Elements</option>
-                  </select>
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      checked={showOnlyVisible}
-                      onChange={(e) => setShowOnlyVisible(e.target.checked)}
-                    />
-                    Show Only Visible
-                  </label>
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      checked={showOnlyInteractive}
-                      onChange={(e) => setShowOnlyInteractive(e.target.checked)}
-                    />
-                    Show Only Interactive
-                  </label>
-                </div>
-              </div>
-
-              {/* Main Content */}
-              <div className="bg-white rounded-lg shadow-md p-4">
-                <table className="w-full text-sm text-left text-gray-900">
-                  <thead className="text-xs uppercase bg-gray-100">
-                    <tr>
-                      {compareMode && (
-                        <th scope="col" className="px-4 py-2">
-                          <input
-                            type="checkbox"
-                            onChange={(e) => {
-                              const allIds = filteredElements.map(
-                                (el) => el.id
-                              );
-                              setSelectedElements(
-                                e.target.checked ? allIds : []
-                              );
-                            }}
-                          />
-                        </th>
-                      )}
-                      <th scope="col" className="px-4 py-2">
-                        Basic Info
-                      </th>
-                      <th scope="col" className="px-4 py-2">
-                        Selectors
-                      </th>
-                      <th scope="col" className="px-4 py-2">
-                        Accessibility
-                      </th>
-                      <th scope="col" className="px-4 py-2">
-                        State
-                      </th>
-                      <th scope="col" className="px-4 py-2">
-                        Styles
-                      </th>
-                      <th scope="col" className="px-4 py-2">
-                        Position
-                      </th>
-                      {showAdvancedFeatures && (
-                        <>
-                          <th scope="col" className="px-4 py-2">
-                            Events
-                          </th>
-                          <th scope="col" className="px-4 py-2">
-                            Shadow DOM
-                          </th>
-                          <th scope="col" className="px-4 py-2">
-                            Performance
-                          </th>
-                          <th scope="col" className="px-4 py-2">
-                            Framework
-                          </th>
-                          <th scope="col" className="px-4 py-2">
-                            Validation
-                          </th>
-                        </>
-                      )}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredElements.map((element, index) => (
-                      <tr key={index} className="border-b hover:bg-gray-50">
-                        {compareMode && (
-                          <td className="px-4 py-2">
-                            <input
-                              type="checkbox"
-                              checked={selectedElements.includes(element.id)}
-                              onChange={(e) => {
-                                setSelectedElements((prev) =>
-                                  e.target.checked
-                                    ? [...prev, element.id]
-                                    : prev.filter((id) => id !== element.id)
-                                );
-                              }}
-                            />
-                          </td>
-                        )}
-                        <td className="px-4 py-2">
-                          <details>
-                            <summary className="cursor-pointer font-medium">
-                              {element.tag.toLowerCase()}{" "}
-                              {element.elementId && `#${element.elementId}`}
-                            </summary>
-                            <div className="mt-2 space-y-1 text-xs">
-                              <div>
-                                <span className="font-semibold">ID:</span>{" "}
-                                {element.elementId}
-                              </div>
-                              <div>
-                                <span className="font-semibold">Class:</span>{" "}
-                                {element.className}
-                              </div>
-                              <div>
-                                <span className="font-semibold">Text:</span>{" "}
-                                {element.text.substring(0, 50)}
-                              </div>
-                            </div>
-                          </details>
-                        </td>
-                        <td className="px-4 py-2">
-                          <details>
-                            <summary className="cursor-pointer">
-                              View Selectors
-                            </summary>
-                            <div className="mt-2 space-y-1 text-xs">
-                              <div>
-                                <span className="font-semibold">CSS:</span>{" "}
-                                {element.cssSelector}
-                              </div>
-                              <div>
-                                <span className="font-semibold">
-                                  Relative XPath:
-                                </span>{" "}
-                                {element.relativeXPath}
-                              </div>
-                              <div>
-                                <span className="font-semibold">
-                                  Absolute XPath:
-                                </span>{" "}
-                                {element.absoluteXPath}
-                              </div>
-                              <div>
-                                <span className="font-semibold">Unique:</span>{" "}
-                                {element.customSelectors.uniqueSelector}
-                              </div>
-                            </div>
-                          </details>
-                        </td>
-                        <td className="px-4 py-2">
-                          <details>
-                            <summary className="cursor-pointer">
-                              View A11y Info
-                            </summary>
-                            <div className="mt-2 space-y-1 text-xs">
-                              <div>
-                                <span className="font-semibold">Role:</span>{" "}
-                                {element.accessibility.role}
-                              </div>
-                              <div>
-                                <span className="font-semibold">
-                                  Aria Label:
-                                </span>{" "}
-                                {element.accessibility.ariaLabel}
-                              </div>
-                              <div>
-                                <span className="font-semibold">
-                                  Focusable:
-                                </span>{" "}
-                                {element.accessibility.isKeyboardFocusable
-                                  ? "Yes"
-                                  : "No"}
-                              </div>
-                            </div>
-                          </details>
-                        </td>
-                        <td className="px-4 py-2">
-                          <details>
-                            <summary className="cursor-pointer">
-                              View State
-                            </summary>
-                            <div className="mt-2 space-y-1 text-xs">
-                              {Object.entries(element.state).map(
-                                ([key, value]) => (
-                                  <div key={key}>
-                                    <span className="font-semibold">
-                                      {key}:
-                                    </span>{" "}
-                                    {value.toString()}
-                                  </div>
-                                )
-                              )}
-                            </div>
-                          </details>
-                        </td>
-                        <td className="px-4 py-2">
-                          <details>
-                            <summary className="cursor-pointer">
-                              View Styles
-                            </summary>
-                            <div className="mt-2 space-y-1 text-xs">
-                              {Object.entries(element.computedStyles).map(
-                                ([key, value]) => (
-                                  <div key={key}>
-                                    <span className="font-semibold">
-                                      {key}:
-                                    </span>{" "}
-                                    {value}
-                                  </div>
-                                )
-                              )}
-                            </div>
-                          </details>
-                        </td>
-                        <td className="px-4 py-2">
-                          <details>
-                            <summary className="cursor-pointer">
-                              View Position
-                            </summary>
-                            <div className="mt-2 space-y-1 text-xs">
-                              <div>
-                                <span className="font-semibold">
-                                  Dimensions:
-                                </span>
-                              </div>
-                              <div>
-                                X: {element.dimensions.x}, Y:{" "}
-                                {element.dimensions.y}
-                              </div>
-                              <div>
-                                Width: {element.dimensions.width}, Height:{" "}
-                                {element.dimensions.height}
-                              </div>
-                              <div>
-                                <span className="font-semibold">Siblings:</span>
-                              </div>
-                              <div>
-                                Position: {element.siblings.siblingPosition + 1}{" "}
-                                of {element.siblings.totalSiblings}
-                              </div>
-                            </div>
-                          </details>
-                        </td>
-                        {showAdvancedFeatures && (
-                          <>
-                            <td className="px-4 py-2">
-                              <details>
-                                <summary className="cursor-pointer">
-                                  Event Listeners
-                                </summary>
-                                <div className="mt-2 space-y-1 text-xs">
-                                  {Object.entries(element.eventListeners).map(
-                                    ([event]) => (
-                                      <div
-                                        key={event}
-                                        className="text-green-600"
-                                      >
-                                        {event}
-                                      </div>
-                                    )
-                                  )}
-                                </div>
-                              </details>
-                            </td>
-                            <td className="px-4 py-2">
-                              <details>
-                                <summary className="cursor-pointer">
-                                  Shadow DOM
-                                </summary>
-                                <div className="mt-2 space-y-1 text-xs">
-                                  {element.shadowDOM.hasShadowRoot ? (
-                                    <>
-                                      <div className="font-semibold">
-                                        Shadow Elements:
-                                      </div>
-                                      {element.shadowDOM.shadowElements.map(
-                                        (el, i) => (
-                                          <div key={i}>
-                                            {el.tag} {el.id && `#${el.id}`}
-                                          </div>
-                                        )
-                                      )}
-                                    </>
-                                  ) : (
-                                    <div>No Shadow DOM</div>
-                                  )}
-                                </div>
-                              </details>
-                            </td>
-                            <td className="px-4 py-2">
-                              <details>
-                                <summary className="cursor-pointer">
-                                  Performance
-                                </summary>
-                                <div className="mt-2 space-y-1 text-xs">
-                                  <div>
-                                    Render Time:{" "}
-                                    {element.performance.renderTime.toFixed(2)}
-                                    ms
-                                  </div>
-                                  <div>
-                                    Layout Impact:{" "}
-                                    {element.performance.layoutImpact.toFixed(
-                                      2
-                                    )}
-                                    %
-                                  </div>
-                                  <div>
-                                    Memory:{" "}
-                                    {(
-                                      element.performance.memoryEstimate / 1024
-                                    ).toFixed(2)}
-                                    KB
-                                  </div>
-                                </div>
-                              </details>
-                            </td>
-                            <td className="px-4 py-2">
-                              <details>
-                                <summary className="cursor-pointer">
-                                  Framework
-                                </summary>
-                                <div className="mt-2 space-y-1 text-xs">
-                                  {Object.entries(element.framework)
-                                    .filter(([, used]) => used)
-                                    .map(([name]) => (
-                                      <div key={name} className="text-blue-600">
-                                        {name}
-                                      </div>
-                                    ))}
-                                </div>
-                              </details>
-                            </td>
-                            <td className="px-4 py-2">
-                              <details>
-                                <summary className="cursor-pointer">
-                                  Validation
-                                </summary>
-                                <div className="mt-2 space-y-1 text-xs">
-                                  {element.validation.hasValidation ? (
-                                    <>
-                                      <div>
-                                        Message:{" "}
-                                        {element.validation.validationMessage}
-                                      </div>
-                                      {element.validation.validity &&
-                                        Object.entries(
-                                          element.validation.validity
-                                        )
-                                          .filter(([, value]) => value)
-                                          .map(([key]) => (
-                                            <div
-                                              key={key}
-                                              className="text-red-600"
-                                            >
-                                              {key}
-                                            </div>
-                                          ))}
-                                    </>
-                                  ) : (
-                                    <div>No Validation</div>
-                                  )}
-                                </div>
-                              </details>
-                            </td>
-                          </>
-                        )}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Comparison Panel */}
-              {compareMode && selectedElements.length > 0 && (
-                <div className="bg-white rounded-lg shadow-md p-4 mt-4">
-                  <h3 className="text-lg font-bold mb-4">Element Comparison</h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    {selectedElements.map((id) => {
-                      const element = identifiedElements.find(
-                        (el) => el.id === id
-                      );
-                      if (!element) return null;
-                      return (
-                        <div key={id} className="border p-4 rounded-md">
-                          <h4 className="font-bold">
-                            {element.tag} #{element.elementId}
-                          </h4>
-                          <div className="mt-2 space-y-2">
-                            <div>
-                              Accessibility Score:{" "}
-                              {
-                                Object.values(element.accessibility).filter(
-                                  Boolean
-                                ).length
-                              }
-                              /7
-                            </div>
-                            <div>
-                              Performance Score:{" "}
-                              {100 - element.performance.layoutImpact}%
-                            </div>
-                            <div>Test Code:</div>
-                            <pre className="bg-gray-100 p-2 rounded text-xs">
-                              {generateTestCode(element)}
-                            </pre>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-            </div>
             <div
               className={`w-full bg-gray-50 rounded-md shadow-lg max-w-6xl ${
                 loading ? "" : "h-[700px]"
               } mx-auto flex flex-col mb-5 overflow-y-scroll`}
             >
+              <div className="container mx-auto px-4 py-8 w-screen flex flex-col gap-4">
+                {/* Advanced Features Toggle */}
+                <div className="flex justify-end mb-4">
+                  <button
+                    onClick={() =>
+                      setShowAdvancedFeatures(!showAdvancedFeatures)
+                    }
+                    className="bg-purple-600 text-white px-4 py-2 rounded-md"
+                  >
+                    {showAdvancedFeatures ? "Hide" : "Show"} Advanced Features
+                  </button>
+                  <button
+                    onClick={() => setCompareMode(!compareMode)}
+                    className="ml-4 bg-blue-600 text-white px-4 py-2 rounded-md"
+                  >
+                    {compareMode ? "Exit" : "Enter"} Compare Mode
+                  </button>
+                </div>
+
+                {/* Filters Section */}
+                <div className="bg-white p-4 rounded-lg shadow-md">
+                  <div className="flex flex-wrap gap-4 items-center">
+                    <div className="flex-1">
+                      <div className="relative">
+                        <FaSearch className="absolute left-3 top-3 text-gray-400" />
+                        <input
+                          type="text"
+                          value={filterText}
+                          onChange={(e) => setFilterText(e.target.value)}
+                          placeholder="Search elements..."
+                          className="w-full pl-10 pr-4 py-2 border rounded-md"
+                        />
+                      </div>
+                    </div>
+                    <select
+                      value={selectedCategory}
+                      onChange={(e) => setSelectedCategory(e.target.value)}
+                      className="border rounded-md px-4 py-2"
+                    >
+                      <option value="all">All Elements</option>
+                      <option value="interactive">Interactive Elements</option>
+                      <option value="text">Text Elements</option>
+                      <option value="media">Media Elements</option>
+                    </select>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={showOnlyVisible}
+                        onChange={(e) => setShowOnlyVisible(e.target.checked)}
+                      />
+                      Show Only Visible
+                    </label>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={showOnlyInteractive}
+                        onChange={(e) =>
+                          setShowOnlyInteractive(e.target.checked)
+                        }
+                      />
+                      Show Only Interactive
+                    </label>
+                  </div>
+                </div>
+
+                {/* Main Content */}
+                <div className="bg-white rounded-lg shadow-md p-4">
+                  <table className="w-full text-sm text-left text-gray-900">
+                    <thead className="text-xs uppercase bg-gray-100">
+                      <tr>
+                        {compareMode && (
+                          <th scope="col" className="px-4 py-2">
+                            <input
+                              type="checkbox"
+                              onChange={(e) => {
+                                const allIds = filteredElements.map(
+                                  (el) => el.id
+                                );
+                                setSelectedElements(
+                                  e.target.checked ? allIds : []
+                                );
+                              }}
+                            />
+                          </th>
+                        )}
+                        <th scope="col" className="px-4 py-2">
+                          Basic Info
+                        </th>
+                        <th scope="col" className="px-4 py-2">
+                          Selectors
+                        </th>
+                        <th scope="col" className="px-4 py-2">
+                          Accessibility
+                        </th>
+                        <th scope="col" className="px-4 py-2">
+                          State
+                        </th>
+                        <th scope="col" className="px-4 py-2">
+                          Styles
+                        </th>
+                        <th scope="col" className="px-4 py-2">
+                          Position
+                        </th>
+                        {showAdvancedFeatures && (
+                          <>
+                            <th scope="col" className="px-4 py-2">
+                              Events
+                            </th>
+                            <th scope="col" className="px-4 py-2">
+                              Shadow DOM
+                            </th>
+                            <th scope="col" className="px-4 py-2">
+                              Performance
+                            </th>
+                            <th scope="col" className="px-4 py-2">
+                              Framework
+                            </th>
+                            <th scope="col" className="px-4 py-2">
+                              Validation
+                            </th>
+                          </>
+                        )}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredElements.map((element, index) => (
+                        <tr key={index} className="border-b hover:bg-gray-50">
+                          {compareMode && (
+                            <td className="px-4 py-2">
+                              <input
+                                type="checkbox"
+                                checked={selectedElements.includes(element.id)}
+                                onChange={(e) => {
+                                  setSelectedElements((prev) =>
+                                    e.target.checked
+                                      ? [...prev, element.id]
+                                      : prev.filter((id) => id !== element.id)
+                                  );
+                                }}
+                              />
+                            </td>
+                          )}
+                          <td className="px-4 py-2">
+                            <details>
+                              <summary className="cursor-pointer font-medium">
+                                {element.tag.toLowerCase()}{" "}
+                                {element.elementId && `#${element.elementId}`}
+                              </summary>
+                              <div className="mt-2 space-y-1 text-xs">
+                                <div>
+                                  <span className="font-semibold">ID:</span>{" "}
+                                  {element.elementId}
+                                </div>
+                                <div>
+                                  <span className="font-semibold">Class:</span>{" "}
+                                  {element.className}
+                                </div>
+                                <div>
+                                  <span className="font-semibold">Text:</span>{" "}
+                                  {element.text.substring(0, 50)}
+                                </div>
+                              </div>
+                            </details>
+                          </td>
+                          <td className="px-4 py-2">
+                            <details>
+                              <summary className="cursor-pointer">
+                                View Selectors
+                              </summary>
+                              <div className="mt-2 space-y-1 text-xs">
+                                <div>
+                                  <span className="font-semibold">CSS:</span>{" "}
+                                  {element.cssSelector}
+                                </div>
+                                <div>
+                                  <span className="font-semibold">
+                                    Relative XPath:
+                                  </span>{" "}
+                                  {element.relativeXPath}
+                                </div>
+                                <div>
+                                  <span className="font-semibold">
+                                    Absolute XPath:
+                                  </span>{" "}
+                                  {element.absoluteXPath}
+                                </div>
+                                <div>
+                                  <span className="font-semibold">Unique:</span>{" "}
+                                  {element.customSelectors.uniqueSelector}
+                                </div>
+                              </div>
+                            </details>
+                          </td>
+                          <td className="px-4 py-2">
+                            <details>
+                              <summary className="cursor-pointer">
+                                View A11y Info
+                              </summary>
+                              <div className="mt-2 space-y-1 text-xs">
+                                <div>
+                                  <span className="font-semibold">Role:</span>{" "}
+                                  {element.accessibility.role}
+                                </div>
+                                <div>
+                                  <span className="font-semibold">
+                                    Aria Label:
+                                  </span>{" "}
+                                  {element.accessibility.ariaLabel}
+                                </div>
+                                <div>
+                                  <span className="font-semibold">
+                                    Focusable:
+                                  </span>{" "}
+                                  {element.accessibility.isKeyboardFocusable
+                                    ? "Yes"
+                                    : "No"}
+                                </div>
+                              </div>
+                            </details>
+                          </td>
+                          <td className="px-4 py-2">
+                            <details>
+                              <summary className="cursor-pointer">
+                                View State
+                              </summary>
+                              <div className="mt-2 space-y-1 text-xs">
+                                {Object.entries(element.state).map(
+                                  ([key, value]) => (
+                                    <div key={key}>
+                                      <span className="font-semibold">
+                                        {key}:
+                                      </span>{" "}
+                                      {value.toString()}
+                                    </div>
+                                  )
+                                )}
+                              </div>
+                            </details>
+                          </td>
+                          <td className="px-4 py-2">
+                            <details>
+                              <summary className="cursor-pointer">
+                                View Styles
+                              </summary>
+                              <div className="mt-2 space-y-1 text-xs">
+                                {Object.entries(element.computedStyles).map(
+                                  ([key, value]) => (
+                                    <div key={key}>
+                                      <span className="font-semibold">
+                                        {key}:
+                                      </span>{" "}
+                                      {value}
+                                    </div>
+                                  )
+                                )}
+                              </div>
+                            </details>
+                          </td>
+                          <td className="px-4 py-2">
+                            <details>
+                              <summary className="cursor-pointer">
+                                View Position
+                              </summary>
+                              <div className="mt-2 space-y-1 text-xs">
+                                <div>
+                                  <span className="font-semibold">
+                                    Dimensions:
+                                  </span>
+                                </div>
+                                <div>
+                                  X: {element.dimensions.x}, Y:{" "}
+                                  {element.dimensions.y}
+                                </div>
+                                <div>
+                                  Width: {element.dimensions.width}, Height:{" "}
+                                  {element.dimensions.height}
+                                </div>
+                                <div>
+                                  <span className="font-semibold">
+                                    Siblings:
+                                  </span>
+                                </div>
+                                <div>
+                                  Position:{" "}
+                                  {element.siblings.siblingPosition + 1} of{" "}
+                                  {element.siblings.totalSiblings}
+                                </div>
+                              </div>
+                            </details>
+                          </td>
+                          {showAdvancedFeatures && (
+                            <>
+                              <td className="px-4 py-2">
+                                <details>
+                                  <summary className="cursor-pointer">
+                                    Event Listeners
+                                  </summary>
+                                  <div className="mt-2 space-y-1 text-xs">
+                                    {Object.entries(element.eventListeners).map(
+                                      ([event]) => (
+                                        <div
+                                          key={event}
+                                          className="text-green-600"
+                                        >
+                                          {event}
+                                        </div>
+                                      )
+                                    )}
+                                  </div>
+                                </details>
+                              </td>
+                              <td className="px-4 py-2">
+                                <details>
+                                  <summary className="cursor-pointer">
+                                    Shadow DOM
+                                  </summary>
+                                  <div className="mt-2 space-y-1 text-xs">
+                                    {element.shadowDOM.hasShadowRoot ? (
+                                      <>
+                                        <div className="font-semibold">
+                                          Shadow Elements:
+                                        </div>
+                                        {element.shadowDOM.shadowElements.map(
+                                          (el, i) => (
+                                            <div key={i}>
+                                              {el.tag} {el.id && `#${el.id}`}
+                                            </div>
+                                          )
+                                        )}
+                                      </>
+                                    ) : (
+                                      <div>No Shadow DOM</div>
+                                    )}
+                                  </div>
+                                </details>
+                              </td>
+                              <td className="px-4 py-2">
+                                <details>
+                                  <summary className="cursor-pointer">
+                                    Performance
+                                  </summary>
+                                  <div className="mt-2 space-y-1 text-xs">
+                                    <div>
+                                      Render Time:{" "}
+                                      {element.performance.renderTime.toFixed(
+                                        2
+                                      )}
+                                      ms
+                                    </div>
+                                    <div>
+                                      Layout Impact:{" "}
+                                      {element.performance.layoutImpact.toFixed(
+                                        2
+                                      )}
+                                      %
+                                    </div>
+                                    <div>
+                                      Memory:{" "}
+                                      {(
+                                        element.performance.memoryEstimate /
+                                        1024
+                                      ).toFixed(2)}
+                                      KB
+                                    </div>
+                                  </div>
+                                </details>
+                              </td>
+                              <td className="px-4 py-2">
+                                <details>
+                                  <summary className="cursor-pointer">
+                                    Framework
+                                  </summary>
+                                  <div className="mt-2 space-y-1 text-xs">
+                                    {Object.entries(element.framework)
+                                      .filter(([, used]) => used)
+                                      .map(([name]) => (
+                                        <div
+                                          key={name}
+                                          className="text-blue-600"
+                                        >
+                                          {name}
+                                        </div>
+                                      ))}
+                                  </div>
+                                </details>
+                              </td>
+                              <td className="px-4 py-2">
+                                <details>
+                                  <summary className="cursor-pointer">
+                                    Validation
+                                  </summary>
+                                  <div className="mt-2 space-y-1 text-xs">
+                                    {element.validation.hasValidation ? (
+                                      <>
+                                        <div>
+                                          Message:{" "}
+                                          {element.validation.validationMessage}
+                                        </div>
+                                        {element.validation.validity &&
+                                          Object.entries(
+                                            element.validation.validity
+                                          )
+                                            .filter(([, value]) => value)
+                                            .map(([key]) => (
+                                              <div
+                                                key={key}
+                                                className="text-red-600"
+                                              >
+                                                {key}
+                                              </div>
+                                            ))}
+                                      </>
+                                    ) : (
+                                      <div>No Validation</div>
+                                    )}
+                                  </div>
+                                </details>
+                              </td>
+                            </>
+                          )}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Comparison Panel */}
+                {compareMode && selectedElements.length > 0 && (
+                  <div className="bg-white rounded-lg shadow-md p-4 mt-4">
+                    <h3 className="text-lg font-bold mb-4">
+                      Element Comparison
+                    </h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      {selectedElements.map((id) => {
+                        const element = identifiedElements.find(
+                          (el) => el.id === id
+                        );
+                        if (!element) return null;
+                        return (
+                          <div key={id} className="border p-4 rounded-md">
+                            <h4 className="font-bold">
+                              {element.tag} #{element.elementId}
+                            </h4>
+                            <div className="mt-2 space-y-2">
+                              <div>
+                                Accessibility Score:{" "}
+                                {
+                                  Object.values(element.accessibility).filter(
+                                    Boolean
+                                  ).length
+                                }
+                                /7
+                              </div>
+                              <div>
+                                Performance Score:{" "}
+                                {100 - element.performance.layoutImpact}%
+                              </div>
+                              <div>Test Code:</div>
+                              <pre className="bg-gray-100 p-2 rounded text-xs">
+                                {generateTestCode(element)}
+                              </pre>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
               <div className="overflow-auto p-4">
                 <div className="bg-white rounded-lg p-4 shadow">
                   <h2 className="text-2xl font-bold text-black mb-4">
