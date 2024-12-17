@@ -13,6 +13,7 @@ import {
   NavigationMenuTrigger,
 } from "@radix-ui/react-navigation-menu";
 import { CaretDownIcon } from "@radix-ui/react-icons";
+import LogoSVG from "@/public/logotext.svg";
 
 export default function Navbar() {
   return (
@@ -34,7 +35,7 @@ export default function Navbar() {
             WaiGenie
           </motion.span> */}
           <Image
-            src="/logotext.png"
+            src="/logotext.svg"
             alt={"logo-text"}
             width={130}
             height={10}
