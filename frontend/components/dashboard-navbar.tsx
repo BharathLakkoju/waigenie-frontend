@@ -17,7 +17,14 @@ import { motion } from "framer-motion";
 import { signout } from "@/actions/auth";
 import AgentExplorer from "./agent-explorer";
 import { FaRobot } from "react-icons/fa";
-import { Code, FileCode2, Info, Lightbulb, SearchCode, LogOut } from "lucide-react";
+import {
+  Code,
+  FileCode2,
+  Info,
+  Lightbulb,
+  SearchCode,
+  LogOut,
+} from "lucide-react";
 
 export function DashboardNavbar({
   user,
@@ -183,13 +190,14 @@ export const Logo = () => {
       className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20 min-h-10 w-full justify-start"
     >
       <Image src="/logo.png" width={24} height={24} alt="" />
-      <motion.span
+      <Image src="/logotext.svg" width={24} height={24} alt="" />
+      {/* <motion.span
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="font-medium text-black dark:text-white whitespace-pre text-[16px] pt-2"
       >
         WaiGenie
-      </motion.span>
+      </motion.span> */}
     </Link>
   );
 };
