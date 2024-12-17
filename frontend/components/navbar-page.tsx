@@ -23,16 +23,17 @@ export default function Navbar() {
       className={`dark:bg-neutral-950/75 bg-white/75 p-4 fixed w-full z-50 top-0 left-0`}
     >
       <div className="mx-auto flex justify-around items-center dark:text-zinc-100 text-zinc-900">
-        <Link href="/" className="flex gap-2 items-center justify-center">
+        <Link href="/" className="flex gap-5 items-center justify-center">
           <Image src="/logo.png" alt="Waigenie Logo" width={42} height={42} />
-          <motion.span
+          {/* <motion.span
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-2xl mt-2 font-bold"
+            className="text-2xl font-bold"
           >
-            Waigenie
-          </motion.span>
+            WaiGenie
+          </motion.span> */}
+            <Image src="/logotext.png" alt={"logo-text"} width={125} height={10} />
         </Link>
 
         <NavigationMenu className="hidden md:flex">
