@@ -33,7 +33,12 @@ export default function Navbar() {
           >
             WaiGenie
           </motion.span> */}
-          <Image src="/logotext.png" alt={"logo-text"} width={130} height={10} />
+          <Image
+            src="/logotext.png"
+            alt={"logo-text"}
+            width={130}
+            height={10}
+          />
         </Link>
 
         <NavigationMenu className="hidden md:flex">
