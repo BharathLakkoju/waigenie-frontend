@@ -209,7 +209,7 @@ export default function HomePage() {
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8 }}
-        className="bg-gradient-to-b from-blue-300 to-white dark:bg-gradient-to-b dark:from-blue-900 dark:to-black min-h-screen"
+        className="bg-gradient-to-b from-blue-300 to-white dark:bg-gradient-to-b dark:from-blue-900 dark:to-black md:min-h-screen"
       >
         <FeatureCarousel />
       </motion.div>
@@ -322,7 +322,7 @@ export function FeatureCarousel() {
   };
 
   return (
-    <div className="flex flex-col-reverse md:flex-row items-center justify-between p-8 bg-transparent min-h-screen max-w-7xl mx-auto">
+    <div className="flex flex-col-reverse md:flex-row items-center justify-between p-8 bg-transparent md:min-h-screen max-w-7xl mx-auto">
       <div className="md:w-1/2 p-4 min-h-[320px] flex flex-col justify-between items-start">
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div
@@ -359,7 +359,7 @@ export function FeatureCarousel() {
           </button>
         </div>
       </div>
-      <div className="md:w-1/2 p-4 relative h-[400px] overflow-hidden rounded-2xl">
+      <div className="md:w-1/2 p-4 relative md:h-[400px] w-[calc(100%-32px)] h-[250px] overflow-hidden rounded-2xl">
         <AnimatePresence initial={false} custom={direction}>
           <motion.div
             key={currentIndex}
