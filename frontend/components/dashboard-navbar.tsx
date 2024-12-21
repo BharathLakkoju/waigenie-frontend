@@ -190,7 +190,7 @@ export const Logo = () => {
       className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20 min-h-10 w-full justify-start"
     >
       <Image src="/logo.png" width={24} height={24} alt="" />
-      <Image src="/logotext.svg" width={125} height={24} alt="" />
+      <Image src="/logotext.svg" width={75} height={24} alt="" />
       {/* <motion.span
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
