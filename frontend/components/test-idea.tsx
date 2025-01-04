@@ -51,9 +51,7 @@ export default function TestIdea() {
     <>
       <div className="container mx-auto px-4 py-8 w-screen flex justify-center items-center gap-8">
         <div className="w-1/3 bg-blue-50 p-8 rounded-md h-[calc(100vh-100px)] shadow-lg overflow-y-scroll">
-          <h1 className="text-xl font-bold text-black mb-2">
-            Test Idea Generation
-          </h1>
+          <h1 className="text-xl font-bold text-black mb-2">IdeaForge</h1>
           <input
             type="text"
             value={url}

@@ -136,32 +136,32 @@ const titlesAndContext = [
     title: "Generate Test Ideas Instantly",
     context:
       "Are you tired of manually coming up with test ideas for your web applications? Our Test Idea Generation feature uses AI to automatically generate test ideas based on user stories and selected web page elements.Simply enter a URL and select the elements you want to test, and our tool will generate a list of test ideas for you.Save time and increase your test coverage with Test Idea Generation.",
-    videoSrc: "",
+    videoSrc: "https://www.youtube.com/embed/zU4KTt2AXes?autoplay=0",
   },
   {
     title: "Identify and Extract Element Information",
     context:
       "Easily identify and extract information about web page elements for testing. Enter a URL and our tool will generate a CSV file containing information about all elements with IDs.Use this feature to quickly gather information about the elements on a page, making it easier to create and execute tests.",
-    videoSrc: "",
+    videoSrc: "https://www.youtube.com/embed/RYfabisj_fU?autoplay=0",
   },
   {
     title: "Convert User Stories into Gherkin Feature Files",
     context:
       "Transform user stories into BDD Gherkin feature files with just a few clicks. Simply enter a user story and our tool will generate a Gherkin feature file for you. Use this feature to streamline your test case creation process and ensure consistency in your tests.",
-    videoSrc: "",
+    videoSrc: "https://www.youtube.com/embed/POVICLNeo-I?autoplay=0",
   },
   {
     title: "Generate Automated Test Code with Gherkin Steps",
     context:
       "Save time and effort by generating automated test code based on Gherkin steps. Enter a URL, Gherkin feature steps, and select a language to generate automated test code. Our tool supports both Python and Java, making it easy to integrate with your existing testing framework.",
-    videoSrc: "",
+    videoSrc: "https://www.youtube.com/embed/RB47l-9fm7k?autoplay=0",
   },
-  {
-    title: "Make use of Waigenie's AI-Powered Web Agent",
-    context:
-      "Use our AI-powered web agent to demonstrate the capabilities of Waigenie. Enter an objective and URL to start the web agent demo and see how it interacts with the web page. Use this feature to showcase the power of Waigenie to potential clients and stakeholders.",
-    videoSrc: "",
-  },
+  // {
+  //   title: "Make use of Waigenie's AI-Powered Web Agent",
+  //   context:
+  //     "Use our AI-powered web agent to demonstrate the capabilities of Waigenie. Enter an objective and URL to start the web agent demo and see how it interacts with the web page. Use this feature to showcase the power of Waigenie to potential clients and stakeholders.",
+  //   videoSrc: "",
+  // },
 ];
 
 export default function HomePage() {
@@ -376,19 +376,15 @@ export function FeatureCarousel() {
             }}
           >
             <div className="bg-gradient-to-br from-purple-500 via-orange-500 to-indigo-500 p-2 rounded-2xl shadow-lg w-[calc(100%-32px)] h-[calc(100%-32px)] flex items-center justify-center">
-              {false ? (
-                <img
-                  src={titlesAndContext[currentIndex].videoSrc}
-                  alt={`Video preview for ${titlesAndContext[currentIndex].title}`}
-                  className="w-full h-full object-cover rounded-xl bg-blue-900"
-                />
-              ) : (
-                <div className="w-full h-full rounded-xl bg-gray-300 relative flex justify-center items-center">
-                  <span className="text-zinc-900">
-                    Sample video here {currentIndex}
-                  </span>
-                </div>
-              )}
+              <iframe
+                src={titlesAndContext[currentIndex].videoSrc}
+                frameBorder={0}
+                allow="autoplay; encrypted-media"
+                allowFullScreen
+                // alt={`Video preview for ${titlesAndContext[currentIndex].title}`}
+                className="w-full h-full object-cover rounded-xl bg-blue-900"
+                title={titlesAndContext[currentIndex].title}
+              />
             </div>
           </motion.div>
         </AnimatePresence>

@@ -529,7 +529,7 @@ export default function IdentifyEl() {
       <div className="container mx-auto px-4 py-8 w-screen flex justify-center items-center gap-8">
         <div className="w-1/3 bg-purple-50 p-8 rounded-md h-[calc(100vh-100px)] shadow-lg">
           <h1 className="text-xl font-bold text-black mb-4">
-            Identify Page Elements
+            DomDetective
           </h1>
           <input
             type="text"

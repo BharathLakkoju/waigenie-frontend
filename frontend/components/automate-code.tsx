@@ -117,9 +117,7 @@ export default function AutomationCodeGenerator() {
     <>
       <div className="container mx-auto px-4 py-8 w-screen flex justify-center items-center gap-8">
         <div className="w-1/3 bg-gray-50 p-8 rounded-md h-[calc(100vh-100px)] shadow-lg overflow-y-auto">
-          <h1 className="text-xl font-bold text-black mb-2">
-            Generate QA Automation Scripts
-          </h1>
+          <h1 className="text-xl font-bold text-black mb-2">AutoScribe</h1>
           <input
             type="text"
             value={url}

@@ -40,9 +40,7 @@ export default function GenerateBDD() {
   return (
     <div className="container mx-auto px-4 py-8 w-screen flex justify-center items-center gap-8">
       <div className="w-1/3 bg-gray-50 p-8 rounded-md h-[calc(100vh-100px)]">
-        <h1 className="text-xl font-bold text-black mb-2">
-          Generate BDD Gherkin Feature Steps
-        </h1>
+        <h1 className="text-xl font-bold text-black mb-2">CucumberCraft</h1>
         <textarea
           value={userStory}
           onChange={(e) => setUserStory(e.target.value)}

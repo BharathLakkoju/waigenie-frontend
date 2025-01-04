@@ -60,15 +60,15 @@ export function DashboardNavbar({
         </>
       ),
     },
-    {
-      label: "WebTrekker",
-      href: "#",
-      icon: (
-        <>
-          <SearchCode className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-        </>
-      ),
-    },
+    // {
+    //   label: "WebTrekker",
+    //   href: "#",
+    //   icon: (
+    //     <>
+    //       <SearchCode className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+    //     </>
+    //   ),
+    // },
     {
       label: "DomDetective",
       href: "#",
@@ -106,10 +106,10 @@ export function DashboardNavbar({
       label: "AutoScribe",
       component: <AutomateCode />,
     },
-    {
-      label: "WebTrekker",
-      component: <AgentExplorer />,
-    },
+    // {
+    //   label: "WebTrekker",
+    //   component: <AgentExplorer />,
+    // },
   ];
 
   const handleLinkClick = (link: string) => {
@@ -120,7 +120,7 @@ export function DashboardNavbar({
   return (
     <div
       className={cn(
-        "rounded-md flex flex-col md:flex-row bg-gray-200 dark:bg-neutral-800 w-full flex-1 mx-auto border border-neutral-200 dark:border-neutral-700 overflow-hidden",
+        "rounded-md flex flex-col md:flex-row bg-gray-100 dark:bg-neutral-800 w-full flex-1 mx-auto border border-neutral-200 dark:border-neutral-700 overflow-hidden",
         "h-screen" // for your use case, use h-screen instead of h-[60vh]
       )}
     >
@@ -136,7 +136,11 @@ export function DashboardNavbar({
                   className="bg-transparent shadow-none border-none flex-shrink-0 p-0"
                   variant="outline"
                 >
-                  <SidebarLink link={link} className="" />
+                  <SidebarLink
+                    link={link}
+                    className=""
+                    activeLink={activeLink}
+                  />
                 </Button>
               ))}
             </div>
@@ -145,7 +149,9 @@ export function DashboardNavbar({
             <div className="flex items-center gap-2">
               <Avatar className="size-6">
                 <AvatarImage src={user.image ?? ""} />
-                <AvatarFallback>{user.name ?? "US"}</AvatarFallback>
+                <AvatarFallback className="bg-black text-white">
+                  {`${user.name.split(" ")[0]?.charAt(0)}` ?? "US"}
+                </AvatarFallback>
               </Avatar>
               {open && (
                 <motion.span
@@ -176,7 +182,7 @@ export function DashboardNavbar({
           </div>
         </SidebarBody>
       </Sidebar>
-      <div className="flex-1 bg-gradient-to-br from-blue-50 via-blue-200 to-blue-100 overflow-y-auto">
+      <div className="flex-1 bg-gradient-to-br from-blue-50 via-blue-200 to-blue-100 overflow-y-auto rounded-tl-[30px] rounded-bl-[30px]">
         {linkComponents.find((link) => link.label === activeLink)?.component}
       </div>
     </div>
