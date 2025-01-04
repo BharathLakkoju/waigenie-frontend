@@ -150,7 +150,7 @@ export function DashboardNavbar({
               <Avatar className="size-6">
                 <AvatarImage src={user.image ?? ""} />
                 <AvatarFallback className="bg-black text-white">
-                  {`${user.name.split(" ")[0]?.charAt(0)}` ?? "US"}
+                  {`${user.name.split(" ")[0]?.charAt(0)}`}
                 </AvatarFallback>
               </Avatar>
               {open && (
