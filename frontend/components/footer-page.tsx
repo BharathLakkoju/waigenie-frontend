@@ -6,9 +6,7 @@ import {
   InstagramLogoIcon,
   TwitterLogoIcon,
 } from "@radix-ui/react-icons";
-import { FaFacebook, FaTwitter } from "react-icons/fa";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
 import { ArrowUpRight } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
@@ -55,7 +53,9 @@ const Footer: React.FC = () => {
             </span>
           </div>
           <div className="dark:text-white text-zinc-900 w-full md:w-[150px]">
-            <span className="text-lg font-semibold mb-4 block text-center md:text-left">Quick Links</span>
+            <span className="text-lg font-semibold mb-4 block text-center md:text-left">
+              Quick Links
+            </span>
             <ul className="text-gray-600 dark:text-gray-300 mt-4 ml-2 flex flex-col items-center md:items-start">
               <li className="mb-2">
                 <Link
@@ -89,10 +89,36 @@ const Footer: React.FC = () => {
                   Contact Us
                 </Link>
               </li>
+              <li className="mb-2">
+                <Link
+                  href="/terms"
+                  className="hover:text-gray-900 hover:dark:text-gray-100"
+                >
+                  Terms & Conditions
+                </Link>
+              </li>
+              <li className="mb-2">
+                <Link
+                  href="/privacy"
+                  className="hover:text-gray-900 hover:dark:text-gray-100"
+                >
+                  Privacy Policy
+                </Link>
+              </li>
+              <li className="mb-2">
+                <Link
+                  href="/cancel-refund"
+                  className="hover:text-gray-900 hover:dark:text-gray-100"
+                >
+                  Cancellation & Refund
+                </Link>
+              </li>
             </ul>
           </div>
           <div className="dark:text-white text-zinc-900 w-full md:w-[150px]">
-            <span className="text-lg font-semibold mb-4 block text-center md:text-left">Products</span>
+            <span className="text-lg font-semibold mb-4 block text-center md:text-left">
+              Products
+            </span>
             <ul className="text-gray-600 dark:text-gray-300 ml-2 mt-4 flex flex-col items-center md:items-start">
               <li className="mb-2">
                 <Link
@@ -137,7 +163,9 @@ const Footer: React.FC = () => {
             </ul>
           </div>
           <div className="text-zinc-900 dark:text-white w-full md:w-[150px]">
-            <span className="text-lg font-semibold mb-4 block text-center md:text-left">Follow Us</span>
+            <span className="text-lg font-semibold mb-4 block text-center md:text-left">
+              Follow Us
+            </span>
             <ul className="flex flex-col space-y-2 mt-4 ml-2 items-center md:items-start">
               <li className="hover:translate-x-2 transition-transform">
                 <Link
