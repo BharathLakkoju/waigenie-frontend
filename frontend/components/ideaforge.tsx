@@ -55,22 +55,22 @@ export default function IdeaForge() {
               functionality.
             </motion.p>
             <div className="flex flex-wrap gap-4">
-            <Link href="/signup">  
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              transition={{ duration: 0.3 }}
-              className="flex justify-start"
-            >
-              <Button
-                size="lg"
-                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 rounded-full"
-              >
-                Try Demo
-              </Button>
-            </motion.div>
-            </Link>
-            {/* <Link href="/">
+              <Link href="/signup">
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ duration: 0.3 }}
+                  className="flex justify-start"
+                >
+                  <Button
+                    size="lg"
+                    className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 rounded-full"
+                  >
+                    Try Demo
+                  </Button>
+                </motion.div>
+              </Link>
+              {/* <Link href="/">
             <motion.div
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
@@ -109,6 +109,35 @@ export default function IdeaForge() {
             </motion.div>
           </motion.div>
         </div>
+
+        <motion.section className="flex flex-col justify-center items-center gap-10">
+          <motion.h1
+            initial={{ y: -20 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 h-20"
+          >
+            Understand how the IdeaForge works
+          </motion.h1>
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="flex justify-center items-center mb-32"
+          >
+            <iframe
+              width="1280"
+              height="720"
+              src="https://www.youtube.com/embed/zU4KTt2AXes?autoplay=0"
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="rounded-lg shadow-xl"
+            ></iframe>
+          </motion.div>
+        </motion.section>
 
         {/* Features Section */}
         <motion.section
@@ -250,14 +279,14 @@ export default function IdeaForge() {
             generation.
           </motion.p>
           <Link href="/signup">
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button
-              size="lg"
-              className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 rounded-full"
-            >
-              Start Testing Your Ideas <ArrowRight className="ml-1 size-6" />
-            </Button>
-          </motion.div>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 rounded-full"
+              >
+                Start Testing Your Ideas <ArrowRight className="ml-1 size-6" />
+              </Button>
+            </motion.div>
           </Link>
         </motion.section>
       </main>
