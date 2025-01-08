@@ -93,7 +93,7 @@ export const DesktopSidebar = ({
           className
         )}
         animate={{
-          width: animate ? (open ? "200px" : "70px") : "70px",
+          width: animate ? (open ? "200px" : "50px") : "50px",
         }}
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
@@ -176,7 +176,9 @@ export const SidebarLink = ({
       )}
       {...props}
     >
-      {link.icon}
+      <div className={`${activeLink === link.label ? "text-blue-400" : "text-neutral-700"}`}>
+        {link.icon}
+      </div>
 
       <motion.span
         animate={{

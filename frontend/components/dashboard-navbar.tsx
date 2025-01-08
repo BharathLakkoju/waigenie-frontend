@@ -1,4 +1,3 @@
-// components/dashboard-navbar.tsx
 "use client";
 import React, { useState } from "react";
 import { Sidebar, SidebarBody, SidebarLink } from "./ui/sidebar"; // Assuming SidebarLink is imported here
@@ -47,7 +46,7 @@ export function DashboardNavbar({
       href: "#",
       icon: (
         <>
-          <Lightbulb className="text-neutral-700 dark:text-neutral-200 size-10 flex-shrink-0" />
+          <Lightbulb className="size-10 flex-shrink-0" />
         </>
       ),
     },
@@ -56,7 +55,7 @@ export function DashboardNavbar({
       href: "#",
       icon: (
         <>
-          <FileCode2 className="text-neutral-700 dark:text-neutral-200 h-5 w-4 flex-shrink-0" />
+          <FileCode2 className="h-5 w-4 flex-shrink-0" />
         </>
       ),
     },
@@ -65,7 +64,7 @@ export function DashboardNavbar({
     //   href: "#",
     //   icon: (
     //     <>
-    //       <SearchCode className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+    //       <SearchCode className="h-5 w-5 flex-shrink-0" />
     //     </>
     //   ),
     // },
@@ -74,7 +73,7 @@ export function DashboardNavbar({
       href: "#",
       icon: (
         <>
-          <Info className="text-neutral-700 dark:text-neutral-200 size-5 flex-shrink-0" />
+          <Info className="size-5 flex-shrink-0" />
         </>
       ),
     },
@@ -83,7 +82,7 @@ export function DashboardNavbar({
       href: "#",
       icon: (
         <>
-          <Code className="text-neutral-700 dark:text-neutral-200 h-4 w-5 flex-shrink-0" />
+          <Code className="h-4 w-5 flex-shrink-0" />
         </>
       ),
     },
