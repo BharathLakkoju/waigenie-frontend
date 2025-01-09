@@ -119,8 +119,8 @@ export default function AutoScribe() {
             className="flex justify-center items-center mb-32"
           >
             <iframe
-              width="1280"
-              height="720"
+              width="1024"
+              height="576"
               src="https://www.youtube.com/embed/RB47l-9fm7k?autoplay=0"
               title="YouTube video player"
               frameBorder="0"

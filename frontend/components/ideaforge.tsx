@@ -119,8 +119,8 @@ export default function IdeaForge() {
             className="flex justify-center items-center mb-32"
           >
             <iframe
-              width="1280"
-              height="720"
+              width="1024"
+              height="576"
               src="https://www.youtube.com/embed/zU4KTt2AXes?autoplay=0"
               title="YouTube video player"
               frameBorder="0"

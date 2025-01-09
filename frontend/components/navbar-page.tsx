@@ -13,7 +13,6 @@ import {
   NavigationMenuTrigger,
 } from "@radix-ui/react-navigation-menu";
 import { CaretDownIcon } from "@radix-ui/react-icons";
-import LogoSVG from "@/public/logotext.svg";
 
 export default function Navbar() {
   return (
@@ -98,12 +97,12 @@ export default function Navbar() {
                   >
                     AutoScribe
                   </NavigationMenuLink>
-                  <NavigationMenuLink
+                  {/* <NavigationMenuLink
                     href="/products/WebTrekker"
                     className="block px-4 py-2 text-sm text-zinc-900 dark:text-white hover:bg-blue-100 dark:hover:bg-neutral-800 rounded-md"
                   >
                     WebTrekker
-                  </NavigationMenuLink>
+                  </NavigationMenuLink> */}
                   {/* <NavigationMenuLink
                     href="/products"
                     className="block px-4 py-2 text-sm text-zinc-900 dark:text-white hover:bg-blue-100 dark:hover:bg-neutral-800 rounded-md"
