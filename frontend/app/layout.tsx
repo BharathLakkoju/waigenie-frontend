@@ -1,39 +1,30 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Inter } from "next/font/google";
 import "./globals.css";
-import SessionProvider from "@/components/session-provider";
-import LenisScroll from "@/hooks/lenis-scroll";
+import { Toaster } from "@/components/ui/toaster";
+import Script from "next/script";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "WaiGenie",
-  description: "Your trusted AI-partner in Test Automation",
+  description: "Your AI Assistant",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {/* <LenisScroll /> */}
-        <SessionProvider>
-          {children}
-        </SessionProvider>
+      <body className={inter.className}>
+        {children}
+        <Toaster />
+        <Script
+          src="https://checkout.razorpay.com/v1/checkout.js"
+          strategy="lazyOnload"
+        />
       </body>
     </html>
   );

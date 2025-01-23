@@ -35,9 +35,14 @@ model User {
   userType              String    @default("freeTierUser")
   creditRefreshInterval Int       @default(1) // Default 1 day for free tier
   maxCredits            Int       @default(25) // Default max credits
+  subscriptionStartDate DateTime?
+  subscriptionEndDate   DateTime?
+  lastPaymentId         String?
+  lastPaymentStatus     String?
 
   @@index([lastCreditRefresh])
   @@index([nextCreditRefresh])
+  @@index([subscriptionEndDate])
 }
 
 model Account {
