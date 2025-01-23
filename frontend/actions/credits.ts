@@ -1,6 +1,6 @@
 "use server";
 import { db } from "@/lib/db";
-import { User } from "@prisma/client";
+import { User } from "@prisma/client/edge";
 import { revalidatePath } from "next/cache";
 import Razorpay from "razorpay";
 

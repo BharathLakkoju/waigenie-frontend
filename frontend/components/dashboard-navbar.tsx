@@ -4,7 +4,7 @@ import { Sidebar, SidebarBody, SidebarLink } from "./ui/sidebar"; // Assuming Si
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { User } from "@prisma/client";
+import { User } from "@prisma/client/edge";
 import TestIdea from "./test-idea";
 import GenerateBDD from "./generate-bdd";
 import IdentifyEl from "./identify-el";
