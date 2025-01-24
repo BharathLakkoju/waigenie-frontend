@@ -4,6 +4,7 @@ import Link, { LinkProps } from "next/link";
 import React, { useState, createContext, useContext } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import Image from "next/image";
 
 interface Links {
   label: string;
@@ -89,14 +90,14 @@ export const DesktopSidebar = ({
     <>
       <motion.div
         className={cn(
-          "h-full px-4 py-4 hidden  md:flex md:flex-col bg-neutral-100 dark:bg-neutral-800 w-[160px] flex-shrink-0",
+          "h-full px-4 py-4 hidden md:flex md:flex-col bg-neutral-100 dark:bg-neutral-800 w-[200px] flex-shrink-0 border-r-2 border-zinc-900",
           className
         )}
-        animate={{
-          width: animate ? (open ? "200px" : "50px") : "50px",
-        }}
-        onMouseEnter={() => setOpen(true)}
-        onMouseLeave={() => setOpen(false)}
+        // animate={{
+        //   width: animate ? (open ? "200px" : "50px") : "50px",
+        // }}
+        // onMouseEnter={() => setOpen(true)}
+        // onMouseLeave={() => setOpen(false)}
         {...props}
       >
         {children}
@@ -115,11 +116,12 @@ export const MobileSidebar = ({
     <>
       <div
         className={cn(
-          "h-10 px-4 py-4 flex flex-row md:hidden  items-center justify-between bg-neutral-100 dark:bg-neutral-800 w-full"
+          "h-10 px-4 py-4 flex flex-row md:hidden border-zinc-900 border-b-2 items-center justify-between bg-neutral-100 dark:bg-neutral-800 w-full"
         )}
         {...props}
       >
-        <div className="flex justify-end z-20 w-full">
+        <div className="flex justify-between z-20 w-full">
+          <Image src={'/logo.png'} alt="logo" width={24} height={10}/>
           <Menu
             className="text-neutral-800 dark:text-neutral-200"
             onClick={() => setOpen(!open)}
@@ -171,22 +173,22 @@ export const SidebarLink = ({
     <Link
       href={link.href}
       className={cn(
-        "flex items-center justify-start gap-2  group/sidebar py-2",
+        "flex items-center justify-start gap-2 group/sidebar py-2",
         className
       )}
       {...props}
     >
-      <div className={`${activeLink === link.label ? "text-blue-400" : "text-neutral-700"}`}>
+      <div className={`${activeLink === link.label ? "text-blue-800" : "text-neutral-700"}`}>
         {link.icon}
       </div>
 
       <motion.span
-        animate={{
-          display: animate ? (open ? "inline-block" : "none") : "inline-block",
-          opacity: animate ? (open ? 1 : 0) : 1,
-        }}
+        // animate={{
+        //   display: animate ? (open ? "inline-block" : "none") : "inline-block",
+        //   opacity: animate ? (open ? 1 : 0) : 1,
+        // }}
         className={`dark:text-neutral-200 text-sm group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block !p-0 !m-0 ${
-          link.label === activeLink ? "text-blue-400" : "text-neutral-700"
+          link.label === activeLink ? "text-blue-800" : "text-neutral-700"
         }`}
       >
         {link.label}

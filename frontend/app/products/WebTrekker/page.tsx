@@ -1,4 +1,4 @@
-import WebTrekker from "@/components/WebTrekker";
+import WebTrekker from "@/components/static/WebTrekker";
 import React from "react";
 
 export default function page() {

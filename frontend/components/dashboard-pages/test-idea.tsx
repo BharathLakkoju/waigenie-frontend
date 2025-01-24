@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import axios from "axios";
-import BrowserView from "@/components/browser-view";
+import BrowserView from "@/components/dashboard-pages/browser-view";
 
 export default function TestIdea() {
   const [url, setUrl] = useState("");
@@ -49,8 +49,8 @@ export default function TestIdea() {
 
   return (
     <>
-      <div className="container mx-auto px-4 py-8 w-screen flex justify-center items-center gap-8">
-        <div className="w-1/3 bg-blue-50 p-8 rounded-md h-[calc(100vh-100px)] shadow-lg overflow-y-scroll">
+      <div className="container mx-auto px-4 py-8 w-screen flex justify-center items-center gap-8 max-md:flex-col">
+        <div className="w-1/3 bg-blue-50 p-8 rounded-md h-[calc(100vh-100px)] shadow-lg overflow-y-scroll max-md:w-full max-md:h-full">
           <h1 className="text-xl font-bold text-black mb-2">IdeaForge</h1>
           <input
             type="text"
@@ -110,7 +110,7 @@ export default function TestIdea() {
             </div>
           )}
         </div>
-        <div className="w-2/3 bg-gray-50 rounded-md h-[calc(100vh-100px)] shadow-lg">
+        <div className={`w-2/3 bg-gray-50 rounded-md h-[calc(100vh-100px)] shadow-lg ${browserStarted ? 'max-md:block' : 'max-md:hidden'} max-md:w-full`}>
           {browserStarted && (
             <>
               <BrowserView

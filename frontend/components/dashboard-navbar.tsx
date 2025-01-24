@@ -5,16 +5,16 @@ import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { User } from "@prisma/client/edge";
-import TestIdea from "./test-idea";
-import GenerateBDD from "./generate-bdd";
-import IdentifyEl from "./identify-el";
-import AutomateCode from "./automate-code";
+import TestIdea from "./dashboard-pages/test-idea";
+import GenerateBDD from "./dashboard-pages/generate-bdd";
+import IdentifyEl from "./dashboard-pages/identify-el";
+import AutomateCode from "./dashboard-pages/automate-code";
 import Image from "next/image";
 import Link, { LinkProps } from "next/link";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { signout } from "@/actions/auth";
-import AgentExplorer from "./agent-explorer";
+import AgentExplorer from "./dashboard-pages/agent-explorer";
 import { FaRobot } from "react-icons/fa";
 import {
   Code,
@@ -126,7 +126,8 @@ export function DashboardNavbar({
       <Sidebar open={open} setOpen={setOpen}>
         <SidebarBody className="justify-between gap-10">
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-            {open ? <Logo /> : <LogoIcon />}
+            {/* {open ? <Logo /> : <LogoIcon />} */}
+            <Logo/>
             <div className="mt-8 flex flex-col gap-2 justify-start items-start">
               {links.map((link, idx) => (
                 <Button
@@ -152,7 +153,7 @@ export function DashboardNavbar({
                   {`${user.name.split(" ")[0]?.charAt(0)}`}
                 </AvatarFallback>
               </Avatar>
-              {open && (
+              {/* {open && ( */}
                 <motion.span
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -160,7 +161,7 @@ export function DashboardNavbar({
                 >
                   {user.name}
                 </motion.span>
-              )}
+              {/* )} */}
             </div>
             <Button
               onClick={handleSignout}
@@ -168,7 +169,7 @@ export function DashboardNavbar({
               variant="outline"
             >
               <LogOut className="h-5 w-5 text-neutral-700 dark:text-neutral-200" />
-              {open && (
+              {/* {open && ( */}
                 <motion.span
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -176,12 +177,13 @@ export function DashboardNavbar({
                 >
                   Sign out
                 </motion.span>
-              )}
+              {/* )} */}
             </Button>
           </div>
         </SidebarBody>
       </Sidebar>
-      <div className="flex-1 bg-gradient-to-br from-blue-50 via-blue-200 to-blue-100 overflow-y-auto rounded-tl-[30px] rounded-bl-[30px]">
+      {/* <div className="flex-1 bg-gradient-to-br from-blue-900 via-blue-200 to-blue-100 overflow-y-auto rounded-tl-[10px] rounded-bl-[10px]"> */}
+      <div className="flex-1 overflow-y-auto">
         {linkComponents.find((link) => link.label === activeLink)?.component}
       </div>
     </div>

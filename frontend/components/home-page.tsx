@@ -49,7 +49,7 @@ const products = [
     link: "/products/IdeaForge",
   },
   {
-    title: "DOMDetective",
+    title: "DomDetective",
     icon: Info,
     description:
       "Automatically identify and analyze web elements with precision.",
@@ -431,6 +431,7 @@ export function ListComponent() {
                   className="h-full overflow-hidden group cursor-pointer w-[300px]"
                   onMouseEnter={() => setHoveredProduct(product.title)}
                   onMouseLeave={() => setHoveredProduct(null)}
+                  onClick={() => router.push(`/products/${product.title}`)}
                 >
                   <CardContent className="p-6 relative">
                     <div

@@ -1,4 +1,4 @@
-import ContactPage from '@/components/contact-page'
+import ContactPage from '@/components/static/contact-page'
 import React from 'react'
 
 export default function page() {
