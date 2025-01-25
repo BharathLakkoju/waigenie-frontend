@@ -126,8 +126,7 @@ export function DashboardNavbar({
       <Sidebar open={open} setOpen={setOpen}>
         <SidebarBody className="justify-between gap-10">
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-            {/* {open ? <Logo /> : <LogoIcon />} */}
-            <Logo/>
+            {open ? <Logo /> : <LogoIcon />}
             <div className="mt-8 flex flex-col gap-2 justify-start items-start">
               {links.map((link, idx) => (
                 <Button
@@ -153,7 +152,7 @@ export function DashboardNavbar({
                   {`${user.name.split(" ")[0]?.charAt(0)}`}
                 </AvatarFallback>
               </Avatar>
-              {/* {open && ( */}
+              {open && (
                 <motion.span
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -161,7 +160,7 @@ export function DashboardNavbar({
                 >
                   {user.name}
                 </motion.span>
-              {/* )} */}
+              )}
             </div>
             <Button
               onClick={handleSignout}
@@ -169,7 +168,7 @@ export function DashboardNavbar({
               variant="outline"
             >
               <LogOut className="h-5 w-5 text-neutral-700 dark:text-neutral-200" />
-              {/* {open && ( */}
+              {open && (
                 <motion.span
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -177,13 +176,12 @@ export function DashboardNavbar({
                 >
                   Sign out
                 </motion.span>
-              {/* )} */}
+              )}
             </Button>
           </div>
         </SidebarBody>
       </Sidebar>
-      <div className="flex-1 bg-gradient-to-br from-blue-900 via-blue-200 to-blue-100 overflow-y-auto rounded-tl-[10px] rounded-bl-[10px]">
-      {/* <div className="flex-1 overflow-y-auto"> */}
+      <div className="flex-1 bg-gradient-to-br from-blue-50 via-blue-200 to-blue-100 overflow-y-auto rounded-tl-[30px] rounded-bl-[30px]">
         {linkComponents.find((link) => link.label === activeLink)?.component}
       </div>
     </div>

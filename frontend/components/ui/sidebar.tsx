@@ -90,14 +90,14 @@ export const DesktopSidebar = ({
     <>
       <motion.div
         className={cn(
-          "h-full px-4 py-4 hidden md:flex md:flex-col bg-neutral-100 dark:bg-neutral-800 w-[200px] flex-shrink-0 border-r-2 border-zinc-900",
+          "h-full px-4 py-4 hidden md:flex md:flex-col bg-neutral-100 dark:bg-neutral-800 w-[200px] flex-shrink-0",
           className
         )}
-        // animate={{
-        //   width: animate ? (open ? "200px" : "50px") : "50px",
-        // }}
-        // onMouseEnter={() => setOpen(true)}
-        // onMouseLeave={() => setOpen(false)}
+        animate={{
+          width: animate ? (open ? "200px" : "50px") : "50px",
+        }}
+        onMouseEnter={() => setOpen(true)}
+        onMouseLeave={() => setOpen(false)}
         {...props}
       >
         {children}
@@ -183,10 +183,10 @@ export const SidebarLink = ({
       </div>
 
       <motion.span
-        // animate={{
-        //   display: animate ? (open ? "inline-block" : "none") : "inline-block",
-        //   opacity: animate ? (open ? 1 : 0) : 1,
-        // }}
+        animate={{
+          display: animate ? (open ? "inline-block" : "none") : "inline-block",
+          opacity: animate ? (open ? 1 : 0) : 1,
+        }}
         className={`dark:text-neutral-200 text-sm group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block !p-0 !m-0 ${
           link.label === activeLink ? "text-blue-800" : "text-neutral-700"
         }`}
