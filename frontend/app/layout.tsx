@@ -11,9 +11,9 @@ export const metadata: Metadata = {
   title: "WaiGenie",
   description: "Your AI Assistant",
   icons: {
-    icon: "/logo.png",
-    apple: "/logo.png",
-    // shortcut: "/favicon-16x16.png"
+    icon: "/logo.ico",
+    shortcut: "/favicon-16x16.png",
+    apple: "/apple-touch-icon.png",
   }
 };
 
