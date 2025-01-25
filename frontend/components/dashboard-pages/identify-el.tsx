@@ -210,7 +210,7 @@ export default function IdentifyEl() {
       const response = await axios.post(
         // "https://favourable-rea-bharath07-7294baab.koyeb.app/api/proxy",
         // "https://waigenie-delpoyment-test.onrender.com/api/proxy",
-        "https://qa-sdet-latest.onrender.com/api/proxy",
+        "https://waigenie.onrender.com/api/proxy",
         {
           url,
         }
@@ -294,7 +294,7 @@ export default function IdentifyEl() {
       const response = await axios.post(
         // "https://favourable-rea-bharath07-7294baab.koyeb.app/api/generate-csv",
         // "https://waigenie-delpoyment-test.onrender.com/api/generate-csv",
-        "https://qa-sdet-latest.onrender.com/api/generate-csv",
+        "https://waigenie.onrender.com/api/generate-csv",
         { elements: identifiedElements, filename: outputFileName },
         { responseType: "blob" }
       );
@@ -344,7 +344,7 @@ export default function IdentifyEl() {
     setIsAnalyzing(true);
     try {
       const response = await axios.post(
-        "https://qa-sdet-latest.onrender.com/api/comprehensive-analysis",
+        "https://waigenie.onrender.com/api/comprehensive-analysis",
         {
           element,
           url: url,
@@ -365,7 +365,7 @@ export default function IdentifyEl() {
   const exportAnalysis = async (format: "markdown" | "html" | "pdf") => {
     try {
       const response = await axios.post(
-        "https://qa-sdet-latest.onrender.com/api/export-analysis",
+        "https://waigenie.onrender.com/api/export-analysis",
         {
           analysis,
           format,

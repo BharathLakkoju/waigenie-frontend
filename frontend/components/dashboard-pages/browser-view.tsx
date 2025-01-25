@@ -22,7 +22,7 @@ const BrowserView: React.FC<BrowserViewProps> = ({
       // "https://waigenie-delpoyment-test.onrender.com/proxy?url=${encodeURIComponent(
       //   currentUrl
       // )}"
-      `https://qa-sdet-latest.onrender.com/proxy?url=${encodeURIComponent(currentUrl)}`
+      `https://waigenie.onrender.com/proxy?url=${encodeURIComponent(currentUrl)}`
     );
   }, [currentUrl]);
 
@@ -45,7 +45,7 @@ const BrowserView: React.FC<BrowserViewProps> = ({
       // `https://waigenie-delpoyment-test.onrender.com/proxy?url=${encodeURIComponent(
       //   currentUrl
       // )}`
-      `https://qa-sdet-latest.onrender.com/proxy?url=${encodeURIComponent(currentUrl)}`
+      `https://waigenie.onrender.com/proxy?url=${encodeURIComponent(currentUrl)}`
     );
   };
 

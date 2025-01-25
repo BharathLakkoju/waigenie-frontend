@@ -18,7 +18,7 @@ export default function AutomationCodeGenerator() {
     setLoading(true);
     try {
       await axios.post(
-        "https://qa-sdet-latest.onrender.com/api/start-browser",
+        "https://waigenie.onrender.com/api/start-browser",
         { url },
         {
           withCredentials: true,
@@ -42,7 +42,7 @@ export default function AutomationCodeGenerator() {
     setLoading(true);
     try {
       await axios.post(
-        "https://qa-sdet-latest.onrender.com/api/stop-browser",
+        "https://waigenie.onrender.com/api/stop-browser",
         {},
         {
           withCredentials: true,
@@ -67,7 +67,7 @@ export default function AutomationCodeGenerator() {
       await stopBrowser();
       await startBrowser();
       const response = await axios.post(
-        "https://qa-sdet-latest.onrender.com/api/generate-code",
+        "https://waigenie.onrender.com/api/generate-code",
         {
           url,
           featureContent,
@@ -95,7 +95,7 @@ export default function AutomationCodeGenerator() {
       interval = setInterval(async () => {
         try {
           const response = await axios.get(
-            "https://qa-sdet-latest.onrender.com/api/get-screenshot",
+            "https://waigenie.onrender.com/api/get-screenshot",
             {
               withCredentials: true,
               headers: {
