@@ -182,8 +182,8 @@ export function DashboardNavbar({
           </div>
         </SidebarBody>
       </Sidebar>
-      {/* <div className="flex-1 bg-gradient-to-br from-blue-900 via-blue-200 to-blue-100 overflow-y-auto rounded-tl-[10px] rounded-bl-[10px]"> */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 bg-gradient-to-br from-blue-900 via-blue-200 to-blue-100 overflow-y-auto rounded-tl-[10px] rounded-bl-[10px]">
+      {/* <div className="flex-1 overflow-y-auto"> */}
         {linkComponents.find((link) => link.label === activeLink)?.component}
       </div>
     </div>
