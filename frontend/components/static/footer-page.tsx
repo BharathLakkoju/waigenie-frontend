@@ -4,15 +4,23 @@ import Link from "next/link";
 import {
   DiscordLogoIcon,
   InstagramLogoIcon,
-  LinkedInLogoIcon,
   TwitterLogoIcon,
 } from "@radix-ui/react-icons";
 import Image from "next/image";
 import { ArrowUpRight, Linkedin } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { Badge } from "../ui/badge";
+import { usePathname } from 'next/navigation';
 
 const Footer: React.FC = () => {
+  const pathname = usePathname();
+  const isProductPage = [
+    '/products/AutoScribe',
+    '/products/CucumberCraft', 
+    '/products/DomDetective',
+    '/products/IdeaForge',
+    '/products/WebTrekker'
+  ].includes(pathname);
+
   return (
     <footer
       className="dark:bg-black py-8 sticky top-full"
@@ -21,22 +29,24 @@ const Footer: React.FC = () => {
           "linear-gradient(to bottom, #FFFFFF 0%, #C9EFFF 59%, #C9EFFF 100%)",
       }}
     >
-      <div className="container mx-auto px-4 min-h-[300px] md:h-[500px]">
-        <div className="flex flex-col items-center justify-center h-full w-full gap-8 md:gap-14 text-center">
-          <span className="text-3xl md:text-5xl font-bold px-4">
-            Want to add AI in your automation testing?
-          </span>
-          <div>
-            <Link
-              href={"/signup"}
-              className="bg-indigo-600 text-white rounded-full transition duration-300 shadow-none hover:bg-indigo-700 hover:text-white hover:shadow-lg border-none px-4 md:px-5 py-2 md:py-3 flex items-center gap-2"
-            >
-              Start Testing Now
-              <ArrowUpRight />
-            </Link>
+      {!isProductPage && (
+        <div className="container mx-auto px-4 min-h-[300px] md:h-[500px]">
+          <div className="flex flex-col items-center justify-center h-full w-full gap-8 md:gap-14 text-center">
+            <span className="text-3xl md:text-5xl font-bold px-4">
+              Want to add AI in your automation testing?
+            </span>
+            <div>
+              <Link
+                href={"/signup"}
+                className="bg-indigo-600 text-white rounded-full transition duration-300 shadow-none hover:bg-indigo-700 hover:text-white hover:shadow-lg border-none px-4 md:px-5 py-2 md:py-3 flex items-center gap-2"
+              >
+                Start Testing Now
+                <ArrowUpRight />
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
+      )}
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row gap-8 md:gap-4 w-full md:w-[calc(100%-100px)] mx-auto justify-around">
           <div className="flex flex-col items-center md:items-start">

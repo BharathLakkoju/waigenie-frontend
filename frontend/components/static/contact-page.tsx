@@ -23,6 +23,8 @@ import {
   X,
   ChevronRight,
   ChevronLeft,
+  Plus,
+  Minus,
 } from "lucide-react";
 
 const faqs = [
@@ -32,13 +34,13 @@ const faqs = [
       "Yes, through: Multi-step action planning, Context-aware decision making, Dynamic validation strategies, Adaptive test flow management.",
   },
   {
-    question: "How does WAIGENIE improve the QA process?",
+    question: "How does WAIGENIE improve the QA process?", 
     answer:
       "WAIGENIE uses AI to generate comprehensive test scenarios, automate test script creation, and provide intelligent analysis of test results, significantly reducing time and effort in the QA process.",
   },
   {
     question: "Can WAIGENIE integrate with existing testing frameworks?",
-    answer:
+    answer: 
       "Yes, WAIGENIE is designed to integrate seamlessly with popular testing frameworks, enhancing your current QA processes rather than replacing them entirely.",
   },
   {
@@ -57,61 +59,58 @@ const FAQItem = ({
   faq,
   isOpen,
   toggleOpen,
+  index,
 }: {
   faq: (typeof faqs)[0];
   isOpen: boolean;
   toggleOpen: () => void;
+  index: number;
 }) => {
-  const controls = useAnimation();
-  const contentRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (isOpen) {
-      controls.start({
-        height: contentRef.current?.scrollHeight || "auto",
-        opacity: 1,
-        transition: { duration: 0.3, ease: "easeOut" },
-      });
-    } else {
-      controls.start({
-        height: 0,
-        opacity: 0,
-        transition: { duration: 0.3, ease: "easeIn" },
-      });
-    }
-  }, [isOpen, controls]);
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.3 }}
-      className="bg-white rounded-lg shadow-md p-4 mb-4 overflow-hidden"
+      transition={{ duration: 0.3, delay: index * 0.1 }}
+      className="border-b border-gray-200 last:border-none"
     >
       <button
-        className="flex justify-between items-center w-full text-left focus:outline-none group"
+        className="flex justify-between items-center w-full py-6 px-4 text-left focus:outline-none hover:bg-gray-50 transition-colors duration-200"
         onClick={toggleOpen}
       >
-        <span className="text-lg font-medium text-indigo-600 group-hover:text-indigo-800 transition-colors">
+        <span className="text-lg font-medium text-gray-900 flex-grow pr-4">
           {faq.question}
         </span>
-        <motion.div
-          animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ duration: 0.3 }}
-          className="bg-indigo-100 rounded-full p-2 group-hover:bg-indigo-200 transition-colors"
-        >
-          <Lightbulb className="w-6 h-6 text-indigo-600" />
-        </motion.div>
+        <div className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}>
+          {isOpen ? (
+            <Minus className="w-6 h-6 text-indigo-600" />
+          ) : (
+            <Plus className="w-6 h-6 text-indigo-600" />
+          )}
+        </div>
       </button>
-      <motion.div
-        ref={contentRef}
-        initial={{ height: 0, opacity: 0 }}
-        animate={controls}
-        className="overflow-hidden"
-      >
-        <p className="text-gray-600 mt-4">{faq.answer}</p>
-      </motion.div>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden"
+          >
+            <div className="px-4 pb-6">
+              <motion.p 
+                initial={{ y: -10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.2 }}
+                className="text-gray-600 leading-relaxed"
+              >
+                {faq.answer}
+              </motion.p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };
@@ -142,16 +141,6 @@ export default function CreativeContactPageWithEnhancedFAQ() {
       return () => clearInterval(timer);
     }
   }, [isFAQExpanded]);
-
-  const scrollFAQ = (direction: "left" | "right") => {
-    if (faqContainerRef.current) {
-      const scrollAmount = direction === "left" ? -300 : 300;
-      faqContainerRef.current.scrollBy({
-        left: scrollAmount,
-        behavior: "smooth",
-      });
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-blue-200 to-white flex flex-col mt-24">
@@ -308,7 +297,8 @@ export default function CreativeContactPageWithEnhancedFAQ() {
               </div>
             </motion.div>
           </div>
-          {/* Enhanced Creative FAQ Section */}
+
+          {/* Redesigned FAQ Section */}
           <motion.div
             ref={faqRef}
             initial={{ opacity: 0, y: 50 }}
@@ -316,103 +306,58 @@ export default function CreativeContactPageWithEnhancedFAQ() {
             transition={{ duration: 0.5, delay: 0.6 }}
             className="mt-32"
           >
-            <motion.div
-              initial={false}
-              animate={{ height: isFAQExpanded ? "auto" : "60px" }}
-              transition={{ duration: 0.3 }}
-              className="bg-white rounded-lg shadow-lg overflow-hidden"
-            >
-              <button
-                onClick={() => setIsFAQExpanded(!isFAQExpanded)}
-                className="w-full py-4 px-6 flex justify-between items-center bg-gradient-to-r from-indigo-600 to-purple-600 text-white"
+            <div className="max-w-4xl mx-auto">
+              <div className="text-center mb-12">
+                <motion.h2 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="text-3xl font-bold text-gray-900 mb-4"
+                >
+                  Frequently Asked Questions
+                </motion.h2>
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="text-gray-600"
+                >
+                  Everything you need to know about WAIGENIE's AI-powered testing capabilities
+                </motion.p>
+              </div>
+
+              <motion.div 
+                className="bg-white rounded-2xl shadow-xl overflow-hidden"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
               >
-                <span className="text-xl font-semibold flex items-center">
-                  <Lightbulb className="w-6 h-6 mr-2" />
-                  Illuminate Your Knowledge
-                </span>
-                {isFAQExpanded ? (
-                  <X className="w-6 h-6" />
-                ) : (
-                  <motion.span
-                    className="text-sm"
-                    animate={{ opacity: [1, 0.5, 1] }}
-                    transition={{ repeat: Infinity, duration: 1.5 }}
-                  >
-                    Click to explore FAQs
-                  </motion.span>
-                )}
-              </button>
-              <AnimatePresence>
-                {isFAQExpanded && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="p-6"
-                  >
-                    <div className="mb-6">
-                      <h3 className="text-lg font-semibold mb-2">
-                        FAQ Spotlight
-                      </h3>
-                      <motion.div
-                        key={currentFAQIndex}
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -20 }}
-                        transition={{ duration: 0.5 }}
-                      >
-                        <FAQItem
-                          faq={faqs[currentFAQIndex]}
-                          isOpen={true}
-                          toggleOpen={() => {}}
-                        />
-                      </motion.div>
-                    </div>
-                    <div className="relative">
-                      <div
-                        ref={faqContainerRef}
-                        className="flex space-x-4 overflow-x-auto pb-4 scrollbar-hide"
-                      >
-                        {faqs.map((faq, index) => (
-                          <motion.div
-                            key={index}
-                            className="flex-shrink-0 w-80"
-                            whileHover={{ scale: 1.05 }}
-                          >
-                            <FAQItem
-                              faq={faq}
-                              isOpen={openFAQIndex === index}
-                              toggleOpen={() => toggleFAQ(index)}
-                            />
-                          </motion.div>
-                        ))}
-                      </div>
-                      <button
-                        onClick={() => scrollFAQ("left")}
-                        className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md"
-                      >
-                        <ChevronLeft className="w-6 h-6 text-indigo-600" />
-                      </button>
-                      <button
-                        onClick={() => scrollFAQ("right")}
-                        className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md"
-                      >
-                        <ChevronRight className="w-6 h-6 text-indigo-600" />
-                      </button>
-                    </div>
-                    <div className="mt-6 text-center">
-                      <Link
-                        href="/FAQ"
-                        className="inline-block bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-6 py-3 rounded-full font-medium transition-all duration-300 hover:from-indigo-600 hover:to-purple-600 hover:shadow-lg transform hover:scale-105"
-                      >
-                        Explore All FAQs
-                      </Link>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
+                {faqs.map((faq, index) => (
+                  <FAQItem
+                    key={index}
+                    faq={faq}
+                    isOpen={openFAQIndex === index}
+                    toggleOpen={() => toggleFAQ(index)}
+                    index={index}
+                  />
+                ))}
+              </motion.div>
+
+              <motion.div 
+                className="text-center mt-8"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.8 }}
+              >
+                <Link
+                  href="/FAQ"
+                  className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-full text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                >
+                  View All FAQs
+                  <ChevronRight className="ml-2 h-5 w-5" />
+                </Link>
+              </motion.div>
+            </div>
           </motion.div>
         </div>
       </main>
