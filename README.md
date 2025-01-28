@@ -49,12 +49,14 @@ npm start
 
 ## Project Structure
 
+```
 frontend/
 ├── app/               # Next.js app directory
 ├── components/        # React components
 ├── store/            # Zustand store definitions
 ├── auth/             # Authentication logic
 └── public/           # Static assets
+```
 
 ## Key Components
 
