@@ -23,9 +23,8 @@ A modern web application for automated testing and element identification, built
 
 1. Clone the repository:
 
-git clone https://github.com/BharathLakkoju/waigenie-frontend.git
-
 ```bash
+git clone https://github.com/BharathLakkoju/waigenie-frontend.git
 cd waigenie-frontend
 cd frontend
 ```
