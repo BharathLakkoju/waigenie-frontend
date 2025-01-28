@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronDown, Search, Tag } from 'lucide-react'
+import { ChevronDown, Search, Tag, HelpCircle } from 'lucide-react'
 
 const faqs = [
   {
@@ -106,17 +106,24 @@ const categories = Array.from(new Set(faqs.map(faq => faq.category)))
 
 const FAQItem = ({ faq, isOpen, toggleOpen }: { faq: typeof faqs[0], isOpen: boolean, toggleOpen: () => void }) => {
   return (
-    <div className="border-b border-gray-200 last:border-b-0">
+    <motion.div 
+      className="border border-indigo-100 rounded-lg mb-4 overflow-hidden bg-white hover:shadow-lg transition-shadow duration-300"
+      whileHover={{ scale: 1.01 }}
+      transition={{ duration: 0.2 }}
+    >
       <button
-        className="flex justify-between items-center w-full py-4 px-4 text-left focus:outline-none"
+        className="flex justify-between items-center w-full py-5 px-6 text-left focus:outline-none group"
         onClick={toggleOpen}
       >
-        <span className="text-lg font-medium text-gray-900">{faq.question}</span>
+        <div className="flex items-center gap-4">
+          <HelpCircle className={`w-6 h-6 ${isOpen ? 'text-indigo-600' : 'text-indigo-400'} group-hover:text-indigo-600 transition-colors`} />
+          <span className="text-lg font-medium text-gray-900 group-hover:text-indigo-600 transition-colors">{faq.question}</span>
+        </div>
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.3 }}
         >
-          <ChevronDown className="w-5 h-5 text-indigo-600" />
+          <ChevronDown className={`w-5 h-5 ${isOpen ? 'text-indigo-600' : 'text-gray-400'} group-hover:text-indigo-600 transition-colors`} />
         </motion.div>
       </button>
       <AnimatePresence initial={false}>
@@ -131,13 +138,18 @@ const FAQItem = ({ faq, isOpen, toggleOpen }: { faq: typeof faqs[0], isOpen: boo
             }}
             transition={{ duration: 0.3 }}
           >
-            <div className="px-4 pb-4 text-gray-600">
+            <div className="px-6 pb-5 text-gray-600 border-t border-indigo-50 pt-4 bg-indigo-50/30">
               {faq.answer}
+              <div className="mt-3 flex items-center gap-2">
+                <span className="text-xs px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full">
+                  {faq.category}
+                </span>
+              </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   )
 }
 
@@ -158,12 +170,23 @@ export default function EnhancedFAQPage() {
   )
 
   return (
-    <section className="py-16 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
-      <div className="max-w-4xl mx-auto px-4">
-        <h2 className="text-4xl font-bold text-center mb-2 text-gray-900">Frequently Asked Questions</h2>
-        <p className="text-xl text-center mb-12 text-gray-600">Find answers to common questions about WAIGENIE</p>
+    <section className="py-20 bg-gradient-to-br from-gray-50 via-purple-50 to-pink-50 min-h-screen">
+      <div className="max-w-5xl mx-auto px-4">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-5xl font-bold mb-4 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+            Frequently Asked Questions
+          </h2>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Find answers to common questions about WAIGENIE and discover how it can transform your testing workflow
+          </p>
+        </motion.div>
         
-        <div className="mb-8 flex flex-col md:flex-row gap-4">
+        <div className="mb-12 flex flex-col md:flex-row gap-6">
           <div className="relative flex-grow">
             <input
               ref={searchRef}
@@ -171,30 +194,28 @@ export default function EnhancedFAQPage() {
               placeholder="Search FAQs..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full py-3 px-12 rounded-full bg-white shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full py-4 px-14 rounded-2xl bg-white shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-lg transition-shadow duration-300 hover:shadow-xl"
             />
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 text-indigo-400 w-6 h-6" />
           </div>
-          <div className="relative">
+          <div className="relative min-w-[200px]">
             <select
               value={selectedCategory || ''}
               onChange={(e) => setSelectedCategory(e.target.value || null)}
-              className="appearance-none w-full md:w-48 py-3 px-4 rounded-full bg-white shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-700"
+              className="appearance-none w-full py-4 px-6 rounded-2xl bg-white shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-700 text-lg cursor-pointer transition-shadow duration-300 hover:shadow-xl"
             >
               <option value="">All Categories</option>
               {categories.map((category) => (
                 <option key={category} value={category}>{category}</option>
               ))}
             </select>
-            <Tag className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+            <Tag className="absolute right-5 top-1/2 transform -translate-y-1/2 text-indigo-400 w-5 h-5 pointer-events-none" />
           </div>
         </div>
 
         <motion.div
-          className="bg-white rounded-lg shadow-xl overflow-hidden"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          layout
+          className="space-y-4"
         >
           {filteredFaqs.map((faq, index) => (
             <FAQItem
@@ -207,13 +228,16 @@ export default function EnhancedFAQPage() {
         </motion.div>
 
         {filteredFaqs.length === 0 && (
-          <motion.p
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-center text-gray-600 mt-8"
+            className="text-center py-12 bg-white rounded-2xl shadow-lg mt-8"
           >
-            No matching FAQs found. Please try a different search term or category.
-          </motion.p>
+            <HelpCircle className="w-16 h-16 text-indigo-300 mx-auto mb-4" />
+            <p className="text-xl text-gray-600">
+              No matching FAQs found. Please try a different search term or category.
+            </p>
+          </motion.div>
         )}
       </div>
     </section>

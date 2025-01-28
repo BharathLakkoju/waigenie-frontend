@@ -1,5 +1,5 @@
 import React from "react";
-import { User } from "@prisma/client";
+import { User } from "@prisma/client/edge";
 
 export default function DashboardPage() {
   return (

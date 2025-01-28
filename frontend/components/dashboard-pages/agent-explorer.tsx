@@ -17,7 +17,7 @@ export default function AgentExplorer() {
     setLoading(true);
     try {
       await axios.post(
-        "https://qa-sdet-latest.onrender.com/api/agent-explorer/start-browser",
+        "https://waigenie.onrender.com/api/agent-explorer/start-browser",
         { url },
         {
           withCredentials: true,
@@ -41,7 +41,7 @@ export default function AgentExplorer() {
     setLoading(true);
     try {
       await axios.post(
-        "https://qa-sdet-latest.onrender.com/api/agent-explorer/stop-browser",
+        "https://waigenie.onrender.com/api/agent-explorer/stop-browser",
         {},
         {
           withCredentials: true,
@@ -80,7 +80,7 @@ export default function AgentExplorer() {
       }
 
       const response = await axios.post(
-        "https://qa-sdet-latest.onrender.com/api/agent-explorer/run-web-agent",
+        "https://waigenie.onrender.com/api/agent-explorer/run-web-agent",
         {
           objective,
           url: processedUrl,
@@ -110,7 +110,7 @@ export default function AgentExplorer() {
       interval = setInterval(async () => {
         try {
           const response = await axios.get(
-            "https://qa-sdet-latest.onrender.com/api/agent-explorer/get-screenshot",
+            "https://waigenie.onrender.com/api/agent-explorer/get-screenshot",
             {
               withCredentials: true,
               headers: {

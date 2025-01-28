@@ -1,9 +1,9 @@
 // components/session-provider.tsx
 import { auth } from "@/auth";
 import Navbar from "@/components/navbar-page";
-import Footer from "@/components/footer-page";
+import Footer from "@/components/static/footer-page";
 import { DashboardNavbar } from "@/components/dashboard-navbar";
-import { User } from "@prisma/client";
+import { User } from "@prisma/client/edge";
 
 export default async function SessionProvider({
   children,

@@ -4,17 +4,17 @@ import { Sidebar, SidebarBody, SidebarLink } from "./ui/sidebar"; // Assuming Si
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { User } from "@prisma/client";
-import TestIdea from "./test-idea";
-import GenerateBDD from "./generate-bdd";
-import IdentifyEl from "./identify-el";
-import AutomateCode from "./automate-code";
+import { User } from "@prisma/client/edge";
+import TestIdea from "./dashboard-pages/test-idea";
+import GenerateBDD from "./dashboard-pages/generate-bdd";
+import IdentifyEl from "./dashboard-pages/identify-el";
+import AutomateCode from "./dashboard-pages/automate-code";
 import Image from "next/image";
 import Link, { LinkProps } from "next/link";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { signout } from "@/actions/auth";
-import AgentExplorer from "./agent-explorer";
+import AgentExplorer from "./dashboard-pages/agent-explorer";
 import { FaRobot } from "react-icons/fa";
 import {
   Code,

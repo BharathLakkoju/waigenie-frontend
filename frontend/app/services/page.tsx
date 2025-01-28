@@ -1,4 +1,4 @@
-import ServicesPage from "@/components/services-page";
+import ServicesPage from "@/components/static/services-page";
 import React from "react";
 
 export default function page() {

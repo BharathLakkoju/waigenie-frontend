@@ -7,10 +7,20 @@ import {
   TwitterLogoIcon,
 } from "@radix-ui/react-icons";
 import Image from "next/image";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Linkedin } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { usePathname } from 'next/navigation';
 
 const Footer: React.FC = () => {
+  const pathname = usePathname();
+  const isProductPage = [
+    '/products/AutoScribe',
+    '/products/CucumberCraft', 
+    '/products/DomDetective',
+    '/products/IdeaForge',
+    '/products/WebTrekker'
+  ].includes(pathname);
+
   return (
     <footer
       className="dark:bg-black py-8 sticky top-full"
@@ -19,22 +29,24 @@ const Footer: React.FC = () => {
           "linear-gradient(to bottom, #FFFFFF 0%, #C9EFFF 59%, #C9EFFF 100%)",
       }}
     >
-      <div className="container mx-auto px-4 min-h-[300px] md:h-[500px]">
-        <div className="flex flex-col items-center justify-center h-full w-full gap-8 md:gap-14 text-center">
-          <span className="text-3xl md:text-5xl font-bold px-4">
-            Want to add AI in your automation testing?
-          </span>
-          <div>
-            <Link
-              href={"/signup"}
-              className="bg-indigo-600 text-white rounded-full transition duration-300 shadow-none hover:bg-indigo-700 hover:text-white hover:shadow-lg border-none px-4 md:px-5 py-2 md:py-3 flex items-center gap-2"
-            >
-              Start Testing Now
-              <ArrowUpRight />
-            </Link>
+      {!isProductPage && (
+        <div className="container mx-auto px-4 min-h-[300px] md:h-[500px]">
+          <div className="flex flex-col items-center justify-center h-full w-full gap-8 md:gap-14 text-center">
+            <span className="text-3xl md:text-5xl font-bold px-4">
+              Want to add AI in your automation testing?
+            </span>
+            <div>
+              <Link
+                href={"/signup"}
+                className="bg-indigo-600 text-white rounded-full transition duration-300 shadow-none hover:bg-indigo-700 hover:text-white hover:shadow-lg border-none px-4 md:px-5 py-2 md:py-3 flex items-center gap-2"
+              >
+                Start Testing Now
+                <ArrowUpRight />
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
+      )}
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row gap-8 md:gap-4 w-full md:w-[calc(100%-100px)] mx-auto justify-around">
           <div className="flex flex-col items-center md:items-start">
@@ -56,7 +68,7 @@ const Footer: React.FC = () => {
             <span className="text-lg font-semibold mb-4 block text-center md:text-left">
               Quick Links
             </span>
-            <ul className="text-gray-600 dark:text-gray-300 mt-4 ml-2 flex flex-col items-center md:items-start">
+            <ul className="text-gray-600 dark:text-gray-300 mt-4 flex flex-col items-center md:items-start">
               <li className="mb-2">
                 <Link
                   href="/"
@@ -110,7 +122,7 @@ const Footer: React.FC = () => {
                   href="/cancel-refund"
                   className="hover:text-gray-900 hover:dark:text-gray-100"
                 >
-                  Cancellation & Refund
+                  Refund Policy
                 </Link>
               </li>
             </ul>
@@ -119,7 +131,7 @@ const Footer: React.FC = () => {
             <span className="text-lg font-semibold mb-4 block text-center md:text-left">
               Products
             </span>
-            <ul className="text-gray-600 dark:text-gray-300 ml-2 mt-4 flex flex-col items-center md:items-start">
+            <ul className="text-gray-600 dark:text-gray-300 mt-4 flex flex-col items-center md:items-start">
               <li className="mb-2">
                 <Link
                   href="/products/IdeaForge"
@@ -152,21 +164,21 @@ const Footer: React.FC = () => {
                   AutoScribe
                 </Link>
               </li>
-              <li className="mb-2">
+              {/* <li className="mb-2">
                 <Link
                   href="/products/WebTrekker"
                   className="hover:text-gray-900 hover:dark:text-gray-100"
                 >
                   WebTrekker
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
           <div className="text-zinc-900 dark:text-white w-full md:w-[150px]">
             <span className="text-lg font-semibold mb-4 block text-center md:text-left">
               Follow Us
             </span>
-            <ul className="flex flex-col space-y-2 mt-4 ml-2 items-center md:items-start">
+            <ul className="flex flex-col space-y-2 mt-4 items-center md:items-start">
               <li className="hover:translate-x-2 transition-transform">
                 <Link
                   href=""
@@ -195,6 +207,16 @@ const Footer: React.FC = () => {
                 >
                   <DiscordLogoIcon className="size-5" />
                   <span>Discord</span>
+                </Link>
+              </li>
+              <li className="hover:translate-x-2 transition-transform">
+                <Link
+                  href="https://www.linkedin.com/company/waigenie"
+                  aria-label="LinkedIn"
+                  className="flex justify-start items-center gap-2 w-fit"
+                >
+                  <Linkedin className="size-5" />
+                  <span className="flex justify-around items-center gap-1">LinkedIn <div className="bg-emerald-500 size-2 rounded-full animate-pulse"/></span>
                 </Link>
               </li>
             </ul>

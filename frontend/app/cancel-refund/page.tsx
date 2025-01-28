@@ -1,5 +1,5 @@
 import React from "react";
-import CancelRefundPage from "@/components/cancel-refund-page";
+import CancelRefundPage from "@/components/static/cancel-refund-page";
 
 export default function CancelRefund() {
   return (

@@ -210,7 +210,7 @@ export default function IdentifyEl() {
       const response = await axios.post(
         // "https://favourable-rea-bharath07-7294baab.koyeb.app/api/proxy",
         // "https://waigenie-delpoyment-test.onrender.com/api/proxy",
-        "https://qa-sdet-latest.onrender.com/api/proxy",
+        "https://waigenie.onrender.com/api/proxy",
         {
           url,
         }
@@ -294,7 +294,7 @@ export default function IdentifyEl() {
       const response = await axios.post(
         // "https://favourable-rea-bharath07-7294baab.koyeb.app/api/generate-csv",
         // "https://waigenie-delpoyment-test.onrender.com/api/generate-csv",
-        "https://qa-sdet-latest.onrender.com/api/generate-csv",
+        "https://waigenie.onrender.com/api/generate-csv",
         { elements: identifiedElements, filename: outputFileName },
         { responseType: "blob" }
       );
@@ -344,7 +344,7 @@ export default function IdentifyEl() {
     setIsAnalyzing(true);
     try {
       const response = await axios.post(
-        "https://qa-sdet-latest.onrender.com/api/comprehensive-analysis",
+        "https://waigenie.onrender.com/api/comprehensive-analysis",
         {
           element,
           url: url,
@@ -365,7 +365,7 @@ export default function IdentifyEl() {
   const exportAnalysis = async (format: "markdown" | "html" | "pdf") => {
     try {
       const response = await axios.post(
-        "https://qa-sdet-latest.onrender.com/api/export-analysis",
+        "https://waigenie.onrender.com/api/export-analysis",
         {
           analysis,
           format,
@@ -596,7 +596,7 @@ export default function IdentifyEl() {
         </div>
       </div>
       {loading ? (
-        <div className="flex justify-center items-center h-32">
+        <div className="flex justify-center items-center absolute top-1/2 left-1/2">
           <div className="p-3 animate-spin drop-shadow-2xl bg-gradient-to-bl from-pink-400 via-purple-400 to-indigo-600 size-24 aspect-square rounded-full">
             <div className="rounded-full h-full w-full bg-slate-100 dark:bg-zinc-900 backdrop-blur-md"></div>
           </div>

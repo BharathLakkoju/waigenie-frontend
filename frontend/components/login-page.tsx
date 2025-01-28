@@ -28,8 +28,9 @@ import GithubLogin from "@/components/github-login";
 import GoogleLogin from "@/components/google-login";
 import { useSearchParams } from "next/navigation";
 import FormSuccess from "@/components/form-success";
+import { Suspense } from "react";
 
-export function LoginForm() {
+function LoginFormContent() {
   const searchParams = useSearchParams();
   const urlError =
     searchParams.get("error") === "OAuthAccountNotLinked"
@@ -147,5 +148,13 @@ export function LoginForm() {
         </div>
       </CardContent>
     </Card>
+  );
+}
+
+export function LoginForm() {
+  return (
+    <Suspense>
+      <LoginFormContent />
+    </Suspense>
   );
 }
