@@ -27,6 +27,7 @@ git clone https://github.com/BharathLakkoju/waigenie-frontend.git
 
 ```bash
 cd waigenie-frontend
+cd frontend
 ```
 
 2. Install dependencies:
