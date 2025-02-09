@@ -1,10 +1,9 @@
 import React from "react";
-import { User } from "@prisma/client/edge";
 
-export default function DashboardPage() {
+export default async function DashboardPage({children}: {children: React.ReactNode}) {
   return (
-    <div>
-      <h1>Dashboard</h1>
-    </div>
+    <>
+      {children}
+    </>
   );
 }

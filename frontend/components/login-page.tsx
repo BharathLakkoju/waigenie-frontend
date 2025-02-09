@@ -111,13 +111,13 @@ function LoginFormContent() {
                     </FormItem>
                   )}
                 />
-                <Link
+                {/* <Link
                   href="/reset"
                   aria-disabled={pending}
                   className="ml-auto mr-1 inline-block text-xs text-blue-600 underline underline-offset-4"
                 >
                   Forgot your password?
-                </Link>
+                </Link> */}
               </div>
               <FormError message={formError || urlError} />
               <FormSuccess message={formSuccess} />

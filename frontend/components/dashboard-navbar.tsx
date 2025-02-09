@@ -1,16 +1,16 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Sidebar, SidebarBody, SidebarLink } from "./ui/sidebar"; // Assuming SidebarLink is imported here
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { User } from "@prisma/client/edge";
+import type { User } from "@prisma/client/edge";
 import TestIdea from "./dashboard-pages/test-idea";
 import GenerateBDD from "./dashboard-pages/generate-bdd";
 import IdentifyEl from "./dashboard-pages/identify-el";
 import AutomateCode from "./dashboard-pages/automate-code";
 import Image from "next/image";
-import Link, { LinkProps } from "next/link";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { signout } from "@/actions/auth";
@@ -21,7 +21,6 @@ import {
   FileCode2,
   Info,
   Lightbulb,
-  SearchCode,
   LogOut,
 } from "lucide-react";
 
@@ -33,17 +32,16 @@ export function DashboardNavbar({
   children: React.ReactNode;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
   const handleSignout = async () => {
     await signout();
     router.push("/");
   };
 
-  const [activeLink, setActiveLink] = useState("IdeaForge");
-
   const links = [
     {
       label: "IdeaForge",
-      href: "#",
+      href: "/dashboard/IdeaForge",
       icon: (
         <>
           <Lightbulb className="size-10 flex-shrink-0" />
@@ -52,7 +50,7 @@ export function DashboardNavbar({
     },
     {
       label: "CucumberCraft",
-      href: "#",
+      href: "/dashboard/cucumbercraft",
       icon: (
         <>
           <FileCode2 className="h-5 w-4 flex-shrink-0" />
@@ -70,7 +68,7 @@ export function DashboardNavbar({
     // },
     {
       label: "DomDetective",
-      href: "#",
+      href: "/dashboard/domdetective",
       icon: (
         <>
           <Info className="size-5 flex-shrink-0" />
@@ -79,7 +77,7 @@ export function DashboardNavbar({
     },
     {
       label: "AutoScribe",
-      href: "#",
+      href: "/dashboard/autoscribe",
       icon: (
         <>
           <Code className="h-4 w-5 flex-shrink-0" />
@@ -110,6 +108,15 @@ export function DashboardNavbar({
     //   component: <AgentExplorer />,
     // },
   ];
+
+  const [activeLink, setActiveLink] = useState("");
+
+  useEffect(() => {
+    const currentLink = links.find(link => link.href === pathname);
+    if (currentLink) {
+      setActiveLink(currentLink.label);
+    }
+  }, [pathname]);
 
   const handleLinkClick = (link: string) => {
     setActiveLink(link);
@@ -182,7 +189,7 @@ export function DashboardNavbar({
         </SidebarBody>
       </Sidebar>
       <div className="flex-1 bg-gradient-to-br from-blue-50 via-blue-200 to-blue-100 overflow-y-auto rounded-tl-[30px] rounded-bl-[30px]">
-        {linkComponents.find((link) => link.label === activeLink)?.component}
+        {/* {linkComponents.find((link) => link.label === activeLink)?.component} */}{children}
       </div>
     </div>
   );

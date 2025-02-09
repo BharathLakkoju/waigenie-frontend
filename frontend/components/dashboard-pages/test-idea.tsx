@@ -121,15 +121,15 @@ export default function TestIdea() {
           )}
         </div>
       </div>
-      {(testScenarios || manualTestCases || loading) && (
+      {loading ? (
+        <div className="p-6">
+          <span className="text-2xl font-bold text-black pb-4">
+            Loading...
+          </span>
+        </div>
+      ) : (testScenarios || manualTestCases || loading) && (
         <div className="w-full bg-gray-50 rounded-md shadow-lg max-w-6xl mx-auto flex flex-col mb-5">
-          {loading && (
-            <div className="p-6">
-              <span className="text-2xl font-bold text-black pb-4">
-                Loading...
-              </span>
-            </div>
-          )}
+          
           {testScenarios && mode === "auto" && (
             <div className="p-6">
               <span className="text-2xl font-bold text-black pb-4">
