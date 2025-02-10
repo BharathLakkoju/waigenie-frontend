@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import Script from "next/script";
 import SessionProvider from "@/components/session-provider";
+// import { ThemeProvider } from "@/components/ui/theme-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,16 +24,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <SessionProvider>
-          {children}
-        </SessionProvider>
-        <Toaster />
+    <html lang="en" suppressHydrationWarning>
+      <head>
         <Script
           src="https://checkout.razorpay.com/v1/checkout.js"
-          strategy="lazyOnload"
+          strategy="beforeInteractive"
         />
+      </head>
+      <body className="min-h-screen bg-background font-sans antialiased">
+        {/* <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        > */}
+          <SessionProvider>
+            {children}
+          </SessionProvider>
+          <Toaster />
+        {/* </ThemeProvider> */}
       </body>
     </html>
   );

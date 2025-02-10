@@ -15,6 +15,8 @@ import {
   FaEye,
   FaLightbulb,
 } from "react-icons/fa";
+import apiClient from "@/lib/api-client";
+import { useToast } from "@/hooks/use-toast";
 
 interface IdentifiedElement {
   id: string;
@@ -157,6 +159,8 @@ export default function IdentifyEl() {
   const [analysis, setAnalysis] = useState<ComprehensiveAnalysis | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [selectedFramework, setSelectedFramework] = useState("playwright");
+  const [locators, setLocators] = useState("");
+  const { toast } = useToast();
 
   const filteredElements = identifiedElements.filter((element) => {
     if (filterText) {
@@ -523,6 +527,39 @@ export default function IdentifyEl() {
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
   }, []);
+
+  const generateLocators = async () => {
+    if (!url.trim() || selectedElements.length === 0) {
+      toast({
+        title: "Error",
+        description: "Please enter a URL and select elements",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await apiClient.post(
+        "https://waigenie.onrender.com/api/generate-locators",
+        {
+          url,
+          selectedElements,
+        }
+      );
+      setLocators(response.data.locators);
+    } catch (error: any) {
+      console.error("Error generating locators:", error);
+      if (!error.message?.includes("Insufficient credits")) {
+        toast({
+          title: "Error",
+          description: "Failed to generate locators. Please try again.",
+          variant: "destructive",
+        });
+      }
+    }
+    setLoading(false);
+  };
 
   return (
     <div>

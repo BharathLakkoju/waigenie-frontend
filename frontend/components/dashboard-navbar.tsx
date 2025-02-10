@@ -5,24 +5,21 @@ import { useRouter, usePathname } from "next/navigation";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import type { User } from "@prisma/client/edge";
-import TestIdea from "./dashboard-pages/test-idea";
-import GenerateBDD from "./dashboard-pages/generate-bdd";
-import IdentifyEl from "./dashboard-pages/identify-el";
-import AutomateCode from "./dashboard-pages/automate-code";
 import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { signout } from "@/actions/auth";
-import AgentExplorer from "./dashboard-pages/agent-explorer";
-import { FaRobot } from "react-icons/fa";
 import {
   Code,
   FileCode2,
   Info,
   Lightbulb,
   LogOut,
+  Coins,
 } from "lucide-react";
+import PaymentModal from "./payment-modal";
+import { getUserByEmail, getUserType } from "@/data/user";
 
 export function DashboardNavbar({
   user,
@@ -33,6 +30,86 @@ export function DashboardNavbar({
 }) {
   const router = useRouter();
   const pathname = usePathname();
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<"pro" | "enterprise">("pro");
+  const [userType, setUserType] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [credits, setCredits] = useState<number>(0);
+
+  const fetchUserData = async () => {
+    try {
+      setIsLoading(true);
+      const userT = await getUserType(user.email);
+      setUserType(userT || "freeTierUser");
+
+      // Fetch user credits
+      const response = await fetch('/api/credits/get', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: user.email,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setCredits(data.credits);
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      setUserType("freeTierUser");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, [user.email]);
+
+  const handleUpgradeSuccess = (newUserType: string) => {
+    console.log("Upgrade successful, new user type:", newUserType);
+    setUserType(newUserType);
+  };
+
+  useEffect(() => {
+    const currentLink = links.find(link => link.href === pathname);
+    if (currentLink) {
+      setActiveLink(currentLink.label);
+    }
+  }, [pathname]);
+
+  const planDetails = {
+    pro: {
+      name: "Pro",
+      price: 15,
+      features: [
+        "1000 credits per day",
+        "Priority support",
+        "Advanced features",
+        "API access",
+      ],
+    },
+    enterprise: {
+      name: "Enterprise",
+      price: 100,
+      features: [
+        "Unlimited credits",
+        "24/7 priority support",
+        "Custom solutions",
+        "Dedicated account manager",
+        "On-premise deployment",
+      ],
+    },
+  };
+
+  const handleUpgradeClick = (plan: "pro" | "enterprise") => {
+    setSelectedPlan(plan);
+    setIsPaymentModalOpen(true);
+  };
+
   const handleSignout = async () => {
     await signout();
     router.push("/");
@@ -86,42 +163,12 @@ export function DashboardNavbar({
     },
   ];
 
-  const linkComponents = [
-    {
-      label: "IdeaForge",
-      component: <TestIdea />,
-    },
-    {
-      label: "CucumberCraft",
-      component: <GenerateBDD />,
-    },
-    {
-      label: "DomDetective",
-      component: <IdentifyEl />,
-    },
-    {
-      label: "AutoScribe",
-      component: <AutomateCode />,
-    },
-    // {
-    //   label: "WebTrekker",
-    //   component: <AgentExplorer />,
-    // },
-  ];
-
   const [activeLink, setActiveLink] = useState("");
-
-  useEffect(() => {
-    const currentLink = links.find(link => link.href === pathname);
-    if (currentLink) {
-      setActiveLink(currentLink.label);
-    }
-  }, [pathname]);
+  const [open, setOpen] = useState(false);
 
   const handleLinkClick = (link: string) => {
     setActiveLink(link);
   };
-  const [open, setOpen] = useState(false);
 
   return (
     <div
@@ -135,6 +182,8 @@ export function DashboardNavbar({
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
             {open ? <Logo /> : <LogoIcon />}
             <div className="mt-8 flex flex-col gap-2 justify-start items-start">
+              {/* Credits Display */}
+
               {links.map((link, idx) => (
                 <Button
                   key={idx}
@@ -150,6 +199,25 @@ export function DashboardNavbar({
                 </Button>
               ))}
             </div>
+              <div className="w-full px-2 py-3 mb-4 bg-gradient-to-r from-indigo-100 to-purple-100 dark:from-indigo-900 dark:to-purple-900 rounded-lg   ">
+                <div className="flex items-center gap-2">
+                  <Coins className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+                  {open && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="flex flex-col"
+                    >
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Credits Available
+                      </span>
+                      <span className="text-lg font-bold text-indigo-600 dark:text-indigo-400">
+                        {isLoading ? "..." : credits}
+                      </span>
+                    </motion.div>
+                  )}
+                </div>
+              </div>
           </div>
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2">
@@ -166,9 +234,25 @@ export function DashboardNavbar({
                   className="text-sm text-neutral-700 dark:text-neutral-200"
                 >
                   {user.name}
+                  {!isLoading && (
+                    <span className="ml-2 text-xs opacity-60">
+                      ({userType === "freeTierUser" ? "Free" : userType === "proTierUser" ? "Pro" : "Enterprise"})
+                    </span>
+                  )}
                 </motion.span>
               )}
             </div>
+            {!isLoading && userType === "freeTierUser" && (
+              <Button
+                onClick={() => handleUpgradeClick("pro")}
+                className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white shadow-lg border-none flex items-center justify-center gap-2 p-2 w-full"
+                variant="outline"
+              >
+                <span className="flex items-center gap-1">
+                  {open ? 'Upgrade to Pro' : '⭐'}
+                </span>
+              </Button>
+            )}
             <Button
               onClick={handleSignout}
               className="bg-transparent hover:bg-neutral-200 dark:hover:bg-neutral-700 shadow-none border-none flex items-center justify-center gap-2 p-2 w-full"
@@ -191,6 +275,13 @@ export function DashboardNavbar({
       <div className="flex-1 bg-gradient-to-br from-blue-50 via-blue-200 to-blue-100 overflow-y-auto rounded-tl-[30px] rounded-bl-[30px]">
         {/* {linkComponents.find((link) => link.label === activeLink)?.component} */}{children}
       </div>
+      <PaymentModal
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+        plan={selectedPlan}
+        planDetails={planDetails[selectedPlan]}
+        onSuccess={handleUpgradeSuccess}
+      />
     </div>
   );
 }

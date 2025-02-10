@@ -17,3 +17,13 @@ export const getUserById = async (id: string) => {
     return null;
   }
 };
+
+export const getUserType = async (email: string) => {
+  try {
+    const user = await db.user.findUnique({where: {email}});
+    console.log(user?.credits)
+    return user?.userType;
+  } catch {
+    return null;
+  }
+}

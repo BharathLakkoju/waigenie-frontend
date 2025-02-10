@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import axios from "axios";
+import React, { useState } from "react";
+import apiClient from "@/lib/api-client";
+import { useToast } from "@/hooks/use-toast";
 import { FaCode, FaEdit } from "react-icons/fa";
 
 export default function GenerateBDD() {
@@ -11,15 +12,47 @@ export default function GenerateBDD() {
   const [gherkinFeature, setGherkinFeature] = useState("");
   const [manualTestCases, setManualTestCases] = useState("");
   const [loading, setLoading] = useState(false);
+  const [generatedBDD, setGeneratedBDD] = useState("");
+  const { toast } = useToast();
+
+  const generateBDD = async () => {
+    if (!userStory.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter a user story",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await apiClient.post(
+        "https://waigenie.onrender.com/api/generate-bdd",
+        {
+          userStory,
+        }
+      );
+      setGeneratedBDD(response.data.bdd_scenarios);
+    } catch (error: any) {
+      console.error("Error generating BDD:", error);
+      if (!error.message?.includes("Insufficient credits")) {
+        toast({
+          title: "Error",
+          description: "Failed to generate BDD scenarios. Please try again.",
+          variant: "destructive",
+        });
+      }
+    }
+    setLoading(false);
+  };
 
   const generateGherkinFeature = async () => {
     setLoading(true);
     setGherkinFeature("");
     setManualTestCases("");
     try {
-      const response = await axios.post(
-        // "https://favourable-rea-bharath07-7294baab.koyeb.app/api/generate-gherkin",
-        // "https://waigenie-delpoyment-test.onrender.com/api/generate-gherkin",
+      const response = await apiClient.post(
         "https://waigenie.onrender.com/api/generate-gherkin",
         {
           userStory,

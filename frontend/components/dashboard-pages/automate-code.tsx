@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaRobot, FaCode } from "react-icons/fa";
+import apiClient from "@/lib/api-client";
+import { useToast } from "@/hooks/use-toast";
 
 export default function AutomationCodeGenerator() {
   const [url, setUrl] = useState("");
@@ -13,6 +15,7 @@ export default function AutomationCodeGenerator() {
   const [loading, setLoading] = useState(false);
   const [screenshot, setScreenshot] = useState("");
   const [browserStarted, setBrowserStarted] = useState(false);
+  const { toast } = useToast();
 
   const startBrowser = async () => {
     setLoading(true);
@@ -61,30 +64,38 @@ export default function AutomationCodeGenerator() {
   };
 
   const generateCode = async () => {
+    if (!featureContent.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter a Gherkin feature",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
     setGeneratedCode("");
     try {
       await stopBrowser();
       await startBrowser();
-      const response = await axios.post(
-        "https://waigenie.onrender.com/api/generate-code",
+      const response = await apiClient.post(
+        "https://waigenie.onrender.com/api/generate-automation",
         {
-          url,
-          featureContent,
+          gherkinFeature: featureContent,
           language,
-        },
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
         }
       );
-      setGeneratedCode(response.data.code);
+      setGeneratedCode(response.data.automation_code);
       await stopBrowser();
-    } catch (error) {
-      console.error("Error generating code:", error);
+    } catch (error: any) {
+      console.error("Error generating automation code:", error);
+      if (!error.message?.includes("Insufficient credits")) {
+        toast({
+          title: "Error",
+          description: "Failed to generate automation code. Please try again.",
+          variant: "destructive",
+        });
+      }
     }
     setLoading(false);
   };

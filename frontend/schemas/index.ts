@@ -19,6 +19,7 @@ export const SignupSchema = z.object({
   password: z.string().min(6, {
     message: "Minimum 6 characters!",
   }),
+  tier: z.enum(["freeTierUser", "proTierUser", "enterpriseTierUser"]).default("freeTierUser"),
 });
 
 export const ResetSchema = z.object({

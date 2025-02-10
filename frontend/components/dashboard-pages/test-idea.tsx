@@ -1,7 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import axios from "axios";
+import apiClient from "@/lib/api-client";
 import BrowserView from "@/components/dashboard-pages/browser-view";
+import { useToast } from "@/hooks/use-toast";
 
 export default function TestIdea() {
   const [url, setUrl] = useState("");
@@ -11,6 +12,7 @@ export default function TestIdea() {
   const [browserStarted, setBrowserStarted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState("auto"); // 'auto' or 'manual'
+  const { toast } = useToast();
 
   const startBrowser = () => {
     setBrowserStarted(true);
@@ -25,11 +27,8 @@ export default function TestIdea() {
     setTestScenarios("");
     setManualTestCases("");
     try {
-      const response = await axios.post(
-        // "https://favourable-rea-bharath07-7294baab.koyeb.app/api/generate-scenarios",
-        // "https://waigenie-delpoyment-test.onrender.com/api/generate-scenarios",
+      const response = await apiClient.post(
         "https://waigenie.onrender.com/api/generate-scenarios",
-        // "http://localhost:5000/api/generate-scenarios",
         {
           url,
           selectedElements,
@@ -41,8 +40,15 @@ export default function TestIdea() {
       } else {
         setManualTestCases(response.data.manual_test_cases);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error generating scenarios:", error);
+      if (!error.message?.includes("Insufficient credits")) {
+        toast({
+          title: "Error",
+          description: "Failed to generate scenarios. Please try again.",
+          variant: "destructive",
+        });
+      }
     }
     setLoading(false);
   };

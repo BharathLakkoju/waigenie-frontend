@@ -38,6 +38,7 @@ export default function SignupForm() {
       name: "",
       email: "",
       password: "",
+      tier: "freeTierUser"
     },
   });
   const onSubmit = (values: z.infer<typeof SignupSchema>) => {
