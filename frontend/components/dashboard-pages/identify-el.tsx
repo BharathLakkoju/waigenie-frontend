@@ -211,7 +211,7 @@ export default function IdentifyEl() {
     setLoading(true);
     setError("");
     try {
-      const response = await axios.post(
+      const response = await apiClient.post(
         // "https://favourable-rea-bharath07-7294baab.koyeb.app/api/proxy",
         // "https://waigenie-delpoyment-test.onrender.com/api/proxy",
         "https://waigenie.onrender.com/api/proxy",

@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { FaRobot, FaCode } from "react-icons/fa";
 import apiClient from "@/lib/api-client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -20,7 +18,7 @@ export default function AutomationCodeGenerator() {
   const startBrowser = async () => {
     setLoading(true);
     try {
-      await axios.post(
+      await apiClient.post(
         "https://waigenie.onrender.com/api/start-browser",
         { url },
         {
@@ -44,7 +42,7 @@ export default function AutomationCodeGenerator() {
   const stopBrowser = async () => {
     setLoading(true);
     try {
-      await axios.post(
+      await apiClient.post(
         "https://waigenie.onrender.com/api/stop-browser",
         {},
         {
@@ -105,7 +103,7 @@ export default function AutomationCodeGenerator() {
     if (browserStarted) {
       interval = setInterval(async () => {
         try {
-          const response = await axios.get(
+          const response = await apiClient.get(
             "https://waigenie.onrender.com/api/get-screenshot",
             {
               withCredentials: true,

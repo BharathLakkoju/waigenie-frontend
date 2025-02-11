@@ -20,6 +20,19 @@ import {
 } from "lucide-react";
 import PaymentModal from "./payment-modal";
 import { getUserByEmail, getUserType } from "@/data/user";
+import { auth } from "@/auth";
+
+interface UserDetails {
+  id: string;
+  name: string;
+  email: string;
+  image: string | null;
+  userType: string;
+  credits: number;
+  maxCredits: number;
+  creditRefreshInterval: number;
+  subscriptionEndDate: Date | null;
+}
 
 export function DashboardNavbar({
   user,
@@ -32,18 +45,13 @@ export function DashboardNavbar({
   const pathname = usePathname();
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<"pro" | "enterprise">("pro");
-  const [userType, setUserType] = useState<string>("");
+  const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [credits, setCredits] = useState<number>(0);
 
   const fetchUserData = async () => {
     try {
       setIsLoading(true);
-      const userT = await getUserType(user.email);
-      setUserType(userT || "freeTierUser");
-
-      // Fetch user credits
-      const response = await fetch('/api/credits/get', {
+      const response = await fetch('/api/user/details', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -55,11 +63,12 @@ export function DashboardNavbar({
 
       if (response.ok) {
         const data = await response.json();
-        setCredits(data.credits);
+        setUserDetails(data);
+      } else {
+        console.error("Failed to fetch user details");
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
-      setUserType("freeTierUser");
     } finally {
       setIsLoading(false);
     }
@@ -69,9 +78,9 @@ export function DashboardNavbar({
     fetchUserData();
   }, [user.email]);
 
-  const handleUpgradeSuccess = (newUserType: string) => {
+  const handleUpgradeSuccess = async (newUserType: string) => {
     console.log("Upgrade successful, new user type:", newUserType);
-    setUserType(newUserType);
+    await fetchUserData(); // Refresh user data after upgrade
   };
 
   useEffect(() => {
@@ -171,24 +180,23 @@ export function DashboardNavbar({
   };
 
   return (
-    <div
-      className={cn(
-        "rounded-md flex flex-col md:flex-row bg-gray-100 dark:bg-neutral-800 w-full flex-1 mx-auto border border-neutral-200 dark:border-neutral-700 overflow-hidden",
-        "h-screen" // for your use case, use h-screen instead of h-[60vh]
-      )}
-    >
+    <div className={cn(
+      "rounded-md flex flex-col md:flex-row bg-gradient-to-br from-gray-50 to-gray-100 dark:from-neutral-900 dark:to-neutral-800 w-full flex-1 mx-auto border border-neutral-200 dark:border-neutral-700 overflow-hidden",
+      "h-screen"
+    )}>
       <Sidebar open={open} setOpen={setOpen}>
         <SidebarBody className="justify-between gap-10">
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-            {open ? <Logo /> : <LogoIcon />}
+            <div className="p-1">
+              {open ? <Logo /> : <LogoIcon />}
+            </div>
             <div className="mt-8 flex flex-col gap-2 justify-start items-start">
-              {/* Credits Display */}
 
               {links.map((link, idx) => (
                 <Button
                   key={idx}
                   onClick={() => handleLinkClick(link.label)}
-                  className="bg-transparent shadow-none border-none flex-shrink-0 p-0"
+                  className="bg-transparent border-0 shadow-none rounded-lg flex-shrink-0 p-1"
                   variant="outline"
                 >
                   <SidebarLink
@@ -198,82 +206,95 @@ export function DashboardNavbar({
                   />
                 </Button>
               ))}
+              {/* Credits Display */}
+              <div className="">
+                <div className="w-full p-1 h-5">
+                  <div className="flex items-center gap-5">
+                    <div className="p-1">
+                      <Coins className={`h-5 w-5 ${open ? `text-indigo-600 dark:text-indigo-400`: `text-black`}`}/>
+                    </div>
+                    {open && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="flex flex-col transition-all duration-500"
+                      >
+                        <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
+                          Credits
+                        </span>
+                        <span className="text-lg font-bold text-indigo-600 dark:text-indigo-400">
+                          {isLoading ? "..." : userDetails?.credits || 0}
+                          
+                        </span>
+                      </motion.div>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
-              <div className="w-full px-2 py-3 mb-4 bg-gradient-to-r from-indigo-100 to-purple-100 dark:from-indigo-900 dark:to-purple-900 rounded-lg   ">
-                <div className="flex items-center gap-2">
-                  <Coins className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+          </div>
+          <div className="flex flex-col gap-2">
+            <div className="border-t pt-4 border-gray-200 dark:border-neutral-700">
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center gap-3 p-1 rounded-lg dark:bg-neutral-800/50">
+                  <Avatar className="h-8 w-8 border-2 border-white dark:border-neutral-800">
+                    <AvatarImage src={userDetails?.image ?? ""} />
+                    <AvatarFallback className="bg-indigo-600 text-white">
+                      {userDetails?.name.split(" ")[0]?.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
                   {open && (
                     <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       className="flex flex-col"
                     >
-                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Credits Available
+                      <span className="font-medium text-gray-900 dark:text-gray-100">
+                        {userDetails?.name}
                       </span>
-                      <span className="text-lg font-bold text-indigo-600 dark:text-indigo-400">
-                        {isLoading ? "..." : credits}
-                      </span>
+                      {!isLoading && userDetails && (
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                          {userDetails.userType === "freeTierUser" ? "Free Plan" : 
+                           userDetails.userType === "proTierUser" ? "Pro Plan" : "Enterprise Plan"}
+                        </span>
+                      )}
                     </motion.div>
                   )}
                 </div>
-              </div>
-          </div>
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-2">
-              <Avatar className="size-6">
-                <AvatarImage src={user.image ?? ""} />
-                <AvatarFallback className="bg-black text-white">
-                  {`${user.name.split(" ")[0]?.charAt(0)}`}
-                </AvatarFallback>
-              </Avatar>
-              {open && (
-                <motion.span
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="text-sm text-neutral-700 dark:text-neutral-200"
-                >
-                  {user.name}
-                  {!isLoading && (
-                    <span className="ml-2 text-xs opacity-60">
-                      ({userType === "freeTierUser" ? "Free" : userType === "proTierUser" ? "Pro" : "Enterprise"})
-                    </span>
+
+                  {/* Only show upgrade button for freeTierUser */}
+                  {open && !isLoading && userDetails?.userType === "freeTierUser" && (
+                    <Button
+                      onClick={() => handleUpgradeClick("pro")}
+                      className="w-full bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white shadow-md border-none"
+                      variant="default"
+                    >
+                      {open ? (
+                        <span className="flex items-center gap-2">
+                          <span className="text-lg">⭐</span>
+                          Upgrade to Pro
+                        </span>
+                      ) : (
+                        <span className="text-lg">⭐</span>
+                      )}
+                    </Button>
                   )}
-                </motion.span>
-              )}
-            </div>
-            {!isLoading && userType === "freeTierUser" && (
-              <Button
-                onClick={() => handleUpgradeClick("pro")}
-                className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white shadow-lg border-none flex items-center justify-center gap-2 p-2 w-full"
-                variant="outline"
-              >
-                <span className="flex items-center gap-1">
-                  {open ? 'Upgrade to Pro' : '⭐'}
-                </span>
-              </Button>
-            )}
-            <Button
-              onClick={handleSignout}
-              className="bg-transparent hover:bg-neutral-200 dark:hover:bg-neutral-700 shadow-none border-none flex items-center justify-center gap-2 p-2 w-full"
-              variant="outline"
-            >
-              <LogOut className="h-5 w-5 text-neutral-700 dark:text-neutral-200" />
-              {open && (
-                <motion.span
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="text-sm text-neutral-700 dark:text-neutral-200"
+
+                <Button
+                  onClick={handleSignout}
+                  className="w-full justify-start gap-2 bg-transparent hover:bg-gray-100 dark:hover:bg-neutral-800/50"
+                  variant="ghost"
                 >
-                  Sign out
-                </motion.span>
-              )}
-            </Button>
+                  <LogOut className="h-4 w-4" />
+                  {open && <span>Sign out</span>}
+                </Button>
+              </div>
+            </div>
           </div>
         </SidebarBody>
       </Sidebar>
-      <div className="flex-1 bg-gradient-to-br from-blue-50 via-blue-200 to-blue-100 overflow-y-auto rounded-tl-[30px] rounded-bl-[30px]">
-        {/* {linkComponents.find((link) => link.label === activeLink)?.component} */}{children}
+      <div className="flex-1 bg-gradient-to-br from-blue-50 via-blue-100 to-indigo-50 dark:from-neutral-900 dark:via-neutral-900 dark:to-neutral-800 overflow-y-auto rounded-tl-[30px] rounded-bl-[30px]">
+        {children}
       </div>
       <PaymentModal
         isOpen={isPaymentModalOpen}

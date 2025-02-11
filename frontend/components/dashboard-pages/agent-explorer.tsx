@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { FaRobot } from "react-icons/fa";
+import apiClient from "@/lib/api-client";
 
 export default function AgentExplorer() {
   const [objective, setObjective] = useState("");
@@ -16,7 +16,7 @@ export default function AgentExplorer() {
   const startBrowser = async () => {
     setLoading(true);
     try {
-      await axios.post(
+      await apiClient.post(
         "https://waigenie.onrender.com/api/agent-explorer/start-browser",
         { url },
         {
@@ -40,7 +40,7 @@ export default function AgentExplorer() {
   const stopBrowser = async () => {
     setLoading(true);
     try {
-      await axios.post(
+      await apiClient.post(
         "https://waigenie.onrender.com/api/agent-explorer/stop-browser",
         {},
         {
@@ -79,7 +79,7 @@ export default function AgentExplorer() {
         processedUrl = `https://${url}`;
       }
 
-      const response = await axios.post(
+      const response = await apiClient.post(
         "https://waigenie.onrender.com/api/agent-explorer/run-web-agent",
         {
           objective,
@@ -109,7 +109,7 @@ export default function AgentExplorer() {
     if (browserStarted) {
       interval = setInterval(async () => {
         try {
-          const response = await axios.get(
+          const response = await apiClient.get(
             "https://waigenie.onrender.com/api/agent-explorer/get-screenshot",
             {
               withCredentials: true,

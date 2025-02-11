@@ -29,9 +29,9 @@ export async function POST(req: Request) {
 
     let amount;
     if (plan === "pro") {
-      amount = 1; // $15.00
+      amount = 15; // $15.00
     } else if (plan === "enterprise") {
-      amount = 1; // $100.00 or custom amount
+      amount = 100; // $100.00 or custom amount
     } else {
       return new NextResponse("Invalid plan", { status: 400 });
     }
@@ -43,7 +43,7 @@ export async function POST(req: Request) {
 
     const options = {
       amount: amount * 100, // Amount in smallest currency unit (cents)
-      currency: "INR",
+      currency: "USD",
       receipt: receipt, // This will now be under 40 chars
       notes: {
         userId: user.id,
