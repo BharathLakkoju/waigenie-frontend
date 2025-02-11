@@ -43,7 +43,7 @@ apiClient.interceptors.request.use(
     } catch (error: any) {
       // Show error toast
       toast({
-        title: "Error",
+        title: "Credits Error",
         description: error.message === "Insufficient credits" 
           ? "You've run out of credits. Please upgrade your plan to continue."
           : "Failed to process request. Please try again.",

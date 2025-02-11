@@ -48,6 +48,28 @@ export function DashboardNavbar({
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const checkAndResetCredits = async (email: string) => {
+    try {
+      const response = await fetch('/api/credits/reset', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          // Credits were reset, update the UI
+          setUserDetails(prev => prev ? { ...prev, credits: data.credits } : prev);
+        }
+      }
+    } catch (error) {
+      console.error("Error checking credit reset:", error);
+    }
+  };
+
   const fetchUserData = async () => {
     try {
       setIsLoading(true);
@@ -64,6 +86,8 @@ export function DashboardNavbar({
       if (response.ok) {
         const data = await response.json();
         setUserDetails(data);
+        // Check if credits need to be reset
+        await checkAndResetCredits(user.email);
       } else {
         console.error("Failed to fetch user details");
       }
