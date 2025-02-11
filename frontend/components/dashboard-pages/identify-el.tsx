@@ -221,9 +221,8 @@ export default function IdentifyEl() {
       );
       setProxyHtml(response.data.html);
     } catch (error) {
-      console.error("Error loading URL:", error);
       setError(
-        "An error occurred while loading the URL. Please check the console for more details."
+        "An error occurred while loading the URL."
       );
     }
     setLoading(false);

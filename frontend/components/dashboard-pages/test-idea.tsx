@@ -44,9 +44,10 @@ export default function TestIdea() {
       console.error("Error generating scenarios:", error);
       if (!error.message?.includes("Insufficient credits")) {
         toast({
-          title: "Error",
+          title: "Insufficient Credits",
           description: "Failed to generate scenarios. Please try again.",
           variant: "destructive",
+          className: "bg-red-200",
         });
       }
     }
