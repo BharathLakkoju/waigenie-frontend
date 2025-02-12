@@ -21,6 +21,7 @@ import {
 import PaymentModal from "./payment-modal";
 import { getUserByEmail, getUserType } from "@/data/user";
 import { auth } from "@/auth";
+import { getExchangeRate } from "@/lib/currency";
 
 interface UserDetails {
   id: string;
@@ -47,6 +48,7 @@ export function DashboardNavbar({
   const [selectedPlan, setSelectedPlan] = useState<"pro" | "enterprise">("pro");
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [proPrice, setProPrice] = useState<number>(0);
 
   const checkAndResetCredits = async (email: string) => {
     try {
@@ -102,6 +104,20 @@ export function DashboardNavbar({
     fetchUserData();
   }, [user.email]);
 
+  useEffect(() => {
+    async function fetchPrices() {
+      try {
+        const proInrAmount = await getExchangeRate(planDetails.pro.basePrice);
+        setProPrice(Math.round(proInrAmount));
+      } catch (error) {
+        console.error('Error fetching prices:', error);
+        // Fallback price
+        setProPrice(Math.round(planDetails.pro.basePrice * 83));
+      }
+    }
+    fetchPrices();
+  }, []);
+
   const handleUpgradeSuccess = async (newUserType: string) => {
     console.log("Upgrade successful, new user type:", newUserType);
     await fetchUserData(); // Refresh user data after upgrade
@@ -117,9 +133,9 @@ export function DashboardNavbar({
   const planDetails = {
     pro: {
       name: "Pro",
-      price: 15,
+      basePrice: 15, // USD price
       features: [
-        "1000 credits per day",
+        "1000 credits per month",
         "Priority support",
         "Advanced features",
         "API access",
@@ -127,7 +143,7 @@ export function DashboardNavbar({
     },
     enterprise: {
       name: "Enterprise",
-      price: 100,
+      basePrice: 100, // USD price
       features: [
         "Unlimited credits",
         "24/7 priority support",
@@ -287,7 +303,7 @@ export function DashboardNavbar({
                 </div>
 
                   {/* Only show upgrade button for freeTierUser */}
-                  {open && !isLoading && userDetails?.userType === "freeTierUser" && (
+                  {!isLoading && userDetails?.userType === "freeTierUser" && (
                     <Button
                       onClick={() => handleUpgradeClick("pro")}
                       className="w-full bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white shadow-md border-none"
@@ -324,7 +340,10 @@ export function DashboardNavbar({
         isOpen={isPaymentModalOpen}
         onClose={() => setIsPaymentModalOpen(false)}
         plan={selectedPlan}
-        planDetails={planDetails[selectedPlan]}
+        planDetails={{
+          ...planDetails[selectedPlan],
+          price: selectedPlan === 'pro' ? proPrice : 'Custom',
+        }}
         onSuccess={handleUpgradeSuccess}
       />
     </div>

@@ -261,38 +261,38 @@ export default function CreativeContactPageWithEnhancedFAQ() {
               <div className="bg-white rounded-lg shadow-lg p-6 space-y-4">
                 <div className="flex items-center space-x-4">
                   <Phone className="h-6 w-6 text-indigo-600" />
-                  <span className="text-lg">1234567890</span>
+                  <span className="text-lg">+91 9618089879</span>
                 </div>
 
                 <div className="flex items-center space-x-4">
                   <Mail className="h-6 w-6 text-indigo-600" />
-                  <span className="text-lg">waigenie@gmail.com</span>
+                  <span className="text-lg">waigeniecompnay@waigenie.tech</span>
                 </div>
 
-                <div className="flex items-center space-x-4">
+                {/* <div className="flex items-center space-x-4">
                   <MapPin className="h-6 w-6 text-indigo-600" />
-                  <span className="text-lg">123, XXX, abc-0000</span>
-                </div>
+                  <span className="text-lg"></span>
+                </div> */}
 
                 <div className="flex items-center space-x-6 pt-4">
                   <Link
-                    href="#"
+                    href="https://www.linkedin.com/company/waigenie"
                     className="text-indigo-600 hover:text-indigo-800 transition-colors"
                   >
                     <Linkedin className="h-6 w-6" />
                   </Link>
                   <Link
-                    href="#"
+                    href="https://www.x.com/GundeRicha82508"
                     className="text-indigo-600 hover:text-indigo-800 transition-colors"
                   >
                     <Twitter className="h-6 w-6" />
                   </Link>
-                  <Link
-                    href="#"
+                  {/* <Link
+                    href="G"
                     className="text-indigo-600 hover:text-indigo-800 transition-colors"
                   >
                     <Github className="h-6 w-6" />
-                  </Link>
+                  </Link> */}
                 </div>
               </div>
             </motion.div>
