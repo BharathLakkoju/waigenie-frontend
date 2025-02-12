@@ -2,43 +2,68 @@
 import { Check, X } from "lucide-react";
 import Link from "next/link";
 import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
+import { getExchangeRate } from "@/lib/currency";
 
 export default function PricingPage() {
   const titleRef = useRef(null);
   const plansRef = useRef(null);
   const customRef = useRef(null);
+  const [proPrice, setProPrice] = useState<string>("Loading...");
+  const [isLoading, setIsLoading] = useState(true);
 
   const isTitleInView = useInView(titleRef, { once: true });
   const isPlansInView = useInView(plansRef, { once: true });
   const isCustomInView = useInView(customRef, { once: true });
 
+  const basePrice = 15; // Base price in USD
+
+  useEffect(() => {
+    async function fetchPrice() {
+      try {
+        const inrAmount = await getExchangeRate(basePrice);
+        setProPrice(`₹${Math.round(inrAmount).toLocaleString('en-IN')}`);
+      } catch (error) {
+        console.error('Error fetching price:', error);
+        // Fallback price
+        setProPrice(`₹${Math.round(basePrice * 83).toLocaleString('en-IN')}`);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchPrice();
+  }, []);
+
   const plans = [
     {
       name: "Starter",
       price: "Free",
-      credits: "20 credits per day",
+      priceDetail: "/month",
+      credits: "25 credits per month",
       features: ["Basic product access", "Email support"],
       notIncluded: [
         "Extensive product access",
         "Priority support",
         "Custom solutions",
+        "API access",
+        "Advanced features",
       ],
       cta: "Get Started",
       ctaLink: "/signup",
     },
     {
       name: "Pro",
-      price: "$15",
-      credits: "1000 credits per day",
+      price: proPrice,
+      priceDetail: "/month",
+      credits: "1000 credits per month",
       features: [
-        "Extensive product access",
-        "Priority email support",
+        "Full product access",
+        "Priority support",
         "API access",
-        "Advanced analytics",
+        "Advanced features",
       ],
-      notIncluded: ["Custom solutions", "Dedicated account manager"],
-      cta: "Upgrade to Pro",
+      notIncluded: ["Custom solutions", "Dedicated support"],
+      cta: "Choose Pro",
       ctaLink: "/signup",
     },
     {
@@ -102,7 +127,7 @@ export default function PricingPage() {
                   </span>
                   {plan.name !== "Enterprise" && (
                     <span className="ml-1 text-xl font-semibold text-gray-500">
-                      /month
+                      {plan.priceDetail}
                     </span>
                   )}
                 </span>

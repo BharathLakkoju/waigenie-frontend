@@ -7,9 +7,11 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from "./ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
+import { Check } from "lucide-react";
 
 declare global {
   interface Window {
@@ -17,16 +19,19 @@ declare global {
   }
 }
 
+interface PlanDetails {
+  name: string;
+  basePrice: number;
+  price?: number | 'Custom';
+  features: string[];
+}
+
 interface PaymentModalProps {
   isOpen: boolean;
   onClose: () => void;
   plan: "pro" | "enterprise";
-  planDetails: {
-    name: string;
-    price: number;
-    features: string[];
-  };
-  onSuccess?: (newUserType: string) => void;
+  planDetails: PlanDetails;
+  onSuccess: (newUserType: string) => void;
 }
 
 export default function PaymentModal({
@@ -159,44 +164,36 @@ export default function PaymentModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Upgrade to {planDetails.name}</DialogTitle>
           <DialogDescription>
-            Get access to premium features and increased usage limits.
+            Get access to advanced features and more credits
           </DialogDescription>
         </DialogHeader>
-        <div className="mt-4 space-y-4">
+        <div className="space-y-4">
           <div className="text-2xl font-bold">
-            ${planDetails.price}
-            <span className="text-sm font-normal text-gray-500">/month</span>
+            {typeof planDetails.price === 'number' 
+              ? `₹${planDetails.price.toLocaleString('en-IN')}/month`
+              : 'Custom Pricing'}
           </div>
-          <ul className="space-y-2">
+          <div className="space-y-2">
             {planDetails.features.map((feature, index) => (
-              <li key={index} className="flex items-center gap-2">
-                <svg
-                  className="h-5 w-5 text-green-500"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path d="M5 13l4 4L19 7"></path>
-                </svg>
-                {feature}
-              </li>
+              <div key={index} className="flex items-center gap-2">
+                <Check className="h-4 w-4 text-green-500" />
+                <span>{feature}</span>
+              </div>
             ))}
-          </ul>
-          <Button
-            onClick={handlePayment}
-            className="w-full"
-            disabled={loading}
-          >
-            {loading ? "Processing..." : "Proceed to Payment"}
-          </Button>
+          </div>
         </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button onClick={handlePayment}>
+            Upgrade Now
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
