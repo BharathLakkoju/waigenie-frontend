@@ -269,10 +269,10 @@ export default function CreativeContactPageWithEnhancedFAQ() {
                   <span className="text-lg">waigeniecompnay@waigenie.tech</span>
                 </div>
 
-                {/* <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-4">
                   <MapPin className="h-6 w-6 text-indigo-600" />
-                  <span className="text-lg"></span>
-                </div> */}
+                  <span className="text-lg">MIG-690, C/o Dr.N.Chandrashekar Rao, Gowthami Nagar, Vuda Colony, Vizianagaram, Andhra Pradesh, INDIA - 535003</span>
+                </div>
 
                 <div className="flex items-center space-x-6 pt-4">
                   <Link
