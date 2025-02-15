@@ -138,7 +138,7 @@ export default function SignupForm() {
                       required
                     />
                   </FormControl>
-                  <PasswordStrengthIndicator password={field.value} />
+                  {field.value && <PasswordStrengthIndicator password={field.value} />}
                   <FormMessage />
                 </FormItem>
               )}
