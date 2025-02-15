@@ -149,7 +149,7 @@ export default function SignupForm() {
 
             <Button
               type="submit"
-              className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white"
+              className="w-full bg-black text-white"
               disabled={pending || !form.formState.isValid}
             >
               {pending ? "Creating account..." : "Create account"}
