@@ -18,6 +18,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import z from "zod";
 import FormSuccess from "@/components/form-success";
@@ -27,29 +28,48 @@ import { signup } from "@/actions/auth";
 import { useState, useTransition } from "react";
 import GithubLogin from "@/components/github-login";
 import GoogleLogin from "@/components/google-login";
+import { PasswordStrengthIndicator } from "./password-strength-indicator";
+import { validatePassword } from "@/lib/password-validation";
 
 export default function SignupForm() {
   const [pending, setPending] = useTransition();
   const [formError, setFormError] = useState<string | undefined>();
   const [formSuccess, setFormSuccess] = useState<string | undefined>();
+
   const form = useForm<z.infer<typeof SignupSchema>>({
     resolver: zodResolver(SignupSchema),
     defaultValues: {
       name: "",
       email: "",
       password: "",
+      tier: "freeTierUser",
     },
+    mode: "onChange", // Enable real-time validation
   });
-  const onSubmit = (values: z.infer<typeof SignupSchema>) => {
+
+  const onSubmit = async (values: z.infer<typeof SignupSchema>) => {
     setFormError("");
     setFormSuccess("");
+
+    // Validate password before submission
+    const passwordValidation = validatePassword(values.password);
+    if (!passwordValidation.isValid) {
+      setFormError(passwordValidation.errors[0]);
+      return;
+    }
+
     setPending(() => {
       signup(values).then((data) => {
-        setFormError(data?.error);
-        setFormSuccess(data?.success);
+        if (data?.error) {
+          setFormError(data.error);
+        } else if (data?.success) {
+          setFormSuccess(data.success);
+          form.reset(); // Reset form on success
+        }
       });
     });
   };
+
   return (
     <Card className="mx-auto max-w-md shadow-none border-none bg-transparent text-gray-800 h-[calc(100vh-100px)]">
       <CardHeader>
@@ -60,100 +80,101 @@ export default function SignupForm() {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="grid gap-4">
-              <div className="grid gap-2">
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Name</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          disabled={pending}
-                          className="placeholder:text-gray-400 focus:border-gray-500 border-gray-800"
-                          id="name"
-                          placeholder="John Doe"
-                          required
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <div className="grid gap-2">
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          className="placeholder:text-gray-400 focus:border-gray-500 border-gray-800"
-                          id="email"
-                          type="email"
-                          placeholder="johndoe@email.com"
-                          disabled={pending}
-                          required
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <div className="grid gap-2">
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        <FormLabel>Password</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            id="password"
-                            disabled={pending}
-                            type="password"
-                            className="placeholder:text-gray-400 focus:border-gray-500 border-gray-800"
-                            placeholder="******"
-                            required
-                          />
-                        </FormControl>
-                      </FormLabel>
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <FormError message={formError} />
-              <FormSuccess message={formSuccess} />
-              <Button type="submit" className="w-full">
-                Create an account
-              </Button>
-            </div>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      disabled={pending}
+                      className="placeholder:text-gray-400 focus:border-gray-500 border-gray-800"
+                      placeholder="John Doe"
+                      required
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      className="placeholder:text-gray-400 focus:border-gray-500 border-gray-800"
+                      type="email"
+                      placeholder="johndoe@email.com"
+                      disabled={pending}
+                      required
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      disabled={pending}
+                      type="password"
+                      className="placeholder:text-gray-400 focus:border-gray-500 border-gray-800"
+                      placeholder="••••••••"
+                      required
+                    />
+                  </FormControl>
+                  <PasswordStrengthIndicator password={field.value} />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {formError && <FormError message={formError} />}
+            {formSuccess && <FormSuccess message={formSuccess} />}
+
+            <Button
+              type="submit"
+              className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white"
+              disabled={pending || !form.formState.isValid}
+            >
+              {pending ? "Creating account..." : "Create account"}
+            </Button>
           </form>
         </Form>
-        <div className="flex justify-around my-4">
-          <Separator className="my-4 w-1/3 bg-black" />
-          <span className="">or</span>
-          <Separator className="my-4 w-1/3 bg-black" />
+
+        <div className="flex items-center gap-2 my-6">
+          <Separator className="flex-1" />
+          <span className="text-gray-500 text-sm">or continue with</span>
+          <Separator className="flex-1" />
         </div>
-        <div className="mt-4 flex justify-center space-x-4">
+
+        <div className="flex gap-4 justify-center items-center">
           <GithubLogin />
           <GoogleLogin />
         </div>
-        <Separator className="my-4" />
-        <div className="text-center text-sm">
+
+        <div className="mt-6 text-center text-sm text-gray-500">
           Already have an account?{" "}
           <Link
             href="/login"
-            className="text-blue-500 underline underline-offset-4"
+            className="text-purple-600 hover:text-purple-500 font-medium"
           >
-            Log in
+            Sign in
           </Link>
         </div>
       </CardContent>
