@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import apiClient from "@/lib/api-client";
 import { useToast } from "@/hooks/use-toast";
+import axios from "axios";
 
 export default function AutomationCodeGenerator() {
   const [url, setUrl] = useState("");
@@ -18,15 +19,16 @@ export default function AutomationCodeGenerator() {
   const startBrowser = async () => {
     setLoading(true);
     try {
-      await apiClient.post(
+      await axios.post(
         "https://waigenie.onrender.com/api/start-browser",
         { url },
         {
           withCredentials: true,
           headers: {
             "Content-Type": "application/json",
-            Accept: "application/json",
-          },
+            "Accept": "application/json",
+            "Access-Control-Allow-Origin": "https://localhost:3000"
+          }
         }
       );
       setBrowserStarted(true);
@@ -42,7 +44,7 @@ export default function AutomationCodeGenerator() {
   const stopBrowser = async () => {
     setLoading(true);
     try {
-      await apiClient.post(
+      await axios.post(
         "https://waigenie.onrender.com/api/stop-browser",
         {},
         {
