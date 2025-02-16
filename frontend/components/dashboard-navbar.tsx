@@ -217,6 +217,7 @@ export function DashboardNavbar({
 
   const handleLinkClick = (link: string) => {
     setActiveLink(link);
+    setOpen(false);
   };
 
   return (
