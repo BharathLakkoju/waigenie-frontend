@@ -77,7 +77,7 @@ export default function AutomationCodeGenerator() {
     if (browserStarted) {
       interval = setInterval(async () => {
         try {
-          const response = await apiClient.get("https://waigenie.onrender.com/api/get-screenshot");
+          const response = await axios.get("https://waigenie.onrender.com/api/get-screenshot");
           setScreenshot(`data:image/png;base64,${response.data.screenshot}`);
         } catch (error) {
           console.error("Error fetching screenshot:", error);
@@ -89,8 +89,8 @@ export default function AutomationCodeGenerator() {
 
   return (
     <>
-      <div className="container mx-auto px-4 py-8 w-screen flex justify-center items-center gap-8">
-        <div className="w-1/3 bg-gray-50 p-8 rounded-md h-[calc(100vh-100px)] shadow-lg overflow-y-auto">
+      <div className="container mx-auto px-4 py-8 w-screen flex flex-col lg:flex-row justify-center items-center gap-8">
+        <div className="w-full lg:w-1/3 bg-gray-50 p-4 lg:p-8 rounded-md h-[calc(100vh-100px)] shadow-lg overflow-y-auto">
           <h1 className="text-xl font-bold text-black mb-2">AutoScribe</h1>
           <input
             type="text"
@@ -148,7 +148,7 @@ export default function AutomationCodeGenerator() {
 
           {generatedCode && (
             <div className="mt-8">
-              <h2 className="text-2xl font-bold text-black mb-4">
+              <h2 className="text-xl lg:text-2xl font-bold text-black mb-4">
                 Generated {language} Code
               </h2>
               <a
@@ -166,7 +166,7 @@ export default function AutomationCodeGenerator() {
           )}
         </div>
 
-        <div className="w-2/3 bg-gray-50 p-8 rounded-md h-[calc(100vh-100px)] shadow-lg overflow-y-auto">
+        <div className="w-full lg:w-2/3 bg-gray-50 p-4 lg:p-8 rounded-md h-[calc(100vh-100px)] shadow-lg overflow-y-auto">
           {browserStarted && screenshot && (
             <img
               src={screenshot}
@@ -177,11 +177,11 @@ export default function AutomationCodeGenerator() {
         </div>
       </div>
       {generatedCode && (
-        <div className="w-full max-w-6xl mx-auto bg-gray-50 rounded-md shadow-lg p-6 mb-4">
-          <h2 className="text-2xl font-bold text-black">
+        <div className="w-full max-w-6xl mx-auto bg-gray-50 rounded-md shadow-lg p-4 lg:p-6 mb-4">
+          <h2 className="text-xl lg:text-2xl font-bold text-black">
             Generated {language} Code
           </h2>
-          <div className="bg-white p-4 rounded-md overflow-x-auto text-black border border-gray-300 whitespace-pre-wrap mt-4 h-[550px] overflow-y-scroll">
+          <div className="bg-white p-4 rounded-md overflow-x-auto text-black border border-gray-300 whitespace-pre-wrap mt-4 h-[350px] lg:h-[550px] overflow-y-scroll">
             <ReactMarkdown>{generatedCode}</ReactMarkdown>
           </div>
         </div>
