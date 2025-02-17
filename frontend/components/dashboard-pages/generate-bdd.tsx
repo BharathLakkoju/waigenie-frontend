@@ -115,25 +115,25 @@ export default function GenerateBDD() {
       <div className="w-full md:w-2/3 px-6 bg-gray-50 rounded-md h-auto md:h-[calc(100vh-100px)] shadow-lg overflow-y-auto">
         {manualTestCases && (
           <>
-            <div className="bg-gray-50 py-2 flex flex-col items-center">
+            <div className="bg-gray-50 py-2 flex flex-col items-center w-full">
               <span className="text-2xl font-bold text-black mt-4">
                 Generated Manual Test Cases
               </span>
-              <pre className="bg-white p-4 rounded-md text-black border border-gray-300 whitespace-pre-wrap my-4">
+              <div className="bg-white p-4 rounded-md text-black border border-gray-300 whitespace-pre-wrap my-4 w-full overflow-x-hidden">
                 <ReactMarkdown>{manualTestCases}</ReactMarkdown>
-              </pre>
+              </div>
             </div>
           </>
         )}
         {gherkinFeature && (
           <>
-            <div className="bg-gray-50 py-2 flex flex-col items-center">
+            <div className="bg-gray-50 py-2 flex flex-col items-center w-full">
               <span className="text-2xl font-bold text-black mt-4">
                 Generated Gherkin Feature
               </span>
-              <pre className="bg-white p-4 rounded-md text-black border border-gray-300 whitespace-pre-wrap my-4">
+              <div className="bg-white p-4 rounded-md text-black border border-gray-300 whitespace-pre-wrap my-4 w-full overflow-x-hidden">
                 <ReactMarkdown>{gherkinFeature}</ReactMarkdown>
-              </pre>
+              </div>
             </div>
           </>
         )}
