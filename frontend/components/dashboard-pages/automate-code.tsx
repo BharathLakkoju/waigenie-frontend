@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import apiClient from "@/lib/api-client";
 import { useToast } from "@/hooks/use-toast";
+import ReactMarkdown from "react-markdown";
 
 export default function AutomationCodeGenerator() {
   const [url, setUrl] = useState("");
@@ -217,7 +218,7 @@ export default function AutomationCodeGenerator() {
             Generated {language} Code
           </h2>
           <pre className="bg-white p-4 rounded-md overflow-x-auto text-black border border-gray-300 whitespace-pre-wrap mt-4 h-[550px] overflow-y-scroll">
-            {generatedCode}
+            <ReactMarkdown>{generatedCode}</ReactMarkdown>
           </pre>
         </div>
       )}
