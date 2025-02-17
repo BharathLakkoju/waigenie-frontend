@@ -17,6 +17,7 @@ import {
 } from "react-icons/fa";
 import apiClient from "@/lib/api-client";
 import { useToast } from "@/hooks/use-toast";
+import { Card, CardContent } from "../ui/card";
 
 interface IdentifiedElement {
   id: string;
@@ -561,58 +562,55 @@ export default function IdentifyEl() {
   };
 
   return (
-    <div>
-      <div className="container mx-auto px-4 py-8 w-screen flex justify-center items-center gap-8">
-        <div className="w-1/3 bg-purple-50 p-8 rounded-md h-[calc(100vh-100px)] shadow-lg">
+    <div className="min-h-screen">
+      {/* Main Layout */}
+      <div className="container mx-auto px-4 py-4 md:py-8 flex flex-col md:flex-row gap-4 md:gap-8">
+        {/* Control Panel */}
+        <div className="w-full md:w-1/3 bg-purple-50 p-4 md:p-8 rounded-md shadow-lg">
           <h1 className="text-xl font-bold text-black mb-4">DomDetective</h1>
-          <input
-            type="text"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            placeholder="Enter URL to inspect"
-            className="w-full p-2 mb-2 bg-white border border-gray-300 rounded-md text-black placeholder-gray-400 focus:outline-none focus:border-gray-500 text-sm"
-          />
-          <input
-            type="text"
-            value={outputFileName}
-            onChange={(e) => setOutputFileName(e.target.value)}
-            placeholder="Output CSV file name"
-            className="w-full p-2 mb-2 bg-white border border-gray-300 rounded-md text-black placeholder-gray-400 focus:outline-none focus:border-gray-500 text-sm"
-          />
-          <button
-            onClick={loadUrl}
-            disabled={loading}
-            className="mb-2 w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition duration-300 shadow-lg transform hover:scale-[1.02] text-sm"
-          >
-            {loading ? "Loading..." : "Load URL"}
-          </button>
-          {proxyHtml && (
+          <div className="space-y-2">
+            <input
+              type="text"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              placeholder="Enter URL to inspect"
+              className="w-full p-2 bg-white border border-gray-300 rounded-md text-black placeholder-gray-400 focus:outline-none focus:border-gray-500 text-sm"
+            />
+            <input
+              type="text"
+              value={outputFileName}
+              onChange={(e) => setOutputFileName(e.target.value)}
+              placeholder="Output CSV file name"
+              className="w-full p-2 bg-white border border-gray-300 rounded-md text-black placeholder-gray-400 focus:outline-none focus:border-gray-500 text-sm"
+            />
             <button
-              onClick={identifyElements}
+              onClick={loadUrl}
               disabled={loading}
               className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition duration-300 shadow-lg transform hover:scale-[1.02] text-sm"
             >
-              {loading ? (
-                <span>
-                  Identifying Elements ({Math.round(progress * 100)}%)
-                </span>
-              ) : (
-                <span>
-                  <FaRobot className="inline-block mr-2" />
-                  Identify Elements
-                </span>
-              )}
+              {loading ? "Loading..." : "Load URL"}
             </button>
-          )}
-
-          {error && (
-            <div className="mt-4 bg-red-500 text-white p-4 rounded-md">
-              {error}
-            </div>
-          )}
+            {proxyHtml && (
+              <button
+                onClick={identifyElements}
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition duration-300 shadow-lg transform hover:scale-[1.02] text-sm"
+              >
+                {loading ? (
+                  <span>Identifying Elements ({Math.round(progress * 100)}%)</span>
+                ) : (
+                  <span className="flex items-center justify-center">
+                    <FaRobot className="mr-2" />
+                    Identify Elements
+                  </span>
+                )}
+              </button>
+            )}
+          </div>
         </div>
 
-        <div className="w-2/3 bg-blue-50 rounded-md shadow-lg overflow-hidden h-[calc(100vh-120px)]">
+        {/* Preview Panel */}
+        <div className="w-full md:w-2/3 bg-blue-50 rounded-md shadow-lg overflow-hidden h-[50vh] md:h-[calc(100vh-120px)]">
           {proxyHtml && (
             <div className="relative w-full h-full">
               <iframe
@@ -620,149 +618,19 @@ export default function IdentifyEl() {
                 srcDoc={proxyHtml}
                 className="absolute top-0 left-0 w-full h-full border-none"
                 sandbox="allow-scripts allow-same-origin"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  transform: "scale(1)",
-                  transformOrigin: "top left",
-                }}
               />
             </div>
           )}
         </div>
       </div>
-      {loading ? (
-        <div className="flex justify-center items-center absolute top-1/2 left-1/2">
-          <div className="p-3 animate-spin drop-shadow-2xl bg-gradient-to-bl from-pink-400 via-purple-400 to-indigo-600 size-24 aspect-square rounded-full">
-            <div className="rounded-full h-full w-full bg-slate-100 dark:bg-zinc-900 backdrop-blur-md"></div>
-          </div>
-        </div>
-      ) : (
-        <div>
-          {identifiedElements.length > 0 && (
-            <div
-              className={`w-full bg-gray-50 rounded-md shadow-lg max-w-[calc(100%-30rem)] ${
-                loading ? "" : "h-[700px]"
-              } mx-auto flex flex-col mb-5 overflow-y-scroll`}
-            >
-              <div className="overflow-auto p-4">
-                <div className="bg-white rounded-lg p-4 shadow">
-                  <h2 className="text-2xl font-bold text-black mb-4">
-                    Identified Elements
-                  </h2>
-                  <div className="overflow-y-auto">
-                    <table className="w-full text-sm text-left text-gray-900 sticky top-10">
-                      <thead className="text-xs uppercase bg-gray-200">
-                        <tr>
-                          <th scope="col" className="p-5">
-                            ID
-                          </th>
-                          <th scope="col" className="p-5">
-                            Tag
-                          </th>
-                          <th scope="col" className="p-5">
-                            Element ID
-                          </th>
-                          <th scope="col" className="p-5">
-                            Class
-                          </th>
-                          <th scope="col" className="p-5">
-                            Relative XPath
-                          </th>
-                          <th scope="col" className="p-5">
-                            Absolute XPath
-                          </th>
-                          <th scope="col" className="p-5">
-                            CSS Selector
-                          </th>
-                          <th scope="col" className="p-5">
-                            Link Text
-                          </th>
-                          <th scope="col" className="p-5">
-                            Partial Link Text
-                          </th>
-                          <th scope="col" className="p-5">
-                            Text Content
-                          </th>
-                          <th scope="col" className="p-5">
-                            Attributes
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {identifiedElements.map((element, index) => (
-                          <tr
-                            key={index}
-                            className="bg-white border-b hover:bg-gray-50"
-                          >
-                            <td className="p-5">{element.id}</td>
-                            <td className="p-5">{element.tag}</td>
-                            <td className="p-5">{element.elementId}</td>
-                            <td className="p-5">{element.className}</td>
-                            <td className="p-5">{element.relativeXPath}</td>
-                            <td className="p-5">{element.absoluteXPath}</td>
-                            <td className="p-5">{element.cssSelector}</td>
-                            <td className="p-5">{element.linkText}</td>
-                            <td className="p-5">{element.partialLinkText}</td>
-                            <td className="p-5">
-                              {element.text.substring(0, 50)}
-                              {element.text.length > 50 ? "..." : ""}
-                            </td>
-                            <td className="p-5">
-                              <details>
-                                <summary className="cursor-pointer">
-                                  View Attributes
-                                </summary>
-                                <div className="mt-2">
-                                  {Object.entries(element.attributes).map(
-                                    ([key, value]) => (
-                                      <div key={key} className="text-xs">
-                                        <span className="font-semibold">
-                                          {key}:
-                                        </span>{" "}
-                                        {value}
-                                      </div>
-                                    )
-                                  )}
-                                </div>
-                              </details>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                  <button
-                    onClick={downloadCsv}
-                    className="mt-4 bg-black text-white font-bold py-2 px-4 rounded-md hover:bg-gray-800 transition duration-300"
-                  >
-                    <FaCode className="inline-block mr-2" />
-                    Download CSV
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-          <div className="container mx-auto px-4 py-8 w-screen flex flex-col gap-4">
-            {/* Advanced Features Toggle */}
-            <div className="flex justify-end mb-4">
-              <button
-                onClick={() => setShowAdvancedFeatures(!showAdvancedFeatures)}
-                className="bg-purple-600 text-white px-4 py-2 rounded-md"
-              >
-                {showAdvancedFeatures ? "Hide" : "Show"} Advanced Features
-              </button>
-              <button
-                onClick={() => setCompareMode(!compareMode)}
-                className="ml-4 bg-blue-600 text-white px-4 py-2 rounded-md"
-              >
-                {compareMode ? "Exit" : "Enter"} Compare Mode
-              </button>
-            </div>
 
-            {/* Filters Section */}
-            <div className="bg-white p-4 rounded-lg shadow-md">
-              <div className="flex flex-wrap gap-4 items-center">
+      {/* Results Section */}
+      {identifiedElements.length > 0 && (
+        <div className="container mx-auto px-4 py-4 space-y-4">
+          {/* Filters */}
+          <Card className="w-full">
+            <CardContent className="p-4">
+              <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex-1">
                   <div className="relative">
                     <FaSearch className="absolute left-3 top-3 text-gray-400" />
@@ -785,445 +653,84 @@ export default function IdentifyEl() {
                   <option value="text">Text Elements</option>
                   <option value="media">Media Elements</option>
                 </select>
-                <label className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={showOnlyVisible}
-                    onChange={(e) => setShowOnlyVisible(e.target.checked)}
-                  />
-                  Show Only Visible
-                </label>
-                <label className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={showOnlyInteractive}
-                    onChange={(e) => setShowOnlyInteractive(e.target.checked)}
-                  />
-                  Show Only Interactive
-                </label>
               </div>
-            </div>
+            </CardContent>
+          </Card>
 
-            {/* Main Content */}
-            <div className="bg-white rounded-lg shadow-md p-4">
-              <table className="w-full text-sm text-left text-gray-900">
-                <thead className="text-xs uppercase bg-gray-100">
+          {/* Elements Table */}
+          <div className="overflow-x-auto bg-white rounded-lg shadow">
+            <div className="inline-block min-w-full align-middle">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead>
                   <tr>
-                    {compareMode && (
-                      <th scope="col" className="px-4 py-2">
-                        <input
-                          type="checkbox"
-                          onChange={(e) => {
-                            const allIds = filteredElements.map((el) => el.id);
-                            setSelectedElements(e.target.checked ? allIds : []);
-                          }}
-                        />
-                      </th>
-                    )}
-                    <th scope="col" className="px-4 py-2">
-                      Basic Info
-                    </th>
-                    <th scope="col" className="px-4 py-2">
-                      Selectors
-                    </th>
-                    <th scope="col" className="px-4 py-2">
-                      Accessibility
-                    </th>
-                    <th scope="col" className="px-4 py-2">
-                      State
-                    </th>
-                    <th scope="col" className="px-4 py-2">
-                      Styles
-                    </th>
-                    <th scope="col" className="px-4 py-2">
-                      Position
-                    </th>
-                    {showAdvancedFeatures && (
-                      <>
-                        <th scope="col" className="px-4 py-2">
-                          Events
-                        </th>
-                        <th scope="col" className="px-4 py-2">
-                          Shadow DOM
-                        </th>
-                        <th scope="col" className="px-4 py-2">
-                          Performance
-                        </th>
-                        <th scope="col" className="px-4 py-2">
-                          Framework
-                        </th>
-                        <th scope="col" className="px-4 py-2">
-                          Validation
-                        </th>
-                      </>
-                    )}
+                    <th scope="col" className="px-4 py-2">Element</th>
+                    <th scope="col" className="px-4 py-2">Details</th>
+                    <th scope="col" className="px-4 py-2 hidden md:table-cell">Accessibility</th>
+                    <th scope="col" className="px-4 py-2 hidden md:table-cell">State</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-gray-200">
                   {filteredElements.map((element, index) => (
-                    <tr key={index} className="border-b hover:bg-gray-50">
-                      {compareMode && (
-                        <td className="px-4 py-2">
-                          <input
-                            type="checkbox"
-                            checked={selectedElements.includes(element.id)}
-                            onChange={(e) => {
-                              setSelectedElements((prev) =>
-                                e.target.checked
-                                  ? [...prev, element.id]
-                                  : prev.filter((id) => id !== element.id)
-                              );
-                            }}
-                          />
-                        </td>
-                      )}
+                    <tr key={index}>
                       <td className="px-4 py-2">
-                        <details>
-                          <summary className="cursor-pointer font-medium">
-                            {element.tag.toLowerCase()}{" "}
-                            {element.elementId && `#${element.elementId}`}
-                          </summary>
-                          <div className="mt-2 space-y-1 text-xs">
-                            <div>
-                              <span className="font-semibold">ID:</span>{" "}
-                              {element.elementId}
-                            </div>
-                            <div>
-                              <span className="font-semibold">Class:</span>{" "}
-                              {element.className}
-                            </div>
-                            <div>
-                              <span className="font-semibold">Text:</span>{" "}
-                              {element.text.substring(0, 50)}
-                            </div>
+                        <div className="text-sm font-medium">{element.tag.toLowerCase()}</div>
+                        <div className="text-xs text-gray-500">{element.elementId}</div>
+                      </td>
+                      <td className="px-4 py-2">
+                        <details className="text-sm">
+                          <summary className="cursor-pointer">View Details</summary>
+                          <div className="mt-2 space-y-1">
+                            <div><span className="font-medium">Class:</span> {element.className}</div>
+                            <div><span className="font-medium">Text:</span> {element.text.substring(0, 50)}</div>
                           </div>
                         </details>
                       </td>
-                      <td className="px-4 py-2">
-                        <details>
-                          <summary className="cursor-pointer">
-                            View Selectors
-                          </summary>
-                          <div className="mt-2 space-y-1 text-xs">
-                            <div>
-                              <span className="font-semibold">CSS:</span>{" "}
-                              {element.cssSelector}
-                            </div>
-                            <div>
-                              <span className="font-semibold">
-                                Relative XPath:
-                              </span>{" "}
-                              {element.relativeXPath}
-                            </div>
-                            <div>
-                              <span className="font-semibold">
-                                Absolute XPath:
-                              </span>{" "}
-                              {element.absoluteXPath}
-                            </div>
-                            <div>
-                              <span className="font-semibold">Unique:</span>{" "}
-                              {element.customSelectors.uniqueSelector}
-                            </div>
+                      <td className="px-4 py-2 hidden md:table-cell">
+                        <details className="text-sm">
+                          <summary className="cursor-pointer">View A11y</summary>
+                          <div className="mt-2 space-y-1">
+                            <div>Role: {element.accessibility.role}</div>
+                            <div>Focusable: {element.accessibility.isKeyboardFocusable ? "Yes" : "No"}</div>
                           </div>
                         </details>
                       </td>
-                      <td className="px-4 py-2">
-                        <details>
-                          <summary className="cursor-pointer">
-                            View A11y Info
-                          </summary>
-                          <div className="mt-2 space-y-1 text-xs">
-                            <div>
-                              <span className="font-semibold">Role:</span>{" "}
-                              {element.accessibility.role}
-                            </div>
-                            <div>
-                              <span className="font-semibold">Aria Label:</span>{" "}
-                              {element.accessibility.ariaLabel}
-                            </div>
-                            <div>
-                              <span className="font-semibold">Focusable:</span>{" "}
-                              {element.accessibility.isKeyboardFocusable
-                                ? "Yes"
-                                : "No"}
-                            </div>
+                      <td className="px-4 py-2 hidden md:table-cell">
+                        <details className="text-sm">
+                          <summary className="cursor-pointer">View State</summary>
+                          <div className="mt-2 space-y-1">
+                            <div>Visible: {element.state.isVisible ? "Yes" : "No"}</div>
+                            <div>Enabled: {element.state.isEnabled ? "Yes" : "No"}</div>
                           </div>
                         </details>
                       </td>
-                      <td className="px-4 py-2">
-                        <details>
-                          <summary className="cursor-pointer">
-                            View State
-                          </summary>
-                          <div className="mt-2 space-y-1 text-xs">
-                            {Object.entries(element.state).map(
-                              ([key, value]) => (
-                                <div key={key}>
-                                  <span className="font-semibold">{key}:</span>{" "}
-                                  {value.toString()}
-                                </div>
-                              )
-                            )}
-                          </div>
-                        </details>
-                      </td>
-                      <td className="px-4 py-2">
-                        <details>
-                          <summary className="cursor-pointer">
-                            View Styles
-                          </summary>
-                          <div className="mt-2 space-y-1 text-xs">
-                            {Object.entries(element.computedStyles).map(
-                              ([key, value]) => (
-                                <div key={key}>
-                                  <span className="font-semibold">{key}:</span>{" "}
-                                  {value}
-                                </div>
-                              )
-                            )}
-                          </div>
-                        </details>
-                      </td>
-                      <td className="px-4 py-2">
-                        <details>
-                          <summary className="cursor-pointer">
-                            View Position
-                          </summary>
-                          <div className="mt-2 space-y-1 text-xs">
-                            <div>
-                              <span className="font-semibold">Dimensions:</span>
-                            </div>
-                            <div>
-                              X: {element.dimensions.x}, Y:{" "}
-                              {element.dimensions.y}
-                            </div>
-                            <div>
-                              Width: {element.dimensions.width}, Height:{" "}
-                              {element.dimensions.height}
-                            </div>
-                            <div>
-                              <span className="font-semibold">Siblings:</span>
-                            </div>
-                            <div>
-                              Position: {element.siblings.siblingPosition + 1}{" "}
-                              of {element.siblings.totalSiblings}
-                            </div>
-                          </div>
-                        </details>
-                      </td>
-                      {showAdvancedFeatures && (
-                        <>
-                          <td className="px-4 py-2">
-                            <details>
-                              <summary className="cursor-pointer">
-                                Event Listeners
-                              </summary>
-                              <div className="mt-2 space-y-1 text-xs">
-                                {Object.entries(element.eventListeners).map(
-                                  ([event]) => (
-                                    <div key={event} className="text-green-600">
-                                      {event}
-                                    </div>
-                                  )
-                                )}
-                              </div>
-                            </details>
-                          </td>
-                          <td className="px-4 py-2">
-                            <details>
-                              <summary className="cursor-pointer">
-                                Shadow DOM
-                              </summary>
-                              <div className="mt-2 space-y-1 text-xs">
-                                {element.shadowDOM.hasShadowRoot ? (
-                                  <>
-                                    <div className="font-semibold">
-                                      Shadow Elements:
-                                    </div>
-                                    {element.shadowDOM.shadowElements.map(
-                                      (el, i) => (
-                                        <div key={i}>
-                                          {el.tag} {el.id && `#${el.id}`}
-                                        </div>
-                                      )
-                                    )}
-                                  </>
-                                ) : (
-                                  <div>No Shadow DOM</div>
-                                )}
-                              </div>
-                            </details>
-                          </td>
-                          <td className="px-4 py-2">
-                            <details>
-                              <summary className="cursor-pointer">
-                                Performance
-                              </summary>
-                              <div className="mt-2 space-y-1 text-xs">
-                                <div>
-                                  Render Time:{" "}
-                                  {element.performance.renderTime.toFixed(2)}ms
-                                </div>
-                                <div>
-                                  Layout Impact:{" "}
-                                  {element.performance.layoutImpact.toFixed(2)}%
-                                </div>
-                                <div>
-                                  Memory:{" "}
-                                  {(
-                                    element.performance.memoryEstimate / 1024
-                                  ).toFixed(2)}
-                                  KB
-                                </div>
-                              </div>
-                            </details>
-                          </td>
-                          <td className="px-4 py-2">
-                            <details>
-                              <summary className="cursor-pointer">
-                                Framework
-                              </summary>
-                              <div className="mt-2 space-y-1 text-xs">
-                                {Object.entries(element.framework)
-                                  .filter(([, used]) => used)
-                                  .map(([name]) => (
-                                    <div key={name} className="text-blue-600">
-                                      {name}
-                                    </div>
-                                  ))}
-                              </div>
-                            </details>
-                          </td>
-                          <td className="px-4 py-2">
-                            <details>
-                              <summary className="cursor-pointer">
-                                Validation
-                              </summary>
-                              <div className="mt-2 space-y-1 text-xs">
-                                {element.validation.hasValidation ? (
-                                  <>
-                                    <div>
-                                      Message:{" "}
-                                      {element.validation.validationMessage}
-                                    </div>
-                                    {element.validation.validity &&
-                                      Object.entries(
-                                        element.validation.validity
-                                      )
-                                        .filter(([, value]) => value)
-                                        .map(([key]) => (
-                                          <div
-                                            key={key}
-                                            className="text-red-600"
-                                          >
-                                            {key}
-                                          </div>
-                                        ))}
-                                  </>
-                                ) : (
-                                  <div>No Validation</div>
-                                )}
-                              </div>
-                            </details>
-                          </td>
-                        </>
-                      )}
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-
-            {/* Comparison Panel */}
-            {compareMode && selectedElements.length > 0 && (
-              <div className="bg-white rounded-lg shadow-md p-4 mt-4">
-                <h3 className="text-lg font-bold mb-4">Element Comparison</h3>
-                <div className="grid grid-cols-2 gap-4">
-                  {selectedElements.map((id) => {
-                    const element = identifiedElements.find(
-                      (el) => el.id === id
-                    );
-                    if (!element) return null;
-                    return (
-                      <div key={id} className="border p-4 rounded-md">
-                        <h4 className="font-bold">
-                          {element.tag} #{element.elementId}
-                        </h4>
-                        <div className="mt-2 space-y-2">
-                          <div>
-                            Accessibility Score:{" "}
-                            {
-                              Object.values(element.accessibility).filter(
-                                Boolean
-                              ).length
-                            }
-                            /7
-                          </div>
-                          <div>
-                            Performance Score:{" "}
-                            {100 - element.performance.layoutImpact}%
-                          </div>
-                          <div>Test Code:</div>
-                          <pre className="bg-gray-100 p-2 rounded text-xs">
-                            {generateTestCode(element)}
-                          </pre>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
           </div>
-          {identifiedElements.length > 0 && (
-            <div className="mt-4 p-4 bg-white rounded-lg shadow container max-w-7xl mb-10 flex justify-between">
-              <select
-                value={selectedFramework}
-                onChange={(e) => setSelectedFramework(e.target.value)}
-                className="px-3 py-2 border rounded"
-              >
-                <option value="playwright">Playwright</option>
-                <option value="cypress">Cypress</option>
-                <option value="selenium">Selenium</option>
-              </select>
-              <button
-                onClick={() => analyzeElement(identifiedElements[0])}
-                className="flex items-center px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors"
-                disabled={isAnalyzing}
-              >
-                <FaRobot className="mr-2" />
-                {isAnalyzing ? "Analyzing..." : "Comprehensive Analysis"}
-              </button>
-              {analysis && (
-                <div className="space-y-6">
-                  <div className="flex justify-end gap-2">
-                    <button
-                      onClick={() => exportAnalysis("markdown")}
-                      className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded"
-                    >
-                      Export MD
-                    </button>
-                    <button
-                      onClick={() => exportAnalysis("html")}
-                      className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded"
-                    >
-                      Export HTML
-                    </button>
-                    <button
-                      onClick={() => exportAnalysis("pdf")}
-                      className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded"
-                    >
-                      Export PDF
-                    </button>
-                  </div>
-                  {renderAnalysisDetails()}
-                </div>
-              )}
-            </div>
-          )}
+
+          {/* Actions */}
+          <div className="flex flex-wrap gap-4 justify-center md:justify-start">
+            <button
+              onClick={downloadCsv}
+              className="bg-black text-white font-bold py-2 px-4 rounded-md hover:bg-gray-800 transition duration-300"
+            >
+              <FaCode className="inline-block mr-2" />
+              Download CSV
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Loading Spinner */}
+      {loading && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="p-3 animate-spin drop-shadow-2xl bg-gradient-to-bl from-pink-400 via-purple-400 to-indigo-600 rounded-full">
+            <div className="rounded-full h-12 w-12 bg-white"></div>
+          </div>
         </div>
       )}
     </div>
   );
-}
+};
