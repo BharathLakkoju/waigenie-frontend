@@ -77,7 +77,7 @@ export default function AutomationCodeGenerator() {
     if (browserStarted) {
       interval = setInterval(async () => {
         try {
-          const response = await apiClient.get("https://waigenie.onrender.com/api/get-screenshot");
+          const response = await axios.get("https://waigenie.onrender.com/api/get-screenshot");
           setScreenshot(`data:image/png;base64,${response.data.screenshot}`);
         } catch (error) {
           console.error("Error fetching screenshot:", error);
