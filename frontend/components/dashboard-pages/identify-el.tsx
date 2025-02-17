@@ -5,15 +5,11 @@ import axios from "axios";
 import {
   FaRobot,
   FaCode,
-  FaBug,
-  FaEdit,
   FaSearch,
-  FaFilter,
   FaShieldAlt,
   FaUniversalAccess,
   FaBolt,
   FaEye,
-  FaLightbulb,
 } from "react-icons/fa";
 import apiClient from "@/lib/api-client";
 import { useToast } from "@/hooks/use-toast";
