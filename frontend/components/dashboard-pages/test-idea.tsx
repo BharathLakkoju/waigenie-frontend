@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import apiClient from "@/lib/api-client";
 import BrowserView from "@/components/dashboard-pages/browser-view";
 import { useToast } from "@/hooks/use-toast";
+import ReactMarkdown from 'react-markdown';
 
 export default function TestIdea() {
   const [url, setUrl] = useState("");
@@ -142,9 +143,9 @@ export default function TestIdea() {
               <span className="text-2xl font-bold text-black pb-4">
                 Generated Test Scenarios
               </span>
-              <pre className="bg-white p-4 rounded-md whitespace-pre-wrap text-black border border-gray-300 mt-4">
-                {testScenarios}
-              </pre>
+              <div className="bg-white p-4 rounded-md text-black border border-gray-300 mt-4 prose prose-sm max-w-none">
+                <ReactMarkdown>{testScenarios}</ReactMarkdown>
+              </div>
             </div>
           )}
           {manualTestCases && mode === "manual" && (
@@ -152,9 +153,9 @@ export default function TestIdea() {
               <span className="text-2xl font-bold text-black">
                 Generated Manual Test Cases
               </span>
-              <pre className="bg-white p-4 rounded-md whitespace-pre-wrap text-black border border-gray-300 mt-4">
-                {manualTestCases}
-              </pre>
+              <div className="bg-white p-4 rounded-md text-black border border-gray-300 mt-4 prose prose-sm max-w-none">
+                <ReactMarkdown>{manualTestCases}</ReactMarkdown>
+              </div>
             </div>
           )}
         </div>

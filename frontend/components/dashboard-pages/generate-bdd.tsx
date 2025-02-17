@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import apiClient from "@/lib/api-client";
 import { useToast } from "@/hooks/use-toast";
 import { FaCode, FaEdit } from "react-icons/fa";
+import ReactMarkdown from "react-markdown";
 
 export default function GenerateBDD() {
   const [userStory, setUserStory] = useState("");
@@ -113,16 +114,28 @@ export default function GenerateBDD() {
       </div>
       <div className="w-full md:w-2/3 px-6 bg-gray-50 rounded-md h-auto md:h-[calc(100vh-100px)] shadow-lg overflow-y-auto">
         {manualTestCases && (
-          <div className="bg-gray-50 py-2 flex flex-col items-center">
-            <span className="text-2xl font-bold text-black mt-4">Generated Manual Test Cases</span>
-            <pre className="bg-white p-4 rounded-md text-black border border-gray-300 whitespace-pre-wrap my-4">{manualTestCases}</pre>
-          </div>
+          <>
+            <div className="bg-gray-50 py-2 flex flex-col items-center">
+              <span className="text-2xl font-bold text-black mt-4">
+                Generated Manual Test Cases
+              </span>
+              <pre className="bg-white p-4 rounded-md text-black border border-gray-300 whitespace-pre-wrap my-4">
+                <ReactMarkdown>{manualTestCases}</ReactMarkdown>
+              </pre>
+            </div>
+          </>
         )}
         {gherkinFeature && (
-          <div className="bg-gray-50 py-2 flex flex-col items-center">
-            <span className="text-2xl font-bold text-black mt-4">Generated Gherkin Feature</span>
-            <pre className="bg-white p-4 rounded-md text-black border border-gray-300 whitespace-pre-wrap my-4">{gherkinFeature}</pre>
-          </div>
+          <>
+            <div className="bg-gray-50 py-2 flex flex-col items-center">
+              <span className="text-2xl font-bold text-black mt-4">
+                Generated Gherkin Feature
+              </span>
+              <pre className="bg-white p-4 rounded-md text-black border border-gray-300 whitespace-pre-wrap my-4">
+                <ReactMarkdown>{gherkinFeature}</ReactMarkdown>
+              </pre>
+            </div>
+          </>
         )}
       </div>
     </div>

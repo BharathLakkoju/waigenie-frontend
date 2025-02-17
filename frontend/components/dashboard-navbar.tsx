@@ -102,7 +102,7 @@ export function DashboardNavbar({
 
   useEffect(() => {
     fetchUserData();
-  }, [user.email]);
+  }, [user.email, user.credits]);
 
   useEffect(() => {
     async function fetchPrices() {

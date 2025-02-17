@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import apiClient from "@/lib/api-client";
 import { useToast } from "@/hooks/use-toast";
+import ReactMarkdown from "react-markdown";
 import axios from "axios";
 
 export default function AutomationCodeGenerator() {
@@ -123,9 +124,13 @@ export default function AutomationCodeGenerator() {
         {browserStarted && screenshot && <img src={screenshot} alt="Browser view" className="w-full rounded-lg" />}
       </div>
       {generatedCode && (
-        <div className="w-full max-w-4xl bg-gray-50 p-6 rounded-lg shadow-md overflow-x-auto">
-          <h2 className="text-xl font-bold">Generated {language} Code</h2>
-          <pre className="bg-gray-100 p-4 rounded-lg overflow-x-auto mt-4">{generatedCode}</pre>
+        <div className="w-full max-w-6xl mx-auto bg-gray-50 rounded-md shadow-lg p-6 mb-4">
+          <h2 className="text-2xl font-bold text-black">
+            Generated {language} Code
+          </h2>
+          <pre className="bg-white p-4 rounded-md overflow-x-auto text-black border border-gray-300 whitespace-pre-wrap mt-4 h-[550px] overflow-y-scroll">
+            <ReactMarkdown>{generatedCode}</ReactMarkdown>
+          </pre>
         </div>
       )}
     </div>
