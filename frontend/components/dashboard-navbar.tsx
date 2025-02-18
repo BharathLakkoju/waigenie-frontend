@@ -22,6 +22,7 @@ import PaymentModal from "./payment-modal";
 import { getUserByEmail, getUserType } from "@/data/user";
 import { auth } from "@/auth";
 import { getExchangeRate } from "@/lib/currency";
+import { useUserStore } from "@/store/user-store";
 
 interface UserDetails {
   id: string;
@@ -46,63 +47,28 @@ export function DashboardNavbar({
   const pathname = usePathname();
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<"pro" | "enterprise">("pro");
-  const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [proPrice, setProPrice] = useState<number>(0);
 
-  const checkAndResetCredits = async (email: string) => {
-    try {
-      const response = await fetch('/api/credits/reset', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
+  // Replace userDetails state with Zustand store
+  const { userDetails, isLoading, fetchUserDetails, checkAndResetCredits } = useUserStore();
 
-      if (response.ok) {
-        const data = await response.json();
-        if (data.success) {
-          // Credits were reset, update the UI
-          setUserDetails(prev => prev ? { ...prev, credits: data.credits } : prev);
-        }
-      }
-    } catch (error) {
-      console.error("Error checking credit reset:", error);
-    }
-  };
-
-  const fetchUserData = async () => {
-    try {
-      setIsLoading(true);
-      const response = await fetch('/api/user/details', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: user.email,
-        }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setUserDetails(data);
-        // Check if credits need to be reset
-        await checkAndResetCredits(user.email);
-      } else {
-        console.error("Failed to fetch user details");
-      }
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
+  // Set up polling for credit updates
   useEffect(() => {
-    fetchUserData();
-  }, [user.email, user.credits]);
+    // Initial fetch
+    fetchUserDetails(user.email);
+
+    // Set up polling interval
+    const pollInterval = setInterval(() => {
+      fetchUserDetails(user.email);
+    }, 5000);
+
+    return () => clearInterval(pollInterval);
+  }, [user.email, fetchUserDetails]);
+
+  // Check for credit reset when component mounts
+  useEffect(() => {
+    checkAndResetCredits(user.email);
+  }, [user.email, checkAndResetCredits]);
 
   useEffect(() => {
     async function fetchPrices() {
@@ -120,7 +86,7 @@ export function DashboardNavbar({
 
   const handleUpgradeSuccess = async (newUserType: string) => {
     console.log("Upgrade successful, new user type:", newUserType);
-    await fetchUserData(); // Refresh user data after upgrade
+    await fetchUserDetails(user.email);
   };
 
   useEffect(() => {
@@ -265,7 +231,6 @@ export function DashboardNavbar({
                         </span>
                         <span className="text-lg font-bold text-indigo-600 dark:text-indigo-400">
                           {isLoading ? "..." : userDetails?.credits || 0}
-                          
                         </span>
                       </motion.div>
                     )}
