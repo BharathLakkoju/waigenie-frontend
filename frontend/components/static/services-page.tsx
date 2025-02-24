@@ -375,12 +375,12 @@ function ListComp() {
         "Leverage AI to automatically explore and test complex user journeys.",
       image: <WebMazeAnimation />,
     },
-    {
-      title: "Custom Integration Solutions",
-      description:
-        "Seamlessly integrate WAIGENIE into your existing QA workflow and tools.",
-      image: "/placeholder.svg",
-    },
+    // {
+    //   title: "Custom Integration Solutions",
+    //   description:
+    //     "Seamlessly integrate WAIGENIE into your existing QA workflow and tools.",
+    //   image: "/placeholder.svg",
+    // },
   ];
   return (
     <>

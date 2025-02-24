@@ -21,8 +21,16 @@ export default function PricingPage() {
   useEffect(() => {
     async function fetchPrice() {
       try {
-        const inrAmount = await getExchangeRate(basePrice);
-        setProPrice(`₹${Math.round(inrAmount).toLocaleString('en-IN')}`);
+        const response = await fetch('https://ipapi.co/json/');
+        const data = await response.json();
+        const countryCode = data.country_code;
+
+        if (countryCode === 'IN') {
+          const inrAmount = await getExchangeRate(basePrice);
+          setProPrice(`₹${Math.round(inrAmount).toLocaleString('en-IN')}`);
+        } else {
+          setProPrice(`$${basePrice}`);
+        }
       } catch (error) {
         console.error('Error fetching price:', error);
         // Fallback price
