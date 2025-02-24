@@ -26,6 +26,7 @@ import {
   Plus,
   Minus,
 } from "lucide-react";
+import emailjs from 'emailjs-com';
 
 const faqs = [
   {
@@ -142,6 +143,19 @@ export default function CreativeContactPageWithEnhancedFAQ() {
     }
   }, [isFAQExpanded]);
 
+  const sendEmail = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', e.currentTarget, 'YOUR_USER_ID')
+      .then((result) => {
+          console.log(result.text);
+          alert('Message sent successfully!');
+      }, (error) => {
+          console.log(error.text);
+          alert('Failed to send message, please try again later.');
+      });
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-blue-200 to-white flex flex-col mt-24">
       <main className="flex-grow flex items-center justify-center py-12 px-4">
@@ -183,7 +197,7 @@ export default function CreativeContactPageWithEnhancedFAQ() {
                   </div>
                 </div>
 
-                <form className="space-y-6">
+                <form className="space-y-6" onSubmit={sendEmail}>
                   <div>
                     <label
                       htmlFor="name"
@@ -193,6 +207,7 @@ export default function CreativeContactPageWithEnhancedFAQ() {
                     </label>
                     <Input
                       id="name"
+                      name="name"
                       placeholder="Enter your full name"
                       className="w-full border-gray-300"
                     />
@@ -207,6 +222,7 @@ export default function CreativeContactPageWithEnhancedFAQ() {
                     </label>
                     <Input
                       id="email"
+                      name="email"
                       type="email"
                       placeholder="Enter your mail id"
                       className="w-full border-gray-300"
@@ -222,12 +238,13 @@ export default function CreativeContactPageWithEnhancedFAQ() {
                     </label>
                     <Textarea
                       id="message"
+                      name="message"
                       placeholder="Enter your message"
                       className="w-full min-h-[150px] border-gray-300"
                     />
                   </div>
 
-                  <Button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white">
+                  <Button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white">
                     Send
                   </Button>
                 </form>

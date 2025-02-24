@@ -642,7 +642,7 @@ export function B2BAnimation() {
   ];
 
   return (
-    <div className="w-full h-[500px] bg-gradient-to-br from-blue-50 to-purple-100 flex items-center justify-center rounded-md">
+    <div className="w-full max-sm:h-[300px] h-[500px] bg-gradient-to-br from-blue-50 to-purple-100 flex items-center justify-center rounded-md">
       <motion.svg
         key={key}
         viewBox="-250 -250 500 500"
@@ -876,7 +876,7 @@ export function EnhancedB2BSection() {
               </ul>
               <Link
                 href={"/Consultation"}
-                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                className="max-sm:text-sm bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
                 <span className="mr-2">Schedule a Consultation</span>
                 <ArrowRight className="w-5 h-5 inline-block" />
