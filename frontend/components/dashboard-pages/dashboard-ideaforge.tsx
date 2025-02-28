@@ -130,15 +130,16 @@ export default function TestIdea() {
           )}
         </div>
       </div>
-      {loading ? (
-        <div className="p-6">
-          <span className="text-2xl font-bold text-black pb-4">
-            Loading...
-          </span>
+      {/* Loading Spinner */}
+      {loading && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="p-3 animate-spin drop-shadow-2xl bg-gradient-to-bl from-pink-400 via-purple-400 to-indigo-600 rounded-full">
+            <div className="rounded-full h-12 w-12 bg-white"></div>
+          </div>
         </div>
-      ) : (testScenarios || manualTestCases || loading) && (
+      )}
+      {(testScenarios || manualTestCases || loading) && (
         <div className="w-full bg-gray-50 rounded-md shadow-lg max-w-6xl mx-auto flex flex-col mb-5">
-          
           {testScenarios && mode === "auto" && (
             <div className="p-6">
               <span className="text-2xl font-bold text-black pb-4">

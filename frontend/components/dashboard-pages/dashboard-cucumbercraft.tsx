@@ -131,6 +131,14 @@ export default function GenerateBDD() {
             </div>
           </div>
         )}
+        {/* Loading Spinner */}
+        {loading && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="p-3 animate-spin drop-shadow-2xl bg-gradient-to-bl from-pink-400 via-purple-400 to-indigo-600 rounded-full">
+              <div className="rounded-full h-12 w-12 bg-white"></div>
+            </div>
+          </div>
+        )}
 
         <button
           onClick={generateGherkinFeature}
