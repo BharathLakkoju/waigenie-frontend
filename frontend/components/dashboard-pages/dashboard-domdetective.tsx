@@ -719,14 +719,101 @@ export default function IdentifyEl() {
         </div>
       )}
 
-      {/* Loading Spinner */}
-      {loading && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="p-3 animate-spin drop-shadow-2xl bg-gradient-to-bl from-pink-400 via-purple-400 to-indigo-600 rounded-full">
-            <div className="rounded-full h-12 w-12 bg-white"></div>
+      {/* Comparison Panel */}
+            {compareMode && selectedElements.length > 0 && (
+              <div className="bg-white rounded-lg shadow-md p-4 mt-4">
+                <h3 className="text-lg font-bold mb-4">Element Comparison</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  {selectedElements.map((id) => {
+                    const element = identifiedElements.find(
+                      (el) => el.id === id
+                    );
+                    if (!element) return null;
+                    return (
+                      <div key={id} className="border p-4 rounded-md">
+                        <h4 className="font-bold">
+                          {element.tag} #{element.elementId}
+                        </h4>
+                        <div className="mt-2 space-y-2">
+                          <div>
+                            Accessibility Score:{" "}
+                            {
+                              Object.values(element.accessibility).filter(
+                                Boolean
+                              ).length
+                            }
+                            /7
+                          </div>
+                          <div>
+                            Performance Score:{" "}
+                            {100 - element.performance.layoutImpact}%
+                          </div>
+                          <div>Test Code:</div>
+                          <pre className="bg-gray-100 p-2 rounded text-xs">
+                            {generateTestCode(element)}
+                          </pre>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+        {identifiedElements.length > 0 && (
+          <div className="mt-4 p-4 bg-white rounded-lg shadow container max-w-7xl mb-10 flex flex-col md:flex-row justify-between space-y-4 md:space-y-0 md:space-x-4">
+            <select
+              value={selectedFramework}
+              onChange={(e) => setSelectedFramework(e.target.value)}
+              className="px-3 py-2 border rounded w-full md:w-auto"
+            >
+              <option value="playwright">Playwright</option>
+              <option value="cypress">Cypress</option>
+              <option value="selenium">Selenium</option>
+            </select>
+            <button
+              onClick={() => analyzeElement(identifiedElements[0])}
+              className="flex items-center px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors w-full md:w-auto justify-center"
+              disabled={isAnalyzing}
+            >
+              <FaRobot className="mr-2" />
+              {isAnalyzing ? "Analyzing..." : "Comprehensive Analysis"}
+            </button>
+            {analysis && (
+              <div className="w-full space-y-6">
+                <div className="flex flex-wrap justify-end gap-2">
+                  <button
+                    onClick={() => exportAnalysis("markdown")}
+                    className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded"
+                  >
+                    Export MD
+                  </button>
+                  <button
+                    onClick={() => exportAnalysis("html")}
+                    className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded"
+                  >
+                    Export HTML
+                  </button>
+                  <button
+                    onClick={() => exportAnalysis("pdf")}
+                    className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded"
+                  >
+                    Export PDF
+                  </button>
+                </div>
+                {renderAnalysisDetails()}
+              </div>
+            )}
           </div>
-        </div>
-      )}
-    </div>
-  );
-};
+        )}
+
+        {/* Loading Spinner */}
+        {loading && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="p-3 animate-spin drop-shadow-2xl bg-gradient-to-bl from-pink-400 via-purple-400 to-indigo-600 rounded-full">
+              <div className="rounded-full h-12 w-12 bg-white"></div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };

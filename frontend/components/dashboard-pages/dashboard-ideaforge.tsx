@@ -3,7 +3,8 @@ import React, { useState } from "react";
 import apiClient from "@/lib/api-client";
 import BrowserView from "@/components/dashboard-pages/browser-view";
 import { useToast } from "@/hooks/use-toast";
-import ReactMarkdown from 'react-markdown';
+import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export default function TestIdea() {
   const [url, setUrl] = useState("");
@@ -144,7 +145,7 @@ export default function TestIdea() {
                 Generated Test Scenarios
               </span>
               <div className="bg-white p-4 rounded-md text-black border border-gray-300 mt-4 prose prose-sm max-w-none">
-                <ReactMarkdown>{testScenarios}</ReactMarkdown>
+                <Markdown remarkPlugins={[remarkGfm]}>{testScenarios}</Markdown>
               </div>
             </div>
           )}
@@ -154,7 +155,7 @@ export default function TestIdea() {
                 Generated Manual Test Cases
               </span>
               <div className="bg-white p-4 rounded-md text-black border border-gray-300 mt-4 prose prose-sm max-w-none">
-                <ReactMarkdown>{manualTestCases}</ReactMarkdown>
+                <Markdown remarkPlugins={[remarkGfm]}>{manualTestCases}</Markdown>
               </div>
             </div>
           )}

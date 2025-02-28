@@ -19,8 +19,6 @@ import {
   Coins,
 } from "lucide-react";
 import PaymentModal from "./payment-modal";
-import { getUserByEmail, getUserType } from "@/data/user";
-import { auth } from "@/auth";
 import { getExchangeRate } from "@/lib/currency";
 import { useUserStore } from "@/store/user-store";
 

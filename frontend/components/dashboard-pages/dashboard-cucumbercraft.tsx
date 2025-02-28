@@ -104,6 +104,34 @@ export default function GenerateBDD() {
           </div>
         </div>
 
+        {generationMethod === "direct" && (
+          <div className="mb-6">
+            <h3 className="text-black font-bold text-lg mb-2">Detail Level:</h3>
+            <div className="flex justify-center space-x-4">
+              <button
+                onClick={() => setDetailLevel("Simple")}
+                className={`px-4 py-2 rounded-full text-xs shadow-lg transition-all duration-300 ${
+                  detailLevel === "Simple"
+                    ? "bg-blue-600 text-white transform scale-105"
+                    : "bg-blue-100 text-blue-600 hover:bg-blue-200"
+                }`}
+              >
+                Simple
+              </button>
+              <button
+                onClick={() => setDetailLevel("Detailed")}
+                className={`px-4 py-2 rounded-full text-xs shadow-lg transition-all duration-300 ${
+                  detailLevel === "Detailed"
+                    ? "bg-blue-600 text-white transform scale-105"
+                    : "bg-blue-100 text-blue-600 hover:bg-blue-200"
+                }`}
+              >
+                Detailed
+              </button>
+            </div>
+          </div>
+        )}
+
         <button
           onClick={generateGherkinFeature}
           disabled={loading}
