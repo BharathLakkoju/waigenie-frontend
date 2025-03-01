@@ -68,7 +68,7 @@ export default function GenerateBDD() {
       if (generationMethod === "manual-first") {
         setManualTestCases(response.data.manualTestCases.replace(/\*/g, ''));
       }
-      setGherkinFeature(response.data.gherkinFeature.replace(/\```(?:gherkin)?```/g, ''));
+      setGherkinFeature(response.data.gherkinFeature.replace(/^.*\n|\n.*$/g, ''));
     } catch (error) {
       console.error("Error generating Gherkin feature:", error);
     }
@@ -131,22 +131,22 @@ export default function GenerateBDD() {
             </div>
           </div>
         )}
-        {/* Loading Spinner */}
-        {loading && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div className="p-3 animate-spin drop-shadow-2xl bg-gradient-to-bl from-pink-400 via-purple-400 to-indigo-600 rounded-full">
-              <div className="rounded-full h-12 w-12 bg-white"></div>
-            </div>
-          </div>
-        )}
 
         <button
           onClick={generateGherkinFeature}
           disabled={loading}
           className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition duration-300 shadow-lg transform hover:scale-[1.02] text-sm"
-        >
+          >
           {loading ? "Generating..." : "Generate Gherkin Feature"}
         </button>
+          {/* Loading Spinner */}
+          {loading && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+              <div className="p-3 animate-spin drop-shadow-2xl bg-gradient-to-bl from-pink-400 via-purple-400 to-indigo-600 rounded-full">
+                <div className="rounded-full h-12 w-12 bg-white"></div>
+              </div>
+            </div>
+          )}
       </div>
       <div className="w-full md:w-2/3 px-6 bg-gray-50 rounded-md h-auto md:h-[calc(100vh-100px)] shadow-lg overflow-y-auto">
         {manualTestCases && (
