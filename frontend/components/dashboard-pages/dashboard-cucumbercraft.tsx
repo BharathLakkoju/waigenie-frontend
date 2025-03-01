@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import apiClient from "@/lib/api-client";
 import { useToast } from "@/hooks/use-toast";
-import { FaCode, FaEdit } from "react-icons/fa";
+
 import ReactMarkdown from "react-markdown";
 
 export default function GenerateBDD() {
@@ -156,7 +156,7 @@ export default function GenerateBDD() {
                 Generated Manual Test Cases
               </span>
               <div className="bg-white p-4 rounded-md text-black border border-gray-300 whitespace-pre-wrap my-4 w-full overflow-x-hidden">
-                <ReactMarkdown>{manualTestCases}</ReactMarkdown>
+                {manualTestCases}
               </div>
             </div>
           </>
@@ -168,7 +168,7 @@ export default function GenerateBDD() {
                 Generated Gherkin Feature
               </span>
               <div className="bg-white p-4 rounded-md text-black border border-gray-300 whitespace-pre-wrap my-4 w-full overflow-x-hidden">
-                <ReactMarkdown>{gherkinFeature}</ReactMarkdown>
+                {gherkinFeature}
               </div>
             </div>
           </>

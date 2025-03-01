@@ -3,8 +3,6 @@ import React, { useState } from "react";
 import apiClient from "@/lib/api-client";
 import BrowserView from "@/components/dashboard-pages/browser-view";
 import { useToast } from "@/hooks/use-toast";
-import Markdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 
 export default function TestIdea() {
   const [url, setUrl] = useState("");
@@ -38,9 +36,9 @@ export default function TestIdea() {
         }
       );
       if (mode === "auto") {
-        setTestScenarios(response.data.test_scenarios);
+        setTestScenarios(response.data.test_scenarios.replace(/\*/g, ''));
       } else {
-        setManualTestCases(response.data.manual_test_cases);
+        setManualTestCases(response.data.manual_test_cases.replace(/\*/g, ''));
       }
     } catch (error: any) {
       console.error("Error generating scenarios:", error);
@@ -145,8 +143,8 @@ export default function TestIdea() {
               <span className="text-2xl font-bold text-black pb-4">
                 Generated Test Scenarios
               </span>
-              <div className="bg-white p-4 rounded-md text-black border border-gray-300 mt-4 prose prose-sm max-w-none">
-                <Markdown remarkPlugins={[remarkGfm]}>{testScenarios}</Markdown>
+              <div className="bg-white p-4 rounded-md text-black border border-gray-300 mt-4 whitespace-pre-wrap">
+                {testScenarios}
               </div>
             </div>
           )}
@@ -155,8 +153,8 @@ export default function TestIdea() {
               <span className="text-2xl font-bold text-black">
                 Generated Manual Test Cases
               </span>
-              <div className="bg-white p-4 rounded-md text-black border border-gray-300 mt-4 prose prose-sm max-w-none">
-                <Markdown remarkPlugins={[remarkGfm]}>{manualTestCases}</Markdown>
+              <div className="bg-white p-4 rounded-md text-black border border-gray-300 mt-4 whitespace-pre-wrap">
+                {manualTestCases}
               </div>
             </div>
           )}

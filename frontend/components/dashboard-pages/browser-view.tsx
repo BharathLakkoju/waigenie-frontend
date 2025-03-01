@@ -13,15 +13,10 @@ const BrowserView: React.FC<BrowserViewProps> = ({
 }) => {
   const [proxyUrl, setProxyUrl] = useState("");
   const [currentUrl, setCurrentUrl] = useState(url);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setProxyUrl(
-      // `https://favourable-rea-bharath07-7294baab.koyeb.app/proxy?url=${encodeURIComponent(
-      //   currentUrl
-      // )}`
-      // "https://waigenie-delpoyment-test.onrender.com/proxy?url=${encodeURIComponent(
-      //   currentUrl
-      // )}"
       `https://waigenie.onrender.com/proxy?url=${encodeURIComponent(currentUrl)}`
     );
   }, [currentUrl]);
@@ -37,52 +32,29 @@ const BrowserView: React.FC<BrowserViewProps> = ({
     return () => window.removeEventListener("message", handleMessage);
   }, [onElementsSelected]);
 
-  const handleReload = () => {
-    setProxyUrl(
-      // `https://favourable-rea-bharath07-7294baab.koyeb.app/proxy?url=${encodeURIComponent(
-      //   currentUrl
-      // )}`
-      // `https://waigenie-delpoyment-test.onrender.com/proxy?url=${encodeURIComponent(
-      //   currentUrl
-      // )}`
-      `https://waigenie.onrender.com/proxy?url=${encodeURIComponent(currentUrl)}`
-    );
-  };
-
-  const handleUrlSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setCurrentUrl(currentUrl);
-  };
-
   return (
-    <div className="browser-view flex flex-col">
-      {/* <div className="flex items-center gap-2 p-2 bg-gray-100 rounded-t-xl h-14">
-        <button
-          onClick={handleReload}
-          className="p-2 hover:bg-gray-200 rounded-full"
-        >
-          <IoReload className="w-5 h-5" />
-        </button>
-        <form onSubmit={handleUrlSubmit} className="flex-1">
-          <input
-            type="text"
-            value={currentUrl}
-            onChange={(e) => setCurrentUrl(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-500"
-            placeholder="Enter URL"
-          />
-        </form>
-      </div> */}
-      <iframe
-        src={proxyUrl}
-        style={{
-          width: "100%",
-          border: "none",
-        }}
-        sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-        className="w-full h-[calc(100vh-100px)] rounded-md"
-      />
-    </div>
+    (url !== "") && (
+      <div className="browser-view flex flex-col">
+        {isLoading && (
+          <div className="w-full h-[calc(100vh-100px)] flex items-center justify-center bg-gray-50 rounded-md">
+            <div className="p-3 animate-spin drop-shadow-2xl bg-gradient-to-bl from-pink-400 via-purple-400 to-indigo-600 rounded-full">
+              <div className="rounded-full h-12 w-12 bg-white"></div>
+            </div>
+          </div>
+        )}
+        <iframe
+          src={proxyUrl}
+          style={{
+            width: "100%",
+            border: "none",
+            display: isLoading ? "none" : "block"
+          }}
+          sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+          className="w-full h-[calc(100vh-100px)] rounded-md"
+          onLoad={() => setIsLoading(false)}
+        />
+      </div>
+    )
   );
 };
 

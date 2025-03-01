@@ -259,18 +259,16 @@ export function DashboardNavbar({
 
                   {/* Only show upgrade button for freeTierUser */}
                   {!isLoading && userDetails?.userType === "freeTierUser" && open && (
-                    <motion.Button
-                      initial={{ opacity: 0, y: -100 }}
+                    <motion.div
+                      initial={{ opacity: 0, y: 100 }}
                       animate={{ opacity: 1, y: 0 }}
                       onClick={() => handleUpgradeClick("pro")}
-                      className="w-full bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 rounded-md p-2 hover:to-purple-600 text-white shadow-md border-none"
-                      variant="default"
+                      className="w-full bg-gradient-to-r flex justify-center items-center from-indigo-500 to-purple-500 hover:from-indigo-600 rounded-md p-2 hover:to-purple-600 text-white shadow-md border-none cursor-pointer"
                     >
                       <span className="flex items-center gap-2">
-                        <span className="text-lg">⭐</span>
                         Upgrade to Pro
                       </span>
-                    </motion.Button>
+                    </motion.div>
                   )}
 
                 <Button
