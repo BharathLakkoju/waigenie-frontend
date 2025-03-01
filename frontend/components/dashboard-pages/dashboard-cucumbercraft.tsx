@@ -66,9 +66,9 @@ export default function GenerateBDD() {
         }
       );
       if (generationMethod === "manual-first") {
-        setManualTestCases(response.data.manualTestCases);
+        setManualTestCases(response.data.manualTestCases.replace(/\*/g, ''));
       }
-      setGherkinFeature(response.data.gherkinFeature);
+      setGherkinFeature(response.data.gherkinFeature.replace(/\```(?:gherkin)?```/g, ''));
     } catch (error) {
       console.error("Error generating Gherkin feature:", error);
     }

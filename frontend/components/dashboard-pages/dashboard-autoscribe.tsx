@@ -182,7 +182,7 @@ export default function AutomationCodeGenerator() {
             Generated {language} Code
           </h2>
           <div className="bg-white p-4 rounded-md overflow-x-auto text-black border border-gray-300 whitespace-pre-wrap mt-4 h-[350px] lg:h-[550px] overflow-y-scroll">
-            {generatedCode}
+            <ReactMarkdown>{generatedCode}</ReactMarkdown>
           </div>
         </div>
       )}
