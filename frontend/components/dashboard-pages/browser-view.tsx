@@ -36,11 +36,11 @@ const BrowserView: React.FC<BrowserViewProps> = ({
     (url !== "") && (
       <div className="browser-view flex flex-col">
         {isLoading && (
-          <div className="w-full h-[calc(100vh-100px)] flex items-center justify-center bg-gray-50 rounded-md">
+          <div className="w-full h-[calc(100vh-100px)] flex flex-col items-center justify-center bg-gray-50 rounded-md">
             <div className="p-3 animate-spin drop-shadow-2xl bg-gradient-to-bl from-pink-400 via-purple-400 to-indigo-600 rounded-full">
               <div className="rounded-full h-12 w-12 bg-white"></div>
             </div>
-            <span className="text-xl">Please wait. While we get the page content...</span>
+            <span className="text-lg font-medium">Please wait. While we get the page content...</span>
           </div>
         )}
         <iframe
