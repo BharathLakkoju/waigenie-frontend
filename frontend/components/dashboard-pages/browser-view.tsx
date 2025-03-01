@@ -40,6 +40,7 @@ const BrowserView: React.FC<BrowserViewProps> = ({
             <div className="p-3 animate-spin drop-shadow-2xl bg-gradient-to-bl from-pink-400 via-purple-400 to-indigo-600 rounded-full">
               <div className="rounded-full h-12 w-12 bg-white"></div>
             </div>
+            <span className="text-xl">Please wait. While we get the page content...</span>
           </div>
         )}
         <iframe
