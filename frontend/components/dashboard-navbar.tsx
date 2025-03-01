@@ -50,24 +50,15 @@ export function DashboardNavbar({
   // Replace userDetails state with Zustand store
   const { userDetails, isLoading, fetchUserDetails, checkAndResetCredits } = useUserStore();
 
-  // Set up polling for credit updates
+  // Fetch user details when component mounts
   useEffect(() => {
-    // Initial fetch
     fetchUserDetails(user.email);
-
-    // Set up polling interval
-    const pollInterval = setInterval(() => {
-      fetchUserDetails(user.email);
-    }, 5000);
-
-    return () => clearInterval(pollInterval);
   }, [user.email, fetchUserDetails]);
 
   // Check for credit reset when component mounts
   useEffect(() => {
     checkAndResetCredits(user.email);
   }, [user.email, checkAndResetCredits]);
-
   useEffect(() => {
     async function fetchPrices() {
       try {
@@ -267,21 +258,19 @@ export function DashboardNavbar({
                 </div>
 
                   {/* Only show upgrade button for freeTierUser */}
-                  {!isLoading && userDetails?.userType === "freeTierUser" && (
-                    <Button
+                  {!isLoading && userDetails?.userType === "freeTierUser" && open && (
+                    <motion.Button
+                      initial={{ opacity: 0, y: -100 }}
+                      animate={{ opacity: 1, y: 0 }}
                       onClick={() => handleUpgradeClick("pro")}
-                      className="w-full bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white shadow-md border-none"
+                      className="w-full bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 rounded-md p-2 hover:to-purple-600 text-white shadow-md border-none"
                       variant="default"
                     >
-                      {open ? (
-                        <span className="flex items-center gap-2">
-                          <span className="text-lg">⭐</span>
-                          Upgrade to Pro
-                        </span>
-                      ) : (
+                      <span className="flex items-center gap-2">
                         <span className="text-lg">⭐</span>
-                      )}
-                    </Button>
+                        Upgrade to Pro
+                      </span>
+                    </motion.Button>
                   )}
 
                 <Button
