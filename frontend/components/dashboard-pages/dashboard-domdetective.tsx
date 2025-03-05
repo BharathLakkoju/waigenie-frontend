@@ -761,23 +761,23 @@ export default function IdentifyEl() {
             )}
         {identifiedElements.length > 0 && (
           <div className="mt-4 p-4 bg-white rounded-lg shadow container max-w-7xl mb-10 flex flex-col md:flex-row justify-between space-y-4 md:space-y-0 md:space-x-4">
-            <select
-              value={selectedFramework}
-              onChange={(e) => setSelectedFramework(e.target.value)}
-              className="px-3 py-2 border rounded w-full md:w-auto"
-            >
-              <option value="playwright">Playwright</option>
-              <option value="cypress">Cypress</option>
-              <option value="selenium">Selenium</option>
-            </select>
-            <button
-              onClick={() => analyzeElement(identifiedElements[0])}
-              className="flex items-center px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors w-full md:w-auto justify-center"
-              disabled={isAnalyzing}
-            >
-              <FaRobot className="mr-2" />
-              {isAnalyzing ? "Analyzing..." : "Comprehensive Analysis"}
-            </button>
+            <div className="flex p-2 justify-between items-center">
+              <select value={selectedFramework}
+                onChange={(e) => setSelectedFramework(e.target.value)}
+                className="px-3 py-2 border rounded w-full md:w-auto"
+              >
+                <option value="playwright">Playwright</option>
+                <option value="cypress">Cypress</option>
+                <option value="selenium">Selenium</option>
+              </select>
+              <button onClick={() => analyzeElement(identifiedElements[0])}
+                className="flex items-center px-4 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors w-full md:auto justify-center"
+                disabled={isAnalyzing}
+              >
+                <FaRobot className="mr-2" />
+                {isAnalyzing ? "Analyzing..." : "Comprehensive Analysis"}
+              </button>
+            </div>
             {analysis && (
               <div className="w-full space-y-6">
                 <div className="flex flex-wrap justify-end gap-2">
