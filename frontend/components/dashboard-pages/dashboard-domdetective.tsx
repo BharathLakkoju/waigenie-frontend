@@ -760,8 +760,8 @@ export default function IdentifyEl() {
               </div>
             )}
         {identifiedElements.length > 0 && (
-          <div className="mt-4 p-4 bg-white rounded-lg shadow container max-w-7xl mb-10 flex flex-col md:flex-row justify-between space-y-4 md:space-y-0 md:space-x-4">
-            <div className="flex p-2 justify-between items-center">
+          <div className={`mt-4 p-4 bg-white rounded-lg shadow container max-w-7xl mb-10 flex flex-col justify-between space-y-4 md:space-y-0 md:space-x-4 w-full`}>
+            <div className="flex p-2 justify-between items-center w-full">
               <select value={selectedFramework}
                 onChange={(e) => setSelectedFramework(e.target.value)}
                 className="px-3 py-2 border rounded w-full md:w-auto"
