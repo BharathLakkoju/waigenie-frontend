@@ -789,7 +789,7 @@ export default function IdentifyEl() {
                 </SelectContent>
               </Select>
               <Button onClick={() => analyzeElement(identifiedElements[0])}
-                className="flex items-center px-4 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors w-full md:auto justify-center"
+                className="flex items-center px-4 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors justify-center"
                 disabled={isAnalyzing}
               >
                 <FaRobot className="mr-2" />
