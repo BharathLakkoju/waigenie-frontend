@@ -14,6 +14,8 @@ import {
 import apiClient from "@/lib/api-client";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent } from "../ui/card";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 
 interface IdentifiedElement {
   id: string;
@@ -579,15 +581,15 @@ export default function IdentifyEl() {
               placeholder="Output CSV file name"
               className="w-full p-2 bg-white border border-gray-300 rounded-md text-black placeholder-gray-400 focus:outline-none focus:border-gray-500 text-sm"
             />
-            <button
+            <Button
               onClick={loadUrl}
               disabled={loading}
               className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition duration-300 shadow-lg transform hover:scale-[1.02] text-sm"
             >
               {loading ? "Loading..." : "Load URL"}
-            </button>
+            </Button>
             {proxyHtml && (
-              <button
+              <Button
                 onClick={identifyElements}
                 disabled={loading}
                 className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition duration-300 shadow-lg transform hover:scale-[1.02] text-sm"
@@ -600,7 +602,7 @@ export default function IdentifyEl() {
                     Identify Elements
                   </span>
                 )}
-              </button>
+              </Button>
             )}
           </div>
         </div>
@@ -639,16 +641,24 @@ export default function IdentifyEl() {
                     />
                   </div>
                 </div>
-                <select
+                <Select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
                   className="border rounded-md px-4 py-2"
                 >
-                  <option value="all">All Elements</option>
-                  <option value="interactive">Interactive Elements</option>
-                  <option value="text">Text Elements</option>
-                  <option value="media">Media Elements</option>
-                </select>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Select a Category"
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Categories</SelectLabel>
+                      <SelectItem value="all">All Elements</SelectItem>
+                      <SelectItem value="interactive">Interactive Elements</SelectItem>
+                      <SelectItem value="text">Text Elements</SelectItem>
+                      <SelectItem value="media">Media Elements</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               </div>
             </CardContent>
           </Card>
@@ -762,21 +772,29 @@ export default function IdentifyEl() {
         {identifiedElements.length > 0 && (
           <div className={`mt-4 p-4 bg-white rounded-lg shadow container max-w-7xl mb-10 flex flex-col justify-between space-y-4 md:space-y-0 md:space-x-4 w-full`}>
             <div className="flex p-2 justify-between items-center w-full">
-              <select value={selectedFramework}
+              <Select value={selectedFramework}
                 onChange={(e) => setSelectedFramework(e.target.value)}
                 className="px-3 py-2 border rounded w-full md:w-auto"
               >
-                <option value="playwright">Playwright</option>
-                <option value="cypress">Cypress</option>
-                <option value="selenium">Selenium</option>
-              </select>
-              <button onClick={() => analyzeElement(identifiedElements[0])}
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select a Framework" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Frameworks</SelectLabel>
+                    <SelectItem value="playwright">Playwright</SelectItem>
+                    <SelectItem value="cypress">Cypress</SelectItem>
+                    <SelectItem value="selenium">Selenium</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              <Button onClick={() => analyzeElement(identifiedElements[0])}
                 className="flex items-center px-4 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors w-full md:auto justify-center"
                 disabled={isAnalyzing}
               >
                 <FaRobot className="mr-2" />
                 {isAnalyzing ? "Analyzing..." : "Comprehensive Analysis"}
-              </button>
+              </Button>
             </div>
             {analysis && (
               <div className="w-full space-y-6">
