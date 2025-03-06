@@ -16,6 +16,8 @@ import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent } from "../ui/card";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import uxstrategy from "../ui/uxstrategy";
+import { DashboardData } from "../ui/uxstrategy";
 
 interface IdentifiedElement {
   id: string;
@@ -345,7 +347,7 @@ export default function IdentifyEl() {
   const analyzeElement = async (element: IdentifiedElement) => {
     setIsAnalyzing(true);
     try {
-      const response = await axios.post(
+      const response = await apiClient.post(
         "https://waigenie.onrender.com/api/comprehensive-analysis",
         {
           element,
@@ -403,29 +405,6 @@ export default function IdentifyEl() {
     }
   };
 
-  const renderValue = (value: unknown): React.ReactNode => {
-    if (
-      typeof value === "string" ||
-      typeof value === "number" ||
-      typeof value === "boolean"
-    ) {
-      return value.toString();
-    }
-    if (Array.isArray(value)) {
-      return (
-        <ul className="list-disc pl-4">
-          {value.map((item, index) => (
-            <li key={index}>{renderValue(item)}</li>
-          ))}
-        </ul>
-      );
-    }
-    if (value && typeof value === "object") {
-      return JSON.stringify(value, null, 2);
-    }
-    return String(value);
-  };
-
   const renderAnalysisDetails = () => {
     if (!analysis) return null;
 
@@ -455,62 +434,13 @@ export default function IdentifyEl() {
 
       if (!parsedData) return null;
 
-      const renderIcon = () => {
-        switch (sectionName) {
-          case "security":
-            return <FaShieldAlt className="text-red-500" />;
-          case "accessibility":
-            return <FaUniversalAccess className="text-green-500" />;
-          case "performance":
-            return <FaBolt className="text-yellow-500" />;
-          case "visual":
-            return <FaEye className="text-blue-500" />;
-          default:
-            return null;
-        }
-      };
-
       return (
-        <div key={sectionName} className="p-4 border rounded-lg">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-bold capitalize">
-              {sectionName} Analysis
-            </h3>
-            {renderIcon()}
+        <>
+          <div>
           </div>
-          <div className="space-y-2">
-            {Object.entries(parsedData).map(([key, value]) => (
-              <div key={key} className="mb-2">
-                <span className="font-semibold capitalize">
-                  {key.replace(/_/g, " ")}:
-                </span>{" "}
-                {renderValue(value)}
-              </div>
-            ))}
-          </div>
-        </div>
-      );
+        </>
+      )
     };
-
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {(["security", "accessibility", "performance", "visual"] as const)
-          .map(renderSection)
-          .filter(Boolean)}
-
-        {analysis.automation && (
-          <div className="p-4 border rounded-lg">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-bold">Market Intelligence</h3>
-              <FaCode className="text-blue-600" />
-            </div>
-            <pre className="bg-gray-100 p-4 rounded overflow-x-auto text-sm">
-              <code>{analysis.automation}</code>
-            </pre>
-          </div>
-        )}
-      </div>
-    );
   };
 
   useEffect(() => {
