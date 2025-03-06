@@ -643,11 +643,11 @@ export default function IdentifyEl() {
                 </div>
                 <Select
                   value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="border rounded-md px-4 py-2"
+                  onValueChange={(value) => setSelectedCategory(value)}
+                  defaultValue="all"
                 >
                   <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select a Category"
+                    <SelectValue placeholder="Select a Category" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
@@ -773,8 +773,8 @@ export default function IdentifyEl() {
           <div className={`mt-4 p-4 bg-white rounded-lg shadow container max-w-7xl mb-10 flex flex-col justify-between space-y-4 md:space-y-0 md:space-x-4 w-full`}>
             <div className="flex p-2 justify-between items-center w-full">
               <Select value={selectedFramework}
-                onChange={(e) => setSelectedFramework(e.target.value)}
-                className="px-3 py-2 border rounded w-full md:w-auto"
+                onValueChange={(e) => setSelectedFramework(e)}
+                defaultValue="playwright"
               >
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select a Framework" />
