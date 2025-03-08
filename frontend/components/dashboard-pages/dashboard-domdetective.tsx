@@ -16,8 +16,12 @@ import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent } from "../ui/card";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import uxstrategy from "../ui/uxstrategy";
+import UxStrategy from "../ui/uxstrategy";
 import { DashboardData } from "../ui/uxstrategy";
+import VisualAnalysisDashboard from "../ui/visual-analytics";
+import PerformanceAnalysisDashboard from "../ui/performance-ui";
+import AccessibilityAnalysisDashboard from "../ui/accessibility-ui";
+import SecurityAnalysisDashboard from "../ui/security";
 
 interface IdentifiedElement {
   id: string;
@@ -408,16 +412,8 @@ export default function IdentifyEl() {
   const renderAnalysisDetails = () => {
     if (!analysis) return null;
 
-    console.log("Full Analysis Data:", JSON.stringify(analysis, null, 2));
-
     const renderSection = (sectionName: keyof typeof analysis) => {
       const sectionData = analysis[sectionName];
-
-      // Log each section for debugging
-      console.log(
-        `${sectionName} Section Data:`,
-        JSON.stringify(sectionData, null, 2)
-      );
 
       // Attempt to parse if it's a string
       const parsedData =
@@ -434,13 +430,41 @@ export default function IdentifyEl() {
 
       if (!parsedData) return null;
 
-      return (
-        <>
-          <div>
-          </div>
-        </>
-      )
+      switch (sectionName) {
+        case 'test_ideas':
+          return <UxStrategy data={parsedData} />;
+        case 'visual':
+          return <VisualAnalysisDashboard data={parsedData.visual} />;
+        case 'performance':
+          return <PerformanceAnalysisDashboard issues={parsedData.performance} />;
+        case 'accessibility':
+          return (
+            <AccessibilityAnalysisDashboard 
+              issues={parsedData.issues}
+              recommendations={parsedData.recommendations}
+              wcagViolations={parsedData.wcagViolations}
+              complianceSummary={parsedData.complianceSummary}
+            />
+          );
+        case 'security':
+          return <SecurityAnalysisDashboard data={parsedData.security} />;
+        default:
+          return null;
+      }
     };
+
+    return (
+      <div className="space-y-8">
+        {Object.keys(analysis).map((sectionName) => (
+          <div key={sectionName} className="p-4 bg-white rounded-lg shadow">
+            <h2 className="text-2xl font-bold mb-4 capitalize">
+              {sectionName.replace(/([A-Z])/g, ' $1').trim()}
+            </h2>
+            {renderSection(sectionName as keyof typeof analysis)}
+          </div>
+        ))}
+      </div>
+    );
   };
 
   useEffect(() => {

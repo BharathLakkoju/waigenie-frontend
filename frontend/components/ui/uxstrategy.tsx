@@ -48,7 +48,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 
-export default function uxstrategy({data}: {data: DashboardData}) {
+export default function UxStrategy({data}: {data: DashboardData}) {
   const [activeTab, setActiveTab] = useState('trends');
 
   const getImpactColor = (impact: string) => {
