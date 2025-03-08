@@ -410,6 +410,7 @@ export default function IdentifyEl() {
 
   const renderAnalysisDetails = () => {
     if (!analysis) return null;
+    console.log(analysis);
 
     const renderSection = (sectionName: keyof typeof analysis) => {
       const sectionData = analysis[sectionName];
