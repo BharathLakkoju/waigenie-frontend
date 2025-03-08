@@ -17,7 +17,6 @@ import { Card, CardContent } from "../ui/card";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import UxStrategy from "../ui/uxstrategy";
-import { DashboardData } from "../ui/uxstrategy";
 import VisualAnalysisDashboard from "../ui/visual-analytics";
 import PerformanceAnalysisDashboard from "../ui/performance-ui";
 import AccessibilityAnalysisDashboard from "../ui/accessibility-ui";
@@ -429,6 +428,7 @@ export default function IdentifyEl() {
           : sectionData;
 
       if (!parsedData) return null;
+      console.log(parsedData);
 
       switch (sectionName) {
         case 'test_ideas':
