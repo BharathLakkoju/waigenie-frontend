@@ -429,7 +429,7 @@ export default function IdentifyEl() {
           : sectionData;
 
       if (!parsedData) return null;
-      console.log(parsedData);
+      // console.log(parsedData);
 
       switch (sectionName) {
         case 'test_ideas':
