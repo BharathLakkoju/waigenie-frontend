@@ -694,13 +694,13 @@ export default function IdentifyEl() {
                                   </h4>
                                   <div className="text-sm space-y-1">
                                     <div>
-                                      <span className="font-medium">
+                                      <span className="font-semibold">
                                         Class:
                                       </span>{" "}
                                       {element.className}
                                     </div>
                                     <div>
-                                      <span className="font-medium">Text:</span>{" "}
+                                      <span className="font-semibold">Text:</span>{" "}
                                       {element.text.substring(0, 50)}
                                     </div>
                                   </div>
@@ -713,11 +713,11 @@ export default function IdentifyEl() {
                                   </h4>
                                   <div className="text-sm space-y-1">
                                     <div>
-                                      <span className="font-medium">Role:</span>{" "}
+                                      <span className="font-semibold">Role:</span>{" "}
                                       {element.accessibility.role}
                                     </div>
                                     <div>
-                                      <span className="font-bold">
+                                      <span className="font-semibold">
                                         Focusable:
                                       </span>{" "}
                                       {element.accessibility.isKeyboardFocusable
@@ -732,13 +732,13 @@ export default function IdentifyEl() {
                                   <h4 className="font-bold text-sm">State</h4>
                                   <div className="text-sm space-y-1">
                                     <div>
-                                      <span className="font-medium">
+                                      <span className="font-semibold">
                                         Visible:
                                       </span>{" "}
                                       {element.state.isVisible ? "Yes" : "No"}
                                     </div>
                                     <div>
-                                      <span className="font-medium">
+                                      <span className="font-semibold">
                                         Enabled:
                                       </span>{" "}
                                       {element.state.isEnabled ? "Yes" : "No"}
