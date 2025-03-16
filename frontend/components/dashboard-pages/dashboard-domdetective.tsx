@@ -689,17 +689,17 @@ export default function IdentifyEl() {
                               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 {/* Details Section */}
                                 <div className="space-y-2">
-                                  <h4 className="font-medium text-sm">
+                                  <h4 className="font-bold text-sm">
                                     Details
                                   </h4>
                                   <div className="text-sm space-y-1">
-                                    <div>
+                                    <div className="font-normal">
                                       <span className="font-medium">
                                         Class:
                                       </span>{" "}
                                       {element.className}
                                     </div>
-                                    <div>
+                                    <div className="font-normal">
                                       <span className="font-medium">Text:</span>{" "}
                                       {element.text.substring(0, 50)}
                                     </div>
@@ -708,16 +708,16 @@ export default function IdentifyEl() {
 
                                 {/* Accessibility Section */}
                                 <div className="space-y-2">
-                                  <h4 className="font-medium text-sm">
+                                  <h4 className="font-bold text-sm">
                                     Accessibility
                                   </h4>
-                                  <div className="text-sm space-y-1">
+                                  <div className="font-normal text-sm space-y-1">
                                     <div>
                                       <span className="font-medium">Role:</span>{" "}
                                       {element.accessibility.role}
                                     </div>
                                     <div>
-                                      <span className="font-medium">
+                                      <span className="font-bold">
                                         Focusable:
                                       </span>{" "}
                                       {element.accessibility.isKeyboardFocusable
@@ -728,8 +728,8 @@ export default function IdentifyEl() {
                                 </div>
 
                                 {/* State Section */}
-                                <div className="space-y-2">
-                                  <h4 className="font-medium text-sm">State</h4>
+                                <div className="space-y-2 font-normal">
+                                  <h4 className="font-bold text-sm">State</h4>
                                   <div className="text-sm space-y-1">
                                     <div>
                                       <span className="font-medium">
