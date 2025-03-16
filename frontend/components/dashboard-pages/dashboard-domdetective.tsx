@@ -693,13 +693,13 @@ export default function IdentifyEl() {
                                     Details
                                   </h4>
                                   <div className="text-sm space-y-1">
-                                    <div className="font-normal">
+                                    <div>
                                       <span className="font-medium">
                                         Class:
                                       </span>{" "}
                                       {element.className}
                                     </div>
-                                    <div className="font-normal">
+                                    <div>
                                       <span className="font-medium">Text:</span>{" "}
                                       {element.text.substring(0, 50)}
                                     </div>
@@ -711,7 +711,7 @@ export default function IdentifyEl() {
                                   <h4 className="font-bold text-sm">
                                     Accessibility
                                   </h4>
-                                  <div className="font-normal text-sm space-y-1">
+                                  <div className="text-sm space-y-1">
                                     <div>
                                       <span className="font-medium">Role:</span>{" "}
                                       {element.accessibility.role}
@@ -728,7 +728,7 @@ export default function IdentifyEl() {
                                 </div>
 
                                 {/* State Section */}
-                                <div className="space-y-2 font-normal">
+                                <div className="space-y-2">
                                   <h4 className="font-bold text-sm">State</h4>
                                   <div className="text-sm space-y-1">
                                     <div>
