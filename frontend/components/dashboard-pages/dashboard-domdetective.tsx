@@ -14,13 +14,23 @@ import {
 import apiClient from "@/lib/api-client";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent } from "../ui/card";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import UxStrategy from "../ui/uxstrategy";
 import VisualAnalysisDashboard from "../ui/visual-analytics";
 import PerformanceAnalysisDashboard from "../ui/performance-ui";
 import AccessibilityAnalysisDashboard from "../ui/accessibility-ui";
 import SecurityAnalysisDashboard from "../ui/security";
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
+import { ChevronDown, ChevronRight } from "lucide-react";
 
 interface IdentifiedElement {
   id: string;
@@ -143,6 +153,7 @@ interface ComprehensiveAnalysis {
 }
 
 export default function IdentifyEl() {
+  const [expandedRows, setExpandedRows] = useState([]);
   const [url, setUrl] = useState("");
   const [outputFileName, setOutputFileName] = useState("elements.csv");
   const [loading, setLoading] = useState(false);
@@ -165,6 +176,10 @@ export default function IdentifyEl() {
   const [selectedFramework, setSelectedFramework] = useState("playwright");
   const [locators, setLocators] = useState("");
   const { toast } = useToast();
+
+  const toggleRow = (index: number) => {
+    setExpandedRows((prev: any) => ({ ...prev, [index]: !prev[index] }));
+  };
 
   const filteredElements = identifiedElements.filter((element) => {
     if (filterText) {
@@ -221,13 +236,11 @@ export default function IdentifyEl() {
         "https://waigenie.onrender.com/api/proxy",
         {
           url,
-        }
+        },
       );
       setProxyHtml(response.data.html);
     } catch (error) {
-      setError(
-        "An error occurred while loading the URL."
-      );
+      setError("An error occurred while loading the URL.");
     }
     setLoading(false);
   };
@@ -257,7 +270,7 @@ export default function IdentifyEl() {
       setError(
         `An error occurred while identifying elements: ${
           error instanceof Error ? error.message : "Unknown error"
-        }`
+        }`,
       );
       setLoading(false);
     }
@@ -303,7 +316,7 @@ export default function IdentifyEl() {
         // "https://waigenie-delpoyment-test.onrender.com/api/generate-csv",
         "https://waigenie.onrender.com/api/generate-csv",
         { elements: identifiedElements, filename: outputFileName },
-        { responseType: "blob" }
+        { responseType: "blob" },
       );
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
@@ -315,7 +328,7 @@ export default function IdentifyEl() {
     } catch (error) {
       console.error("Error downloading CSV:", error);
       setError(
-        "An error occurred while downloading the CSV. Please check the console for more details."
+        "An error occurred while downloading the CSV. Please check the console for more details.",
       );
     }
   };
@@ -326,7 +339,7 @@ export default function IdentifyEl() {
 
   const generateTestCode = (element: IdentifiedElement) => {
     const framework = Object.entries(element.framework).find(
-      ([, value]) => value
+      ([, value]) => value,
     )?.[0];
     let code = "";
 
@@ -356,7 +369,7 @@ export default function IdentifyEl() {
           element,
           url: url,
           framework: selectedFramework,
-        }
+        },
       );
 
       if (response.data.success) {
@@ -376,7 +389,7 @@ export default function IdentifyEl() {
         {
           analysis,
           format,
-        }
+        },
       );
 
       if (response.data.success) {
@@ -432,22 +445,24 @@ export default function IdentifyEl() {
       // console.log(parsedData);
 
       switch (sectionName) {
-        case 'test_ideas':
+        case "test_ideas":
           return <UxStrategy data={parsedData} />;
-        case 'visual':
+        case "visual":
           return <VisualAnalysisDashboard data={parsedData.visual} />;
-        case 'performance':
-          return <PerformanceAnalysisDashboard issues={parsedData.performance} />;
-        case 'accessibility':
+        case "performance":
           return (
-            <AccessibilityAnalysisDashboard 
+            <PerformanceAnalysisDashboard issues={parsedData.performance} />
+          );
+        case "accessibility":
+          return (
+            <AccessibilityAnalysisDashboard
               issues={parsedData.issues}
               recommendations={parsedData.recommendations}
               wcagViolations={parsedData.wcagViolations}
               complianceSummary={parsedData.complianceSummary}
             />
           );
-        case 'security':
+        case "security":
           return <SecurityAnalysisDashboard data={parsedData.security} />;
         default:
           return null;
@@ -459,7 +474,7 @@ export default function IdentifyEl() {
         {Object.keys(analysis).map((sectionName) => (
           <div key={sectionName} className="p-4 bg-white rounded-lg shadow">
             <h2 className="text-2xl font-bold mb-4 capitalize">
-              {sectionName.replace(/([A-Z])/g, ' $1').trim()}
+              {sectionName.replace(/([A-Z])/g, " $1").trim()}
             </h2>
             {renderSection(sectionName as keyof typeof analysis)}
           </div>
@@ -498,7 +513,7 @@ export default function IdentifyEl() {
         {
           url,
           selectedElements,
-        }
+        },
       );
       setLocators(response.data.locators);
     } catch (error: any) {
@@ -550,7 +565,9 @@ export default function IdentifyEl() {
                 className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition duration-300 shadow-lg transform hover:scale-[1.02] text-sm"
               >
                 {loading ? (
-                  <span>Identifying Elements ({Math.round(progress * 100)}%)</span>
+                  <span>
+                    Identifying Elements ({Math.round(progress * 100)}%)
+                  </span>
                 ) : (
                   <span className="flex items-center justify-center">
                     <FaRobot className="mr-2" />
@@ -608,7 +625,9 @@ export default function IdentifyEl() {
                     <SelectGroup>
                       <SelectLabel>Categories</SelectLabel>
                       <SelectItem value="all">All Elements</SelectItem>
-                      <SelectItem value="interactive">Interactive Elements</SelectItem>
+                      <SelectItem value="interactive">
+                        Interactive Elements
+                      </SelectItem>
                       <SelectItem value="text">Text Elements</SelectItem>
                       <SelectItem value="media">Media Elements</SelectItem>
                     </SelectGroup>
@@ -621,53 +640,120 @@ export default function IdentifyEl() {
           {/* Elements Table */}
           <div className="overflow-x-auto bg-white rounded-lg shadow">
             <div className="inline-block min-w-full align-middle">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead>
-                  <tr>
-                    <th scope="col" className="px-4 py-2">Element</th>
-                    <th scope="col" className="px-4 py-2">Details</th>
-                    <th scope="col" className="px-4 py-2 hidden md:table-cell">Accessibility</th>
-                    <th scope="col" className="px-4 py-2 hidden md:table-cell">State</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-12"></TableHead>
+                    <TableHead>Element</TableHead>
+                    <TableHead>Type</TableHead>
+                    <TableHead className="hidden md:table-cell">ID</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
                   {filteredElements.map((element, index) => (
-                    <tr key={index}>
-                      <td className="px-4 py-2">
-                        <div className="text-sm font-medium">{element.tag.toLowerCase()}</div>
-                        <div className="text-xs text-gray-500">{element.elementId}</div>
-                      </td>
-                      <td className="px-4 py-2">
-                        <details className="text-sm">
-                          <summary className="cursor-pointer">View Details</summary>
-                          <div className="mt-2 space-y-1">
-                            <div><span className="font-medium">Class:</span> {element.className}</div>
-                            <div><span className="font-medium">Text:</span> {element.text.substring(0, 50)}</div>
-                          </div>
-                        </details>
-                      </td>
-                      <td className="px-4 py-2 hidden md:table-cell">
-                        <details className="text-sm">
-                          <summary className="cursor-pointer">View A11y</summary>
-                          <div className="mt-2 space-y-1">
-                            <div>Role: {element.accessibility.role}</div>
-                            <div>Focusable: {element.accessibility.isKeyboardFocusable ? "Yes" : "No"}</div>
-                          </div>
-                        </details>
-                      </td>
-                      <td className="px-4 py-2 hidden md:table-cell">
-                        <details className="text-sm">
-                          <summary className="cursor-pointer">View State</summary>
-                          <div className="mt-2 space-y-1">
-                            <div>Visible: {element.state.isVisible ? "Yes" : "No"}</div>
-                            <div>Enabled: {element.state.isEnabled ? "Yes" : "No"}</div>
-                          </div>
-                        </details>
-                      </td>
-                    </tr>
+                    <>
+                      <TableRow key={`row-${index}`}>
+                        <TableCell className="p-2">
+                          <button
+                            onClick={() => toggleRow(index)}
+                            className="p-1 rounded-full hover:bg-gray-100"
+                            aria-label={
+                              expandedRows[index]
+                                ? "Collapse row"
+                                : "Expand row"
+                            }
+                          >
+                            {expandedRows[index] ? (
+                              <ChevronDown size={16} />
+                            ) : (
+                              <ChevronRight size={16} />
+                            )}
+                          </button>
+                        </TableCell>
+                        <TableCell>{element.tag.toLowerCase()}</TableCell>
+                        <TableCell className="text-gray-500 text-sm">
+                          {element.className}
+                        </TableCell>
+                        <TableCell className="hidden md:table-cell text-gray-500 text-sm">
+                          {element.elementId}
+                        </TableCell>
+                      </TableRow>
+
+                      {expandedRows[index] && (
+                        <TableRow
+                          key={`details-${index}`}
+                          className="bg-gray-50"
+                        >
+                          <TableCell colSpan={4} className="p-0">
+                            <div className="p-4 space-y-4">
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                {/* Details Section */}
+                                <div className="space-y-2">
+                                  <h4 className="font-medium text-sm">
+                                    Details
+                                  </h4>
+                                  <div className="text-sm space-y-1">
+                                    <div>
+                                      <span className="font-medium">
+                                        Class:
+                                      </span>{" "}
+                                      {element.className}
+                                    </div>
+                                    <div>
+                                      <span className="font-medium">Text:</span>{" "}
+                                      {element.text.substring(0, 50)}
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* Accessibility Section */}
+                                <div className="space-y-2">
+                                  <h4 className="font-medium text-sm">
+                                    Accessibility
+                                  </h4>
+                                  <div className="text-sm space-y-1">
+                                    <div>
+                                      <span className="font-medium">Role:</span>{" "}
+                                      {element.accessibility.role}
+                                    </div>
+                                    <div>
+                                      <span className="font-medium">
+                                        Focusable:
+                                      </span>{" "}
+                                      {element.accessibility.isKeyboardFocusable
+                                        ? "Yes"
+                                        : "No"}
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* State Section */}
+                                <div className="space-y-2">
+                                  <h4 className="font-medium text-sm">State</h4>
+                                  <div className="text-sm space-y-1">
+                                    <div>
+                                      <span className="font-medium">
+                                        Visible:
+                                      </span>{" "}
+                                      {element.state.isVisible ? "Yes" : "No"}
+                                    </div>
+                                    <div>
+                                      <span className="font-medium">
+                                        Enabled:
+                                      </span>{" "}
+                                      {element.state.isEnabled ? "Yes" : "No"}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </>
                   ))}
-                </tbody>
-              </table>
+                </TableBody>
+              </Table>
             </div>
           </div>
 
@@ -685,108 +771,109 @@ export default function IdentifyEl() {
       )}
 
       {/* Comparison Panel */}
-            {compareMode && selectedElements.length > 0 && (
-              <div className="bg-white rounded-lg shadow-md p-4 mt-4">
-                <h3 className="text-lg font-bold mb-4">Element Comparison</h3>
-                <div className="grid grid-cols-2 gap-4">
-                  {selectedElements.map((id) => {
-                    const element = identifiedElements.find(
-                      (el) => el.id === id
-                    );
-                    if (!element) return null;
-                    return (
-                      <div key={id} className="border p-4 rounded-md">
-                        <h4 className="font-bold">
-                          {element.tag} #{element.elementId}
-                        </h4>
-                        <div className="mt-2 space-y-2">
-                          <div>
-                            Accessibility Score:{" "}
-                            {
-                              Object.values(element.accessibility).filter(
-                                Boolean
-                              ).length
-                            }
-                            /7
-                          </div>
-                          <div>
-                            Performance Score:{" "}
-                            {100 - element.performance.layoutImpact}%
-                          </div>
-                          <div>Test Code:</div>
-                          <pre className="bg-gray-100 p-2 rounded text-xs">
-                            {generateTestCode(element)}
-                          </pre>
-                        </div>
-                      </div>
-                    );
-                  })}
+      {compareMode && selectedElements.length > 0 && (
+        <div className="bg-white rounded-lg shadow-md p-4 mt-4">
+          <h3 className="text-lg font-bold mb-4">Element Comparison</h3>
+          <div className="grid grid-cols-2 gap-4">
+            {selectedElements.map((id) => {
+              const element = identifiedElements.find((el) => el.id === id);
+              if (!element) return null;
+              return (
+                <div key={id} className="border p-4 rounded-md">
+                  <h4 className="font-bold">
+                    {element.tag} #{element.elementId}
+                  </h4>
+                  <div className="mt-2 space-y-2">
+                    <div>
+                      Accessibility Score:{" "}
+                      {
+                        Object.values(element.accessibility).filter(Boolean)
+                          .length
+                      }
+                      /7
+                    </div>
+                    <div>
+                      Performance Score:{" "}
+                      {100 - element.performance.layoutImpact}%
+                    </div>
+                    <div>Test Code:</div>
+                    <pre className="bg-gray-100 p-2 rounded text-xs">
+                      {generateTestCode(element)}
+                    </pre>
+                  </div>
                 </div>
-              </div>
-            )}
-        {identifiedElements.length > 0 && (
-          <div className={`mt-4 p-4 bg-white rounded-lg shadow container max-w-7xl mb-10 flex flex-col justify-between space-y-4 md:space-y-0 md:space-x-4 w-full`}>
-            <div className="flex p-2 justify-between items-center w-full">
-              <Select value={selectedFramework}
-                onValueChange={(e) => setSelectedFramework(e)}
-                defaultValue="playwright"
-              >
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Select a Framework" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Frameworks</SelectLabel>
-                    <SelectItem value="playwright">Playwright</SelectItem>
-                    <SelectItem value="cypress">Cypress</SelectItem>
-                    <SelectItem value="selenium">Selenium</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              <Button onClick={() => analyzeElement(identifiedElements[0])}
-                className="flex items-center px-4 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors justify-center"
-                disabled={isAnalyzing}
-              >
-                <FaRobot className="mr-2" />
-                {isAnalyzing ? "Analyzing..." : "Comprehensive Analysis"}
-              </Button>
-            </div>
-            {analysis && (
-              <div className="w-full space-y-6">
-                <div className="flex flex-wrap justify-end gap-2">
-                  <button
-                    onClick={() => exportAnalysis("markdown")}
-                    className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded"
-                  >
-                    Export MD
-                  </button>
-                  <button
-                    onClick={() => exportAnalysis("html")}
-                    className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded"
-                  >
-                    Export HTML
-                  </button>
-                  <button
-                    onClick={() => exportAnalysis("pdf")}
-                    className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded"
-                  >
-                    Export PDF
-                  </button>
-                </div>
-                {renderAnalysisDetails()}
-              </div>
-            )}
+              );
+            })}
           </div>
-        )}
+        </div>
+      )}
+      {identifiedElements.length > 0 && (
+        <div
+          className={`mt-4 p-4 bg-white rounded-lg shadow container max-w-7xl mb-10 flex flex-col justify-between space-y-4 md:space-y-0 md:space-x-4 w-full`}
+        >
+          <div className="flex p-2 justify-between items-center w-full">
+            <Select
+              value={selectedFramework}
+              onValueChange={(e) => setSelectedFramework(e)}
+              defaultValue="playwright"
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select a Framework" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Frameworks</SelectLabel>
+                  <SelectItem value="playwright">Playwright</SelectItem>
+                  <SelectItem value="cypress">Cypress</SelectItem>
+                  <SelectItem value="selenium">Selenium</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <Button
+              onClick={() => analyzeElement(identifiedElements[0])}
+              className="flex items-center px-4 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors justify-center"
+              disabled={isAnalyzing}
+            >
+              <FaRobot className="mr-2" />
+              {isAnalyzing ? "Analyzing..." : "Comprehensive Analysis"}
+            </Button>
+          </div>
+          {analysis && (
+            <div className="w-full space-y-6">
+              <div className="flex flex-wrap justify-end gap-2">
+                <button
+                  onClick={() => exportAnalysis("markdown")}
+                  className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded"
+                >
+                  Export MD
+                </button>
+                <button
+                  onClick={() => exportAnalysis("html")}
+                  className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded"
+                >
+                  Export HTML
+                </button>
+                <button
+                  onClick={() => exportAnalysis("pdf")}
+                  className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded"
+                >
+                  Export PDF
+                </button>
+              </div>
+              {renderAnalysisDetails()}
+            </div>
+          )}
+        </div>
+      )}
 
-        {/* Loading Spinner */}
-        {loading && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div className="p-3 animate-spin drop-shadow-2xl bg-gradient-to-bl from-pink-400 via-purple-400 to-indigo-600 rounded-full">
-              <div className="rounded-full h-12 w-12 bg-white"></div>
-            </div>
+      {/* Loading Spinner */}
+      {loading && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="p-3 animate-spin drop-shadow-2xl bg-gradient-to-bl from-pink-400 via-purple-400 to-indigo-600 rounded-full">
+            <div className="rounded-full h-12 w-12 bg-white"></div>
           </div>
-        )}
-      </div>
-    );
-  };
+        </div>
+      )}
+    </div>
+  );
+}
