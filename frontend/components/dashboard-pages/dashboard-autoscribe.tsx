@@ -15,13 +15,50 @@ export default function AutomationCodeGenerator() {
   const [loading, setLoading] = useState(false);
   const [screenshot, setScreenshot] = useState("");
   const [browserStarted, setBrowserStarted] = useState(false);
+  const [eventSource, setEventSource] = useState<EventSource | null>(null);
   const { toast } = useToast();
+
+  const connectScreenshotStream = () => {
+    if (eventSource) {
+      eventSource.close();
+    }
+
+    const newEventSource = new EventSource("http://localhost:5000/api/stream-screenshots", {
+      withCredentials: true,
+    });
+
+    newEventSource.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.screenshot) {
+          setScreenshot(`data:image/png;base64,${data.screenshot}`);
+        }
+      } catch (error) {
+        console.error("Error parsing SSE message:", error);
+      }
+    };
+
+    newEventSource.onerror = (error) => {
+      console.error("SSE connection error:", error);
+      newEventSource.close();
+      setEventSource(null);
+    };
+
+    setEventSource(newEventSource);
+  };
+
+  const disconnectScreenshotStream = () => {
+    if (eventSource) {
+      eventSource.close();
+      setEventSource(null);
+    }
+  };
 
   const startBrowser = async () => {
     setLoading(true);
     try {
       await axios.post(
-        "https://waigenie.onrender.com/api/start-browser",
+        "http://localhost:5000/api/start-browser",
         { url },
         {
           withCredentials: true,
@@ -32,6 +69,7 @@ export default function AutomationCodeGenerator() {
         }
       );
       setBrowserStarted(true);
+      connectScreenshotStream();
     } catch (error) {
       console.error("Error starting browser:", error);
       setError("An error occurred while starting the browser. Please try again.");
@@ -42,9 +80,10 @@ export default function AutomationCodeGenerator() {
   const stopBrowser = async () => {
     setLoading(true);
     try {
-      await axios.post("https://waigenie.onrender.com/api/stop-browser", {});
+      await axios.post("http://localhost:5000/api/stop-browser", {});
       setBrowserStarted(false);
       setScreenshot("");
+      disconnectScreenshotStream();
     } catch (error) {
       console.error("Error stopping browser:", error);
     }
@@ -60,11 +99,12 @@ export default function AutomationCodeGenerator() {
     setLoading(true);
     setGeneratedCode("");
     try {
-      await stopBrowser();
-      await startBrowser();
-      const response = await apiClient.post("https://waigenie.onrender.com/api/generate-automation", { gherkinFeature: featureContent, language });
-      setGeneratedCode(response.data.automation_code);
-      await stopBrowser();
+      const response = await apiClient.post("http://localhost:5000/api/generate-code", {
+        url,                         // include the URL
+        featureContent,              // match backend key
+        language,
+      });
+      setGeneratedCode(response.data.code);  // use .code per backend response
     } catch (error) {
       console.error("Error generating automation code:", error);
       toast({ title: "Error", description: "Failed to generate automation code. Please try again.", variant: "destructive" });
@@ -73,19 +113,10 @@ export default function AutomationCodeGenerator() {
   };
 
   useEffect(() => {
-    let interval: any;
-    if (browserStarted) {
-      interval = setInterval(async () => {
-        try {
-          const response = await axios.get("https://waigenie.onrender.com/api/get-screenshot");
-          setScreenshot(`data:image/png;base64,${response.data.screenshot}`);
-        } catch (error) {
-          console.error("Error fetching screenshot:", error);
-        }
-      }, 1000);
-    }
-    return () => clearInterval(interval);
-  }, [browserStarted]);
+    return () => {
+      disconnectScreenshotStream();
+    };
+  }, []);
 
   return (
     <>
@@ -152,12 +183,8 @@ export default function AutomationCodeGenerator() {
                 Generated {language} Code
               </h2>
               <a
-                href={`data:text/plain;charset=utf-8,${encodeURIComponent(
-                  generatedCode
-                )}`}
-                download={`generated_test.${
-                  language.toLowerCase() === "python" ? "py" : "java"
-                }`}
+                href={`data:text/plain;charset=utf-8,${encodeURIComponent(generatedCode)}`}
+                download={`generated_test.${language.toLowerCase() === "python" ? "py" : "java"}`}
                 className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition duration-300 shadow-lg transform hover:scale-[1.02] text-sm inline-block text-center"
               >
                 Download {language} Code
