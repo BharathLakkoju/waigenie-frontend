@@ -83,7 +83,9 @@ The application uses Zustand for state management with the following stores:
 
 ## License
 
-MIT License
+This project is proprietary. All rights reserved.  
+See the [LICENSE](./LICENSE.md) file for details.  
+Commercial use of WaiGENIE, its frontend code, branding, UI/UX, or logo is strictly prohibited.
 
 ## Contact
 
