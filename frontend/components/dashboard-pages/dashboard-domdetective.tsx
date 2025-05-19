@@ -153,6 +153,7 @@ interface ComprehensiveAnalysis {
 }
 
 export default function IdentifyEl() {
+  const [selectedXPath, setSelectedXPath] = useState("");
   const [expandedRows, setExpandedRows] = useState([]);
   const [url, setUrl] = useState("");
   const [outputFileName, setOutputFileName] = useState("elements.csv");
@@ -434,7 +435,7 @@ export default function IdentifyEl() {
         typeof sectionData === "string"
           ? (() => {
             try {
-              return JSON.parse(sectionData.replace(/```json\n|\n```/g, ""));
+              return JSON.parse(sectionData.replace(/```json\n|\n```/g, "").replace(/\n/g, " ").trim());
             } catch (e) {
               console.error(`Error parsing ${sectionName} section:`, e);
               return null;
@@ -443,40 +444,37 @@ export default function IdentifyEl() {
           : sectionData;
 
       if (!parsedData) return null;
-      console.log(parsedData);
+      console.log("parsedData", parsedData);
 
       switch (sectionName) {
-        case "test_ideas":
+        case "automation":
           return <UxStrategy data={parsedData} />;
         case "visual":
-          return <VisualAnalysisDashboard data={parsedData.visual} />;
+          return <VisualAnalysisDashboard data={parsedData} />;
         case "performance":
           return (
-            <PerformanceAnalysisDashboard issues={parsedData.performance} />
+            <PerformanceAnalysisDashboard performance={parsedData} />
           );
         case "accessibility":
           return (
             <AccessibilityAnalysisDashboard
               issues={parsedData.issues}
               recommendations={parsedData.recommendations}
-              wcagViolations={parsedData.wcagViolations}
-              complianceSummary={parsedData.complianceSummary}
+              wcagViolations={parsedData.wcag_violations}
+              complianceSummary={parsedData.compliance_summary}
             />
           );
         case "security":
-          return <SecurityAnalysisDashboard data={parsedData.security} />;
+          return <SecurityAnalysisDashboard data={parsedData} />;
         default:
           return null;
       }
     };
 
     return (
-      <div className="space-y-8">
+      <div className="space-y-8"> 
         {Object.keys(analysis).map((sectionName) => (
-          <div key={sectionName} className="p-4 bg-white rounded-lg shadow">
-            <h2 className="text-2xl font-bold mb-4 capitalize">
-              {sectionName.replace(/([A-Z])/g, " $1").trim()}
-            </h2>
+          <div key={sectionName} className="bg-white rounded-lg">
             {renderSection(sectionName as keyof typeof analysis)}
           </div>
         ))}
@@ -922,28 +920,56 @@ export default function IdentifyEl() {
       )}
       {identifiedElements.length > 0 && (
         <div
-          className={`mt-4 p-4 bg-white rounded-lg shadow container max-w-7xl mb-10 flex flex-col justify-between space-y-4 md:space-y-0 md:space-x-4 w-full`}
+          className={`mt-4 p-4 bg-white rounded-lg shadow container max-w-7xl mb-10 flex flex-col justify-between w-full`}
         >
           <div className="flex p-2 justify-between items-center w-full">
-            <Select
-              value={selectedFramework}
-              onValueChange={(e) => setSelectedFramework(e)}
-              defaultValue="playwright"
-            >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select a Framework" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Frameworks</SelectLabel>
-                  <SelectItem value="playwright">Playwright</SelectItem>
-                  <SelectItem value="cypress">Cypress</SelectItem>
-                  <SelectItem value="selenium">Selenium</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <div className="flex w-1/2 gap-2 items-center">
+              <Select
+                value={selectedFramework}
+                onValueChange={(e) => setSelectedFramework(e)}
+                defaultValue="playwright"
+              >
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select a Framework" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Frameworks</SelectLabel>
+                    <SelectItem value="playwright">Playwright</SelectItem>
+                    <SelectItem value="cypress">Cypress</SelectItem>
+                    <SelectItem value="selenium">Selenium</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              <Select
+                value={selectedXPath}
+                onValueChange={(e) => setSelectedXPath(e)}
+                defaultValue={identifiedElements[0]?.relativeXPath}
+              >
+                <SelectTrigger className="max-w-[250px]">
+                  <SelectValue placeholder="Select XPath" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>RelativeXPaths</SelectLabel>
+                    {identifiedElements.map((element, index) => (
+                      <SelectItem key={index} value={element.relativeXPath}>
+                        {element.tag} #{element.relativeXPath}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
             <Button
-              onClick={() => analyzeElement(identifiedElements[0])}
+              onClick={() => {
+                const selectedElement = identifiedElements.find(
+                  element => element.relativeXPath === selectedXPath
+                );
+                if (selectedElement) {
+                  analyzeElement(selectedElement);
+                }
+              }}
               className="flex items-center px-4 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors justify-center"
               disabled={isAnalyzing}
             >
@@ -953,7 +979,7 @@ export default function IdentifyEl() {
           </div>
           {analysis && (
             <div className="w-full space-y-6">
-              <div className="flex flex-wrap justify-end gap-2">
+              <div className="flex flex-wrap justify-end pr-5 gap-2">
                 <button
                   onClick={() => exportAnalysis("markdown")}
                   className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded"

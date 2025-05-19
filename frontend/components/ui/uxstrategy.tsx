@@ -49,6 +49,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 
 export default function UxStrategy({ data }: { data: DashboardData }) {
+  console.log("automation data: ", data)
   const [activeTab, setActiveTab] = useState('trends');
 
   const getImpactColor = (impact: string) => {
@@ -96,7 +97,7 @@ export default function UxStrategy({ data }: { data: DashboardData }) {
 
   return (
     <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-6">UX Strategy Dashboard</h1>
+      <h1 className="text-3xl font-bold mb-6">Automation Analysis Dashboard</h1>
 
       <Tabs
         defaultValue="trends"

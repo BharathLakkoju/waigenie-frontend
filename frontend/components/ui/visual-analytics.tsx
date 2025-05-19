@@ -108,6 +108,7 @@ import {
 } from '@/components/ui/table';
 
 export default function VisualAnalysisDashboard({ data }: { data: VisualAnalysisData }) {
+  console.log("visual data: ", data);
   const [activeTab, setActiveTab] = useState('checkpoints');
 
   const getPriorityColor = (priority: string) => {

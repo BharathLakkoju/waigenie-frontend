@@ -53,73 +53,80 @@ interface PerformanceScore {
   };
 }
 
-export default function PerformanceAnalysisDashboard({ issues }: { issues: Issue[] }) {
+interface Performance {
+  issues: Issue[];
+  metrics_to_monitor: Metric[];
+  optimizations: Optimization[];
+  performance_score: PerformanceScore;
+}
 
-  const optimizations: Optimization[] = [
-    {
-      priority: 'high',
-      recommendation:
-        'Optimize DOM structure and CSS for improved layout performance.',
-      implementation:
-        '1. Analyze the content of the div and refactor to minimize unnecessary DOM nodes. Consider using CSS grid or flexbox for efficient layout. 2. Profile the layout calculations using browser developer tools to identify bottlenecks. 3. Optimize CSS selectors to avoid complex calculations. 4. Minimize the use of inline styles.',
-      expected_improvement:
-        'Reduce layoutImpact by 50% (from 6.87 to <3.43) and renderTime by 20% (from 0.1s to <0.08s).',
-    },
-    {
-      priority: 'medium',
-      recommendation:
-        'Reduce the number of event listeners or implement event delegation.',
-      implementation:
-        '1. Identify essential event listeners and remove unnecessary ones. 2. For similar event handlers on multiple child elements, use event delegation to attach a single listener to a parent element.',
-      expected_improvement:
-        'Reduce event handling overhead, improving renderTime by 10% (from 0.1s to <0.09s) and potentially reducing memory usage.',
-    },
-    {
-      priority: 'medium',
-      recommendation: 'Optimize text rendering for memory efficiency.',
-      implementation:
-        '1. If the text content is dynamic, consider using techniques like virtual DOM or efficient text updates to minimize DOM manipulation. 2. If possible, reduce the amount of text displayed or break it into smaller chunks.',
-      expected_improvement:
-        'Reduce memoryEstimate by 20% (from 1259 bytes to <1007 bytes).',
-    },
-  ];
+export default function PerformanceAnalysisDashboard({ performance }: { performance: Performance }) {
+  console.log("performance data: ", performance)
+  // const optimizations: Optimization[] = [
+  //   {
+  //     priority: 'high',
+  //     recommendation:
+  //       'Optimize DOM structure and CSS for improved layout performance.',
+  //     implementation:
+  //       '1. Analyze the content of the div and refactor to minimize unnecessary DOM nodes. Consider using CSS grid or flexbox for efficient layout. 2. Profile the layout calculations using browser developer tools to identify bottlenecks. 3. Optimize CSS selectors to avoid complex calculations. 4. Minimize the use of inline styles.',
+  //     expected_improvement:
+  //       'Reduce layoutImpact by 50% (from 6.87 to <3.43) and renderTime by 20% (from 0.1s to <0.08s).',
+  //   },
+  //   {
+  //     priority: 'medium',
+  //     recommendation:
+  //       'Reduce the number of event listeners or implement event delegation.',
+  //     implementation:
+  //       '1. Identify essential event listeners and remove unnecessary ones. 2. For similar event handlers on multiple child elements, use event delegation to attach a single listener to a parent element.',
+  //     expected_improvement:
+  //       'Reduce event handling overhead, improving renderTime by 10% (from 0.1s to <0.09s) and potentially reducing memory usage.',
+  //   },
+  //   {
+  //     priority: 'medium',
+  //     recommendation: 'Optimize text rendering for memory efficiency.',
+  //     implementation:
+  //       '1. If the text content is dynamic, consider using techniques like virtual DOM or efficient text updates to minimize DOM manipulation. 2. If possible, reduce the amount of text displayed or break it into smaller chunks.',
+  //     expected_improvement:
+  //       'Reduce memoryEstimate by 20% (from 1259 bytes to <1007 bytes).',
+  //   },
+  // ];
 
-  const metrics: Metric[] = [
-    {
-      metric: 'layoutImpact',
-      current_value: '6.87',
-      target_value: '<3.43',
-      measurement_method: 'Browser developer tools (Performance tab)',
-    },
-    {
-      metric: 'renderTime',
-      current_value: '0.1s',
-      target_value: '<0.08s',
-      measurement_method: 'Browser developer tools (Performance tab)',
-    },
-    {
-      metric: 'memoryEstimate',
-      current_value: '1259 bytes',
-      target_value: '<1007 bytes',
-      measurement_method: 'Browser developer tools (Memory tab)',
-    },
-  ];
+  // const metrics: Metric[] = [
+  //   {
+  //     metric: 'layoutImpact',
+  //     current_value: '6.87',
+  //     target_value: '<3.43',
+  //     measurement_method: 'Browser developer tools (Performance tab)',
+  //   },
+  //   {
+  //     metric: 'renderTime',
+  //     current_value: '0.1s',
+  //     target_value: '<0.08s',
+  //     measurement_method: 'Browser developer tools (Performance tab)',
+  //   },
+  //   {
+  //     metric: 'memoryEstimate',
+  //     current_value: '1259 bytes',
+  //     target_value: '<1007 bytes',
+  //     measurement_method: 'Browser developer tools (Memory tab)',
+  //   },
+  // ];
 
-  const performanceScore: PerformanceScore = {
-    overall: 70,
-    categories: {
-      loading: 100,
-      rendering: 60,
-      execution: 80,
-      memory: 75,
-    },
-  };
+  // const performanceScore: PerformanceScore = {
+  // overall: 70,
+  //   categories: {
+  //   loading: 100,
+  //     rendering: 60,
+  //       execution: 80,
+  //         memory: 75,
+  //   },
+  // };
 
   // Helper function to get the appropriate color based on score
   const getScoreColor = (score: number) => {
-    if (score >= 90) return 'bg-green-500';
-    if (score >= 70) return 'bg-yellow-500';
-    return 'bg-red-500';
+    if (score >= 90) return 'text-green-500';
+    if (score >= 70) return 'text-yellow-500';
+    return 'text-red-500';
   };
 
   // Helper function to get the appropriate color for impact/priority badges
@@ -165,54 +172,58 @@ export default function PerformanceAnalysisDashboard({ issues }: { issues: Issue
             <div className="flex-1">
               <div className="text-center mb-4">
                 <span className="text-6xl font-bold">
-                  {performanceScore.overall}
+                  {performance?.performance_score?.overall}
                 </span>
                 <span className="text-xl">/100</span>
               </div>
-              <div
-                className={`h-4 w-full rounded-full ${getScoreColor(
-                  performanceScore.overall
-                )}`}
-              ></div>
+              <Progress
+                foreColor={getScoreColor(
+                  performance?.performance_score?.overall
+                )}
+                value={performance?.performance_score?.overall}
+                className={`h-3 w-full rounded-full ${getScoreColor(
+                  performance?.performance_score?.overall
+                )} bg-gray-400`}
+              />
             </div>
             <div className="flex-1 space-y-4">
               <div>
                 <div className="flex justify-between mb-1">
                   <span>Loading</span>
-                  <span>{performanceScore.categories.loading}%</span>
+                  <span>{performance?.performance_score?.categories?.loading} %</span>
                 </div>
                 <Progress
-                  value={performanceScore.categories.loading}
+                  value={performance?.performance_score?.categories?.loading}
                   className="h-2"
                 />
               </div>
               <div>
                 <div className="flex justify-between mb-1">
                   <span>Rendering</span>
-                  <span>{performanceScore.categories.rendering}%</span>
+                  <span>{performance?.performance_score?.categories?.rendering}%</span>
                 </div>
                 <Progress
-                  value={performanceScore.categories.rendering}
+                  value={performance?.performance_score?.categories?.rendering}
                   className="h-2"
                 />
               </div>
               <div>
                 <div className="flex justify-between mb-1">
                   <span>Execution</span>
-                  <span>{performanceScore.categories.execution}%</span>
+                  <span>{performance?.performance_score?.categories?.execution}%</span>
                 </div>
                 <Progress
-                  value={performanceScore.categories.execution}
+                  value={performance?.performance_score?.categories?.execution}
                   className="h-2"
                 />
               </div>
               <div>
                 <div className="flex justify-between mb-1">
                   <span>Memory</span>
-                  <span>{performanceScore.categories.memory}%</span>
+                  <span>{performance?.performance_score?.categories?.memory}%</span>
                 </div>
                 <Progress
-                  value={performanceScore.categories.memory}
+                  value={performance?.performance_score?.categories?.memory}
                   className="h-2"
                 />
               </div>
@@ -229,37 +240,37 @@ export default function PerformanceAnalysisDashboard({ issues }: { issues: Issue
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {issues?.map((issue, index) => (
+            {performance?.issues?.map((issue, index) => (
               <Alert
                 key={index}
                 className="border-l-4"
                 style={{
                   borderLeftColor:
-                    issue.impact === 'high'
+                    issue?.impact === 'high'
                       ? '#ef4444'
-                      : issue.impact === 'medium'
+                      : issue?.impact === 'medium'
                         ? '#f59e0b'
                         : '#22c55e',
                 }}
               >
                 <div className="flex items-center gap-2">
-                  {getImpactIcon(issue.impact)}
+                  {getImpactIcon(issue?.impact)}
                   <AlertTitle className="font-medium">
-                    {issue.category}
+                    {issue?.category}
                   </AlertTitle>
                 </div>
                 <AlertDescription className="mt-2">
-                  <p className="mt-1 text-sm">{issue.description}</p>
+                  <p className="mt-1 text-sm">{issue?.description}</p>
                   <div className="mt-2 flex flex-wrap gap-2">
                     <span className="text-xs font-medium">Affects:</span>
-                    {issue.metrics_affected.map((metric, i) => (
+                    {issue?.metrics_affected.map((metric, i) => (
                       <Badge key={i} variant="outline" className="text-xs">
                         {metric}
                       </Badge>
                     ))}
                   </div>
                   <Badge className={`mt-2 ${getImpactColor(issue.impact)}`}>
-                    {issue.impact.toUpperCase()} IMPACT
+                    {issue?.impact.toUpperCase()} IMPACT
                   </Badge>
                 </AlertDescription>
               </Alert>
@@ -278,7 +289,7 @@ export default function PerformanceAnalysisDashboard({ issues }: { issues: Issue
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
-            {optimizations.map((opt, index) => (
+            {performance?.optimizations?.map((opt, index) => (
               <div
                 key={index}
                 className="border-b pb-4 last:border-b-0 last:pb-0"
@@ -322,7 +333,7 @@ export default function PerformanceAnalysisDashboard({ issues }: { issues: Issue
               </TableRow>
             </TableHeader>
             <TableBody>
-              {metrics.map((metric, index) => (
+              {performance?.metrics_to_monitor?.map((metric, index) => (
                 <TableRow key={index}>
                   <TableCell className="font-medium">{metric.metric}</TableCell>
                   <TableCell>{metric.current_value}</TableCell>

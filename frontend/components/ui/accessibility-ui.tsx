@@ -45,7 +45,7 @@ interface Recommendation {
 
 interface WcagViolation {
   criterion: string;
-  level: string;
+  level: 'A' | 'AA' | 'AAA';
   description: string;
   fix_required: boolean;
 }
@@ -57,7 +57,7 @@ interface ComplianceSummary {
 }
 
 export default function AccessibilityAnalysisDashboard({ issues, recommendations, wcagViolations, complianceSummary }: { issues: AccessibilityIssue[], recommendations: Recommendation[], wcagViolations: WcagViolation[], complianceSummary: ComplianceSummary }) {
-
+  
   // Helper functions
   const getImpactColor = (impact: 'low' | 'medium' | 'high') => {
     switch (impact) {
@@ -100,8 +100,40 @@ export default function AccessibilityAnalysisDashboard({ issues, recommendations
     }
   };
 
+  // Calculate average WCAG level
+  const calculateAverageLevel = () => {
+    const levelValues = {
+      'A': 1,
+      'AA': 2,
+      'AAA': 3
+    };
+    
+    const total = wcagViolations.reduce((sum, violation) => {
+      return sum + (levelValues[violation.level as keyof typeof levelValues] || 0);
+    }, 0);
+    
+    const average = total / wcagViolations.length;
+    
+    if (average >= 2.5) return 'AAA';
+    if (average >= 1.5) return 'AA';
+    return 'A';
+  };
+
+  const getLevelColor = (level: string) => {
+    switch (level) {
+      case 'AAA':
+        return 'text-red-500';
+      case 'AA':
+        return 'text-amber-500';
+      case 'A':
+        return 'text-blue-500';
+      default:
+        return 'text-gray-500';
+    }
+  };
+
   return (
-    <div className="container mx-auto py-6 space-y-6">
+    <div className="container p-2">
       {/* Compliance Summary */}
       <Card>
         <CardHeader className="bg-slate-50 border-b">
@@ -118,9 +150,8 @@ export default function AccessibilityAnalysisDashboard({ issues, recommendations
                   ? 'bg-green-500'
                   : 'bg-red-500'
               }
-            // size="lg"
             >
-              {complianceSummary.overall_status.toUpperCase()}
+              {complianceSummary?.overall_status.toUpperCase()}
             </Badge>
           </div>
         </CardHeader>
@@ -133,7 +164,7 @@ export default function AccessibilityAnalysisDashboard({ issues, recommendations
               <CardContent>
                 <div className="flex items-center">
                   <span className="text-4xl font-bold text-red-500">
-                    {complianceSummary.critical_issues_count}
+                    {complianceSummary?.critical_issues_count}
                   </span>
                   <span className="ml-2 text-sm text-gray-500">
                     issues to fix
@@ -148,9 +179,9 @@ export default function AccessibilityAnalysisDashboard({ issues, recommendations
               <CardContent>
                 <div className="flex items-center">
                   <span className="text-4xl font-bold text-blue-500">
-                    {complianceSummary.recommended_actions_count}
+                    {complianceSummary?.recommended_actions_count}
                   </span>
-                  <span className="ml-2 text-sm text-gray-500">tasks</span>
+                  <span className="ml-2 text-sm text-gray-500">actions to do</span>
                 </div>
               </CardContent>
             </Card>
@@ -160,8 +191,10 @@ export default function AccessibilityAnalysisDashboard({ issues, recommendations
               </CardHeader>
               <CardContent>
                 <div className="flex items-center">
-                  <span className="text-4xl font-bold text-amber-500">A</span>
-                  <span className="ml-2 text-sm text-gray-500">violations</span>
+                  <span className={`text-4xl font-bold ${getLevelColor(calculateAverageLevel())}`}>
+                    {calculateAverageLevel()}
+                  </span>
+                  <span className="ml-2 text-sm text-gray-500">level</span>
                 </div>
               </CardContent>
             </Card>
@@ -188,38 +221,38 @@ export default function AccessibilityAnalysisDashboard({ issues, recommendations
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {issues.map((issue, index) => (
+                {issues?.map((issue, index) => (
                   <Alert
                     key={index}
                     variant="default"
                     className="border-l-4"
                     style={{
                       borderLeftColor:
-                        issue.impact_level === 'high'
+                        issue?.impact_level === 'high'
                           ? '#ef4444'
-                          : issue.impact_level === 'medium'
+                          : issue?.impact_level === 'medium'
                             ? '#f59e0b'
                             : '#3b82f6',
                     }}
                   >
                     <div className="flex items-center gap-2">
-                      {getImpactIcon(issue.impact_level)}
+                      {getImpactIcon(issue?.impact_level)}
                       <div className="flex items-center gap-2">
-                        {getCategoryIcon(issue.category)}
+                        {getCategoryIcon(issue?.category)}
                         <AlertTitle className="font-medium">
-                          {issue.category}: {issue.wcag_criterion}
+                          {issue?.category}: {issue?.wcag_criterion}
                         </AlertTitle>
                       </div>
                     </div>
                     <AlertDescription className="mt-2">
-                      <p className="mt-1 text-sm">{issue.description}</p>
+                      <p className="mt-1 text-sm">{issue?.description}</p>
                       <div className="mt-2">
                         <Badge
                           className={`mt-2 ${getImpactColor(
-                            issue.impact_level
+                            issue?.impact_level
                           )}`}
                         >
-                          {issue.impact_level.toUpperCase()} IMPACT
+                          {issue?.impact_level?.toUpperCase()} IMPACT
                         </Badge>
                       </div>
                     </AlertDescription>
@@ -241,17 +274,17 @@ export default function AccessibilityAnalysisDashboard({ issues, recommendations
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
-                {recommendations.map((recommendation, index) => (
+                {recommendations?.map((recommendation, index) => (
                   <div key={index} className="border rounded-lg p-4 shadow-sm">
                     <div className="flex items-center justify-between mb-2">
                       <h3 className="text-lg font-medium flex items-center gap-2">
-                        {getImpactIcon(recommendation.priority)}
-                        {recommendation.action}
+                        {getImpactIcon(recommendation?.priority)}
+                        {recommendation?.action}
                       </h3>
                       <Badge
-                        className={`${getImpactColor(recommendation.priority)}`}
+                        className={`${getImpactColor(recommendation?.priority)}`}
                       >
-                        {recommendation.priority.toUpperCase()} PRIORITY
+                        {recommendation?.priority?.toUpperCase()} PRIORITY
                       </Badge>
                     </div>
                     <div className="mb-3">
@@ -259,7 +292,7 @@ export default function AccessibilityAnalysisDashboard({ issues, recommendations
                         Implementation Details:
                       </h4>
                       <p className="text-sm">
-                        {recommendation.implementation_details}
+                        {recommendation?.implementation_details}
                       </p>
                     </div>
                     <div>
@@ -267,7 +300,7 @@ export default function AccessibilityAnalysisDashboard({ issues, recommendations
                         WCAG Success Criteria:
                       </h4>
                       <div className="flex flex-wrap gap-2">
-                        {recommendation.wcag_success_criteria.map(
+                        {recommendation?.wcag_success_criteria?.map(
                           (criterion, i) => (
                             <Badge
                               key={i}
@@ -307,22 +340,22 @@ export default function AccessibilityAnalysisDashboard({ issues, recommendations
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {wcagViolations.map((violation, index) => (
-                    <TableRow key={index}>
+                  {wcagViolations?.map((violation, index) => (
+                    < TableRow key = { index } >
                       <TableCell className="font-medium">
-                        {violation.criterion}
+                        {violation?.criterion}
                       </TableCell>
                       <TableCell>
                         <Badge
                           variant="outline"
                           className="bg-amber-100 text-amber-800 hover:bg-amber-100"
                         >
-                          {violation.level}
+                          {violation?.level}
                         </Badge>
                       </TableCell>
-                      <TableCell>{violation.description}</TableCell>
+                      <TableCell>{violation?.description}</TableCell>
                       <TableCell>
-                        {violation.fix_required ? (
+                        {violation?.fix_required ? (
                           <Badge className="bg-red-100 text-red-800 hover:bg-red-100">
                             Required
                           </Badge>
@@ -334,21 +367,21 @@ export default function AccessibilityAnalysisDashboard({ issues, recommendations
                       </TableCell>
                     </TableRow>
                   ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-            <CardFooter className="bg-slate-50 border-t p-4">
-              <div className="flex items-center">
-                <ExclamationTriangleIcon className="h-5 w-5 text-amber-500 mr-2" />
-                <p className="text-sm text-gray-600">
-                  All identified violations are Level A, which are the most
-                  basic web accessibility requirements that must be satisfied.
-                </p>
-              </div>
-            </CardFooter>
-          </Card>
-        </TabsContent>
-      </Tabs>
-    </div>
+              </TableBody>
+            </Table>
+          </CardContent>
+          <CardFooter className="bg-slate-50 border-t p-4">
+            <div className="flex items-center">
+              <ExclamationTriangleIcon className="h-5 w-5 text-amber-500 mr-2" />
+              <p className="text-sm text-gray-600">
+                All identified violations `Level A`, which are the most
+                basic web accessibility requirements that must be satisfied.
+              </p>
+            </div>
+          </CardFooter>
+        </Card>
+      </TabsContent>
+    </Tabs>
+    </div >
   );
 };
