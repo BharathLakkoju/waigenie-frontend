@@ -38,7 +38,7 @@ interface SecurityAnalysisData {
   severity_level: 'low' | 'medium' | 'high' | 'critical';
 }
 
-export default function SecurityAnalysisDashboard({data}: {data: SecurityAnalysisData}) {
+export default function SecurityAnalysisDashboard({ data }: { data: SecurityAnalysisData }) {
 
   // Helper function to get badge color based on severity
   const getSeverityColor = (
@@ -88,13 +88,13 @@ export default function SecurityAnalysisDashboard({data}: {data: SecurityAnalysi
             </CardDescription>
           </div>
           <div className="flex items-center gap-2">
-            {getSeverityIcon(data.severity_level)}
+            {getSeverityIcon(data?.severity_level)}
             <Badge
               className={`${getSeverityColor(
-                data.severity_level
+                data?.severity_level
               )} px-3 py-1`}
             >
-              {data.severity_level.toUpperCase()} SEVERITY
+              {data?.severity_level.toUpperCase()} SEVERITY
             </Badge>
           </div>
         </CardHeader>
@@ -123,11 +123,11 @@ export default function SecurityAnalysisDashboard({data}: {data: SecurityAnalysi
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {data.risks.length === 0 ||
-            (data.risks.length === 1 &&
-              data.risks[0].description.includes(
-                'No security risks'
-              )) ? (
+            {data?.risks?.length === 0 ||
+              (data?.risks?.length === 1 &&
+                data?.risks[0]?.description?.includes(
+                  'No security risks'
+                )) ? (
               <Alert className="bg-green-50 border-green-200">
                 <CheckCircle className="h-4 w-4 text-green-500" />
                 <AlertTitle>No Risks Identified</AlertTitle>
@@ -139,7 +139,7 @@ export default function SecurityAnalysisDashboard({data}: {data: SecurityAnalysi
             ) : (
               // If there were risks, they would be displayed here
               <div className="space-y-4">
-                {data.risks.map((risk, index) => (
+                {data?.risks?.map((risk, index) => (
                   <Alert
                     key={index}
                     className="border-l-4"
@@ -148,17 +148,17 @@ export default function SecurityAnalysisDashboard({data}: {data: SecurityAnalysi
                         risk.impact === 'high'
                           ? '#ef4444'
                           : risk.impact === 'medium'
-                          ? '#f59e0b'
-                          : '#22c55e',
+                            ? '#f59e0b'
+                            : '#22c55e',
                     }}
                   >
                     <AlertTitle className="font-medium">
-                      {risk.category}
+                      {risk?.category}
                     </AlertTitle>
-                    <AlertDescription>{risk.description}</AlertDescription>
+                    <AlertDescription>{risk?.description}</AlertDescription>
                     <div className="mt-2">
-                      <Badge className={getSeverityColor(risk.impact as any)}>
-                        {risk.impact.toUpperCase()} IMPACT
+                      <Badge className={getSeverityColor(risk?.impact as any)}>
+                        {risk?.impact?.toUpperCase()} IMPACT
                       </Badge>
                     </div>
                   </Alert>
@@ -177,11 +177,11 @@ export default function SecurityAnalysisDashboard({data}: {data: SecurityAnalysi
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {data.recommendations.length === 0 ||
-            (data.recommendations.length === 1 &&
-              data.recommendations[0].action.includes(
-                'No recommendations'
-              )) ? (
+            {data?.recommendations?.length === 0 ||
+              (data?.recommendations?.length === 1 &&
+                data?.recommendations[0]?.action?.includes(
+                  'No recommendations'
+                )) ? (
               <Alert className="bg-blue-50 border-blue-200">
                 <CheckCircle className="h-4 w-4 text-blue-500" />
                 <AlertTitle>No Actions Required</AlertTitle>
@@ -193,16 +193,16 @@ export default function SecurityAnalysisDashboard({data}: {data: SecurityAnalysi
             ) : (
               // If there were recommendations, they would be displayed here
               <div className="space-y-4">
-                {data.recommendations.map((rec, index) => (
+                {data?.recommendations?.map((rec, index) => (
                   <div key={index} className="border rounded-lg p-4">
                     <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-lg font-medium">{rec.action}</h3>
-                      <Badge className={getSeverityColor(rec.priority as any)}>
-                        {rec.priority.toUpperCase()} PRIORITY
+                      <h3 className="text-lg font-medium">{rec?.action}</h3>
+                      <Badge className={getSeverityColor(rec?.priority as any)}>
+                        {rec?.priority?.toUpperCase()} PRIORITY
                       </Badge>
                     </div>
                     <p className="text-sm text-gray-600">
-                      {rec.implementation}
+                      {rec?.implementation}
                     </p>
                   </div>
                 ))}
@@ -225,9 +225,9 @@ export default function SecurityAnalysisDashboard({data}: {data: SecurityAnalysi
             <div className="flex items-center mb-2">
               <h3 className="text-lg font-medium">Standard: </h3>
               <span className="ml-2">
-                {data.compliance_impact.standard === 'none'
+                {data?.compliance_impact?.standard === 'none'
                   ? 'No compliance standards applicable'
-                  : data.compliance_impact.standard}
+                  : data?.compliance_impact?.standard}
               </span>
             </div>
 
@@ -235,13 +235,13 @@ export default function SecurityAnalysisDashboard({data}: {data: SecurityAnalysi
 
             <div>
               <h3 className="text-lg font-medium mb-2">Requirements:</h3>
-              {data.compliance_impact.requirements.length === 0 ? (
+              {data?.compliance_impact?.requirements?.length === 0 ? (
                 <p className="text-gray-600">
                   No compliance requirements affected
                 </p>
               ) : (
                 <ul className="list-disc list-inside">
-                  {data.compliance_impact.requirements.map(
+                  {data?.compliance_impact?.requirements?.map(
                     (req, index) => (
                       <li key={index} className="text-gray-600">
                         {req}

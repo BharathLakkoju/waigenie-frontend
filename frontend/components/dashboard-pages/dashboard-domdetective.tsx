@@ -268,8 +268,7 @@ export default function IdentifyEl() {
     } catch (error) {
       console.error("Error identifying elements:", error);
       setError(
-        `An error occurred while identifying elements: ${
-          error instanceof Error ? error.message : "Unknown error"
+        `An error occurred while identifying elements: ${error instanceof Error ? error.message : "Unknown error"
         }`,
       );
       setLoading(false);
@@ -373,6 +372,8 @@ export default function IdentifyEl() {
       );
 
       if (response.data.success) {
+        console.log("Test Data: ", response.data);
+        console.log("Analysis Data: ", response.data.analysis);
         setAnalysis(response.data.analysis);
       }
     } catch (error) {
@@ -432,17 +433,17 @@ export default function IdentifyEl() {
       const parsedData =
         typeof sectionData === "string"
           ? (() => {
-              try {
-                return JSON.parse(sectionData.replace(/```json\n|\n```/g, ""));
-              } catch (e) {
-                console.error(`Error parsing ${sectionName} section:`, e);
-                return null;
-              }
-            })()
+            try {
+              return JSON.parse(sectionData.replace(/```json\n|\n```/g, ""));
+            } catch (e) {
+              console.error(`Error parsing ${sectionName} section:`, e);
+              return null;
+            }
+          })()
           : sectionData;
 
       if (!parsedData) return null;
-      // console.log(parsedData);
+      console.log(parsedData);
 
       switch (sectionName) {
         case "test_ideas":
@@ -645,14 +646,15 @@ export default function IdentifyEl() {
                   <TableRow>
                     <TableHead className="w-12"></TableHead>
                     <TableHead>Element</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead className="hidden md:table-cell">ID</TableHead>
+                    {/* <TableHead>Type</TableHead> */}
+                    <TableHead className="hidden md:table-cell">Relative XPath</TableHead>
+                    <TableHead className="hidden md:table-cell">Absolute XPath</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {filteredElements.map((element, index) => (
-                    <>
-                      <TableRow key={`row-${index}`}>
+                    <React.Fragment key={`row-${index}`}>
+                      <TableRow>
                         <TableCell className="p-2">
                           <button
                             onClick={() => toggleRow(index)}
@@ -671,11 +673,14 @@ export default function IdentifyEl() {
                           </button>
                         </TableCell>
                         <TableCell>{element.tag.toLowerCase()}</TableCell>
-                        <TableCell className="text-gray-500 text-sm">
+                        {/* <TableCell className="text-gray-500 text-sm">
                           {element.className}
+                        </TableCell> */}
+                        <TableCell className="hidden md:table-cell text-gray-500 text-sm">
+                          {element.relativeXPath ? element.relativeXPath : "--"}
                         </TableCell>
                         <TableCell className="hidden md:table-cell text-gray-500 text-sm">
-                          {element.elementId}
+                          {element.absoluteXPath ? element.absoluteXPath : "--"}
                         </TableCell>
                       </TableRow>
 
@@ -685,10 +690,10 @@ export default function IdentifyEl() {
                           className="bg-gray-50"
                         >
                           <TableCell colSpan={4} className="p-0">
-                            <div className="p-4 space-y-4">
-                              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div className="p-4 space-y-4 w-full">
+                              <div className="flex flex-wrap justify-start items-start w-full pl-10 gap-[7%]">
                                 {/* Details Section */}
-                                <div className="space-y-2">
+                                <div className="space-y-2 min-w-[calc(100vw/10)] max-w-[calc(100vw/25)]">
                                   <h4 className="font-bold text-sm">
                                     Details
                                   </h4>
@@ -697,24 +702,28 @@ export default function IdentifyEl() {
                                       <span className="font-semibold">
                                         Class:
                                       </span>{" "}
-                                      {element.className}
+                                      {element.className ? element.className : "--"}
                                     </div>
                                     <div>
                                       <span className="font-semibold">Text:</span>{" "}
-                                      {element.text.substring(0, 50)}
+                                      <span className="break-words">{element.text.substring(0, 50) ? element.text.substring(0, 50) : "--"}</span>
+                                    </div>
+                                    <div>
+                                      <span className="font-semibold">ID:</span>{" "}
+                                      {element.elementId ? element.elementId : "--"}
                                     </div>
                                   </div>
                                 </div>
 
                                 {/* Accessibility Section */}
-                                <div className="space-y-2">
+                                <div className="space-y-2 min-w-[calc(100vw/10)] max-w-[calc(100vw/25)]">
                                   <h4 className="font-bold text-sm">
                                     Accessibility
                                   </h4>
                                   <div className="text-sm space-y-1">
                                     <div>
                                       <span className="font-semibold">Role:</span>{" "}
-                                      {element.accessibility.role}
+                                      {element.accessibility.role ? element.accessibility.role : "--"}
                                     </div>
                                     <div>
                                       <span className="font-semibold">
@@ -724,24 +733,128 @@ export default function IdentifyEl() {
                                         ? "Yes"
                                         : "No"}
                                     </div>
+                                    <div>
+                                      <span className="font-semibold">ariaLabel:</span>{" "}
+                                      {element.accessibility.ariaLabel ? element.accessibility.ariaLabel : "--"}
+                                    </div>
+                                    <div>
+                                      <span className="font-semibold">ariaDescribedBy:</span>{" "}
+                                      {element.accessibility.ariaDescribedBy ? element.accessibility.ariaDescribedBy : "--"}
+                                    </div>
+                                    <div>
+                                      <span className="font-semibold">ariaHidden:</span>{" "}
+                                      {element.accessibility.ariaHidden ? element.accessibility.ariaHidden : "--"}
+                                    </div>
+                                    <div>
+                                      <span className="font-semibold">Has Accessible Name?:</span>{" "}
+                                      {element.accessibility.hasAccessibleName ? "Yes" : "No"}
+                                    </div>
+                                    <div>
+                                      <span className="font-semibold">tabIndex:</span>{" "}
+                                      {element.accessibility.tabIndex ? element.accessibility.tabIndex : "--"}
+                                    </div>
                                   </div>
                                 </div>
 
                                 {/* State Section */}
-                                <div className="space-y-2">
+                                <div className="space-y-2 min-w-[calc(100vw/10)] max-w-[calc(100vw/25)]">
                                   <h4 className="font-bold text-sm">State</h4>
                                   <div className="text-sm space-y-1">
                                     <div>
-                                      <span className="font-semibold">
-                                        Visible:
-                                      </span>{" "}
+                                      <span className="font-semibold">Visible:</span>{" "}
                                       {element.state.isVisible ? "Yes" : "No"}
                                     </div>
                                     <div>
-                                      <span className="font-semibold">
-                                        Enabled:
-                                      </span>{" "}
+                                      <span className="font-semibold">Enabled:</span>{" "}
                                       {element.state.isEnabled ? "Yes" : "No"}
+                                    </div>
+                                    <div>
+                                      <span className="font-semibold">Checked:</span>{" "}
+                                      {element.state.isChecked ? "Yes" : "No"}
+                                    </div>
+                                    <div>
+                                      <span className="font-semibold">Required:</span>{" "}
+                                      {element.state.isRequired ? "Yes" : "No"}
+                                    </div>
+                                    <div>
+                                      <span className="font-semibold">Read Only:</span>{" "}
+                                      {element.state.isReadOnly ? "Yes" : "No"}
+                                    </div>
+                                    <div>
+                                      <span className="font-semibold">Content Editable:</span>{" "}
+                                      {element.state.isContentEditable ? "Yes" : "No"}
+                                    </div>
+                                    <div>
+                                      <span className="font-semibold">Focused:</span>{" "}
+                                      {element.state.isFocused ? "Yes" : "No"}
+                                    </div>
+                                    <div>
+                                      <span className="font-semibold">In Viewport:</span>{" "}
+                                      {element.state.isInViewport ? "Yes" : "No"}
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* siblings */}
+                                <div className="space-y-2 min-w-[calc(100vw/10)] max-w-[calc(100vw/25)]">
+                                  <h4 className="font-bold text-sm">Siblings</h4>
+                                  <div className="text-sm space-y-1">
+                                    <div>
+                                      <span className="font-semibold">Previous Sibling:</span>{" "}
+                                      {element.siblings.previousSibling ? (
+                                        <span>
+                                          {element.siblings.previousSibling.tag || "--"}
+                                          {element.siblings.previousSibling.id ? ` #${element.siblings.previousSibling.id}` : ""}
+                                          {element.siblings.previousSibling.class ? ` .${element.siblings.previousSibling.class}` : ""}
+                                        </span>
+                                      ) : (
+                                        "--"
+                                      )}
+                                    </div>
+                                    <div>
+                                      <span className="font-semibold">Next Sibling:</span>{" "}
+                                      {element.siblings.nextSibling ? (
+                                        <span>
+                                          {element.siblings.nextSibling.tag || "--"}
+                                          {element.siblings.nextSibling.id ? ` #${element.siblings.nextSibling.id}` : ""}
+                                          {element.siblings.nextSibling.class ? ` .${element.siblings.nextSibling.class}` : ""}
+                                        </span>
+                                      ) : (
+                                        "--"
+                                      )}
+                                    </div>
+                                    <div>
+                                      <span className="font-semibold">Position:</span>{" "}
+                                      {element.siblings.siblingPosition || "--"} of {element.siblings.totalSiblings || "--"}
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* CustomSelectors */}
+                                <div className="space-y-2 min-w-[calc(100vw/10)] max-w-[calc(100vw/20)]">
+                                  <h4 className="font-bold text-sm">Custom Selectors</h4>
+                                  <div className="text-sm space-y-1">
+                                    <div>
+                                      <span className="font-semibold">Unique Selector:</span>{" "}
+                                      {element.customSelectors.uniqueSelector || "--"}
+                                    </div>
+                                    <div>
+                                      <span className="font-semibold">Data Test ID:</span>{" "}
+                                      {element.customSelectors.dataTestId || "--"}
+                                    </div>
+                                    <div>
+                                      <span className="font-semibold">Data Automation ID:</span>{" "}
+                                      {element.customSelectors.dataAutomationId || "--"}
+                                    </div>
+                                    <div>
+                                      <span className="font-semibold">Custom Data Attributes:</span>{" "}
+                                      <div className="break-words">
+                                        {Object.keys(element.customSelectors.customDataAttributes).length > 0
+                                          ? Object.entries(element.customSelectors.customDataAttributes)
+                                            .map(([key, value]) => `${key}="${value}"`)
+                                            .join(", ")
+                                          : "--"}
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -750,7 +863,7 @@ export default function IdentifyEl() {
                           </TableCell>
                         </TableRow>
                       )}
-                    </>
+                    </React.Fragment>
                   ))}
                 </TableBody>
               </Table>

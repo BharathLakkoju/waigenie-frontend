@@ -107,7 +107,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-export default function VisualAnalysisDashboard({data}: {data: VisualAnalysisData}) {
+export default function VisualAnalysisDashboard({ data }: { data: VisualAnalysisData }) {
   const [activeTab, setActiveTab] = useState('checkpoints');
 
   const getPriorityColor = (priority: string) => {
@@ -156,19 +156,19 @@ export default function VisualAnalysisDashboard({data}: {data: VisualAnalysisDat
         {/* Checkpoints Tab */}
         <TabsContent value="checkpoints" className="space-y-4">
           <div className="grid grid-cols-1 gap-6">
-            {data.checkpoints.map((checkpoint, index) => (
+            {data?.checkpoints?.map((checkpoint, index) => (
               <Card key={index} className="overflow-hidden">
                 <CardHeader className="pb-2">
                   <div className="flex justify-between items-center">
-                    <CardTitle className="text-xl">{checkpoint.name}</CardTitle>
+                    <CardTitle className="text-xl">{checkpoint?.name}</CardTitle>
                     <div className="flex space-x-2">
-                      <Badge className={getTypeColor(checkpoint.type)}>
-                        {checkpoint.type.charAt(0).toUpperCase() +
-                          checkpoint.type.slice(1)}
+                      <Badge className={getTypeColor(checkpoint?.type)}>
+                        {checkpoint?.type?.charAt(0).toUpperCase() +
+                          checkpoint?.type?.slice(1)}
                       </Badge>
-                      <Badge className={getPriorityColor(checkpoint.priority)}>
-                        {checkpoint.priority.charAt(0).toUpperCase() +
-                          checkpoint.priority.slice(1)}{' '}
+                      <Badge className={getPriorityColor(checkpoint?.priority)}>
+                        {checkpoint?.priority?.charAt(0).toUpperCase() +
+                          checkpoint?.priority.slice(1)}{' '}
                         Priority
                       </Badge>
                     </div>
@@ -180,7 +180,7 @@ export default function VisualAnalysisDashboard({data}: {data: VisualAnalysisDat
                       Verification Steps
                     </h3>
                     <ul className="list-disc list-inside space-y-1">
-                      {checkpoint.verification_steps.map((step, idx) => (
+                      {checkpoint?.verification_steps?.map((step, idx) => (
                         <li
                           key={idx}
                           className="text-gray-700 dark:text-gray-300"
@@ -206,19 +206,19 @@ export default function VisualAnalysisDashboard({data}: {data: VisualAnalysisDat
                         <TableRow>
                           <TableCell className="font-medium">Desktop</TableCell>
                           <TableCell>
-                            {checkpoint.expected_results.desktop}
+                            {checkpoint?.expected_results?.desktop}
                           </TableCell>
                         </TableRow>
                         <TableRow>
                           <TableCell className="font-medium">Tablet</TableCell>
                           <TableCell>
-                            {checkpoint.expected_results.tablet}
+                            {checkpoint?.expected_results?.tablet}
                           </TableCell>
                         </TableRow>
                         <TableRow>
                           <TableCell className="font-medium">Mobile</TableCell>
                           <TableCell>
-                            {checkpoint.expected_results.mobile}
+                            {checkpoint?.expected_results?.mobile}
                           </TableCell>
                         </TableRow>
                       </TableBody>
@@ -250,16 +250,16 @@ export default function VisualAnalysisDashboard({data}: {data: VisualAnalysisDat
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {data.responsive_testing.breakpoints.map(
+                    {data?.responsive_testing?.breakpoints?.map(
                       (breakpoint, index) => (
                         <TableRow key={index}>
                           <TableCell className="font-medium capitalize">
-                            {breakpoint.device_category}
+                            {breakpoint?.device_category}
                           </TableCell>
-                          <TableCell>{breakpoint.width}</TableCell>
+                          <TableCell>{breakpoint?.width}</TableCell>
                           <TableCell>
                             <div className="flex flex-wrap gap-1">
-                              {breakpoint.critical_checks.map((check, idx) => (
+                              {breakpoint?.critical_checks?.map((check, idx) => (
                                 <Badge key={idx} variant="outline">
                                   {check}
                                 </Badge>
@@ -283,22 +283,22 @@ export default function VisualAnalysisDashboard({data}: {data: VisualAnalysisDat
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {data.responsive_testing.layout_shifts.map((shift, index) => (
+                  {data?.responsive_testing?.layout_shifts?.map((shift, index) => (
                     <div key={index} className="border rounded-lg p-4">
                       <h3 className="text-lg font-medium mb-2">
-                        Scenario: {shift.scenario}
+                        Scenario: {shift?.scenario}
                       </h3>
                       <div className="space-y-2">
                         <p>
                           <span className="font-medium">
                             Expected Behavior:
                           </span>{' '}
-                          {shift.expected_behavior}
+                          {shift?.expected_behavior}
                         </p>
                         <div>
                           <p className="font-medium">Validation Points:</p>
                           <ul className="list-disc list-inside mt-1">
-                            {shift.validation_points.map((point, idx) => (
+                            {shift?.validation_points?.map((point, idx) => (
                               <li key={idx}>{point}</li>
                             ))}
                           </ul>
@@ -323,12 +323,12 @@ export default function VisualAnalysisDashboard({data}: {data: VisualAnalysisDat
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {data.browser_matrix.supported_browsers.map(
+                {data?.browser_matrix?.supported_browsers?.map(
                   (browser, index) => (
                     <Card key={index}>
                       <CardHeader className="py-3">
                         <CardTitle className="text-lg">
-                          {browser.name}
+                          {browser?.name}
                         </CardTitle>
                       </CardHeader>
                       <CardContent className="py-2">
@@ -336,7 +336,7 @@ export default function VisualAnalysisDashboard({data}: {data: VisualAnalysisDat
                           <div>
                             <p className="text-sm font-medium mb-1">Versions</p>
                             <div className="flex gap-2">
-                              {browser.versions.map((version, idx) => (
+                              {browser?.versions?.map((version, idx) => (
                                 <Badge key={idx} variant="secondary">
                                   {version}
                                 </Badge>
@@ -348,7 +348,7 @@ export default function VisualAnalysisDashboard({data}: {data: VisualAnalysisDat
                               Specific Checks
                             </p>
                             <ul className="list-disc list-inside">
-                              {browser.specific_checks.map((check, idx) => (
+                              {browser?.specific_checks?.map((check, idx) => (
                                 <li
                                   key={idx}
                                   className="text-sm text-gray-700 dark:text-gray-300"
@@ -365,11 +365,11 @@ export default function VisualAnalysisDashboard({data}: {data: VisualAnalysisDat
                 )}
               </div>
 
-              {data.browser_matrix.known_issues.length > 0 && (
+              {data?.browser_matrix?.known_issues?.length > 0 && (
                 <div className="mt-6">
                   <h3 className="text-lg font-medium mb-2">Known Issues</h3>
                   <ul className="list-disc list-inside">
-                    {data.browser_matrix.known_issues.map((issue, index) => (
+                    {data?.browser_matrix?.known_issues?.map((issue, index) => (
                       <li key={index}>{issue}</li>
                     ))}
                   </ul>
@@ -388,7 +388,7 @@ export default function VisualAnalysisDashboard({data}: {data: VisualAnalysisDat
               </CardHeader>
               <CardContent>
                 <ul className="list-disc list-inside space-y-1">
-                  {data.testing_strategy.baseline_requirements.map(
+                  {data?.testing_strategy?.baseline_requirements?.map(
                     (req, index) => (
                       <li
                         key={index}
@@ -416,20 +416,20 @@ export default function VisualAnalysisDashboard({data}: {data: VisualAnalysisDat
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {data.testing_strategy.comparison_methods.map(
+                    {data?.testing_strategy?.comparison_methods?.map(
                       (method, index) => (
                         <TableRow key={index}>
                           <TableCell className="font-medium capitalize">
-                            {method.type}
+                            {method?.type}
                           </TableCell>
                           <TableCell>
-                            {method.threshold !== null
-                              ? method.threshold
+                            {method?.threshold !== null
+                              ? method?.threshold
                               : 'N/A'}
                           </TableCell>
                           <TableCell>
                             <ul className="list-disc list-inside">
-                              {method.applicable_scenarios.map(
+                              {method?.applicable_scenarios?.map(
                                 (scenario, idx) => (
                                   <li key={idx}>{scenario}</li>
                                 )
@@ -450,17 +450,17 @@ export default function VisualAnalysisDashboard({data}: {data: VisualAnalysisDat
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {data.testing_strategy.automation_tools.map((tool, index) => (
+                  {data?.testing_strategy?.automation_tools?.map((tool, index) => (
                     <div key={index} className="border rounded-lg p-4">
-                      <h3 className="text-lg font-medium mb-1">{tool.name}</h3>
+                      <h3 className="text-lg font-medium mb-1">{tool?.name}</h3>
                       <p className="text-sm text-gray-500 mb-2">
-                        {tool.purpose}
+                        {tool?.purpose}
                       </p>
-                      {Object.keys(tool.configuration).length > 0 && (
+                      {Object.keys(tool?.configuration)?.length > 0 && (
                         <div>
                           <p className="text-sm font-medium">Configuration:</p>
                           <pre className="bg-gray-100 dark:bg-gray-800 p-2 rounded mt-1 text-xs overflow-x-auto">
-                            {JSON.stringify(tool.configuration, null, 2)}
+                            {JSON.stringify(tool?.configuration, null, 2)}
                           </pre>
                         </div>
                       )}
@@ -479,7 +479,7 @@ export default function VisualAnalysisDashboard({data}: {data: VisualAnalysisDat
               <AccordionTrigger>Setup Steps</AccordionTrigger>
               <AccordionContent>
                 <ol className="list-decimal list-inside space-y-1 ml-4">
-                  {data.implementation_plan.setup_steps.map((step, index) => (
+                  {data?.implementation_plan?.setup_steps?.map((step, index) => (
                     <li
                       key={index}
                       className="text-gray-700 dark:text-gray-300"
@@ -495,7 +495,7 @@ export default function VisualAnalysisDashboard({data}: {data: VisualAnalysisDat
               <AccordionTrigger>Test Sequence</AccordionTrigger>
               <AccordionContent>
                 <ol className="list-decimal list-inside space-y-1 ml-4">
-                  {data.implementation_plan.test_sequence.map((step, index) => (
+                  {data?.implementation_plan?.test_sequence?.map((step, index) => (
                     <li
                       key={index}
                       className="text-gray-700 dark:text-gray-300"
@@ -511,7 +511,7 @@ export default function VisualAnalysisDashboard({data}: {data: VisualAnalysisDat
               <AccordionTrigger>Maintenance Considerations</AccordionTrigger>
               <AccordionContent>
                 <ul className="list-disc list-inside space-y-1 ml-4">
-                  {data.implementation_plan.maintenance_considerations.map(
+                  {data?.implementation_plan?.maintenance_considerations?.map(
                     (consideration, index) => (
                       <li
                         key={index}
@@ -529,7 +529,7 @@ export default function VisualAnalysisDashboard({data}: {data: VisualAnalysisDat
               <AccordionTrigger>Success Criteria</AccordionTrigger>
               <AccordionContent>
                 <ul className="list-disc list-inside space-y-1 ml-4">
-                  {data.implementation_plan.success_criteria.map(
+                  {data?.implementation_plan?.success_criteria?.map(
                     (criteria, index) => (
                       <li
                         key={index}

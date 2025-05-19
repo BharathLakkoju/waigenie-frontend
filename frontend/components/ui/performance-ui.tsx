@@ -53,7 +53,7 @@ interface PerformanceScore {
   };
 }
 
-export default function PerformanceAnalysisDashboard({issues}: {issues: Issue[]}) {
+export default function PerformanceAnalysisDashboard({ issues }: { issues: Issue[] }) {
 
   const optimizations: Optimization[] = [
     {
@@ -229,7 +229,7 @@ export default function PerformanceAnalysisDashboard({issues}: {issues: Issue[]}
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {issues.map((issue, index) => (
+            {issues?.map((issue, index) => (
               <Alert
                 key={index}
                 className="border-l-4"
@@ -238,8 +238,8 @@ export default function PerformanceAnalysisDashboard({issues}: {issues: Issue[]}
                     issue.impact === 'high'
                       ? '#ef4444'
                       : issue.impact === 'medium'
-                      ? '#f59e0b'
-                      : '#22c55e',
+                        ? '#f59e0b'
+                        : '#22c55e',
                 }}
               >
                 <div className="flex items-center gap-2">

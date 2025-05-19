@@ -48,7 +48,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 
-export default function UxStrategy({data}: {data: DashboardData}) {
+export default function UxStrategy({ data }: { data: DashboardData }) {
   const [activeTab, setActiveTab] = useState('trends');
 
   const getImpactColor = (impact: string) => {
@@ -113,28 +113,28 @@ export default function UxStrategy({data}: {data: DashboardData}) {
         {/* Trends Tab */}
         <TabsContent value="trends" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {data.trends.map((trend, index) => (
+            {data?.trends?.map((trend, index) => (
               <Card
                 key={index}
                 className="overflow-hidden transition-all hover:shadow-lg"
               >
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-xl">{trend.category}</CardTitle>
-                  <Badge className={`${getImpactColor(trend.impact)} w-fit`}>
-                    {trend.impact.charAt(0).toUpperCase() +
-                      trend.impact.slice(1)}{' '}
+                  <CardTitle className="text-xl">{trend?.category}</CardTitle>
+                  <Badge className={`${getImpactColor(trend?.impact)} w-fit`}>
+                    {trend?.impact?.charAt(0).toUpperCase() +
+                      trend?.impact?.slice(1)}{' '}
                     Impact
                   </Badge>
                 </CardHeader>
                 <CardContent>
-                  <p className="mb-4">{trend.trend}</p>
+                  <p className="mb-4">{trend?.trend}</p>
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                       <span>Adoption Rate</span>
-                      <span className="font-medium">{trend.adoption_rate}</span>
+                      <span className="font-medium">{trend?.adoption_rate}</span>
                     </div>
                     <Progress
-                      value={getProgressValue(trend.adoption_rate)}
+                      value={getProgressValue(trend?.adoption_rate)}
                       className="h-2"
                     />
                   </div>
@@ -157,7 +157,7 @@ export default function UxStrategy({data}: {data: DashboardData}) {
               <div>
                 <h3 className="text-lg font-medium mb-2">Market Position</h3>
                 <p className="text-gray-700 dark:text-gray-300">
-                  {data.competition.market_position}
+                  {data?.competition?.market_position}
                 </p>
               </div>
 
@@ -166,7 +166,7 @@ export default function UxStrategy({data}: {data: DashboardData}) {
                   Key Differentiators
                 </h3>
                 <ul className="list-disc list-inside space-y-1">
-                  {data.competition.differentiators.map((diff, index) => (
+                  {data?.competition?.differentiators?.map((diff, index) => (
                     <li
                       key={index}
                       className="text-gray-700 dark:text-gray-300"
@@ -180,7 +180,7 @@ export default function UxStrategy({data}: {data: DashboardData}) {
               <div>
                 <h3 className="text-lg font-medium mb-2">Market Gaps</h3>
                 <ul className="list-disc list-inside space-y-1">
-                  {data.competition.gaps.map((gap, index) => (
+                  {data?.competition?.gaps?.map((gap, index) => (
                     <li
                       key={index}
                       className="text-gray-700 dark:text-gray-300"
@@ -197,30 +197,30 @@ export default function UxStrategy({data}: {data: DashboardData}) {
         {/* Opportunities Tab */}
         <TabsContent value="opportunities" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {data.opportunities.map((opportunity, index) => (
+            {data?.opportunities?.map((opportunity, index) => (
               <Card
                 key={index}
                 className="overflow-hidden transition-all hover:shadow-lg"
               >
                 <CardHeader>
-                  <CardTitle className="text-xl">{opportunity.type}</CardTitle>
+                  <CardTitle className="text-xl">{opportunity?.type}</CardTitle>
                   <div className="flex space-x-2 mt-2">
                     <Badge
-                      className={getImpactColor(opportunity.potential_impact)}
+                      className={getImpactColor(opportunity?.potential_impact)}
                     >
-                      {opportunity.potential_impact.charAt(0).toUpperCase() +
-                        opportunity.potential_impact.slice(1)}{' '}
+                      {opportunity?.potential_impact?.charAt(0).toUpperCase() +
+                        opportunity?.potential_impact?.slice(1)}{' '}
                       Impact
                     </Badge>
                     <Badge
                       className={getComplexityColor(
-                        opportunity.implementation_complexity
+                        opportunity?.implementation_complexity
                       )}
                     >
-                      {opportunity.implementation_complexity
+                      {opportunity?.implementation_complexity
                         .charAt(0)
                         .toUpperCase() +
-                        opportunity.implementation_complexity.slice(1)}{' '}
+                        opportunity?.implementation_complexity?.slice(1)}{' '}
                       Complexity
                     </Badge>
                   </div>
@@ -228,7 +228,7 @@ export default function UxStrategy({data}: {data: DashboardData}) {
                 <CardContent>
                   <h3 className="text-sm font-medium mb-1">Expected ROI</h3>
                   <p className="text-gray-700 dark:text-gray-300 mb-3">
-                    {opportunity.estimated_roi}
+                    {opportunity?.estimated_roi}
                   </p>
                 </CardContent>
               </Card>
@@ -238,7 +238,7 @@ export default function UxStrategy({data}: {data: DashboardData}) {
 
         {/* Recommendations Tab */}
         <TabsContent value="recommendations" className="space-y-4">
-          {data.recommendations.map((rec, index) => (
+          {data?.recommendations?.map((rec, index) => (
             <Card
               key={index}
               className="overflow-hidden transition-all hover:shadow-lg"
@@ -248,9 +248,9 @@ export default function UxStrategy({data}: {data: DashboardData}) {
                   <CardTitle className="text-xl">
                     Recommendation {index + 1}
                   </CardTitle>
-                  <Badge className={getPriorityColor(rec.priority)}>
-                    {rec.priority.charAt(0).toUpperCase() +
-                      rec.priority.slice(1)}{' '}
+                  <Badge className={getPriorityColor(rec?.priority)}>
+                    {rec?.priority?.charAt(0).toUpperCase() +
+                      rec?.priority?.slice(1)}{' '}
                     Priority
                   </Badge>
                 </div>
@@ -259,14 +259,14 @@ export default function UxStrategy({data}: {data: DashboardData}) {
                 <div>
                   <h3 className="text-sm font-medium mb-1">Action</h3>
                   <p className="text-gray-700 dark:text-gray-300">
-                    {rec.action}
+                    {rec?.action}
                   </p>
                 </div>
 
                 <div>
                   <h3 className="text-sm font-medium mb-1">Expected Outcome</h3>
                   <p className="text-gray-700 dark:text-gray-300">
-                    {rec.expected_outcome}
+                    {rec?.expected_outcome}
                   </p>
                 </div>
 
@@ -275,7 +275,7 @@ export default function UxStrategy({data}: {data: DashboardData}) {
                     Measurement Metrics
                   </h3>
                   <ul className="list-disc list-inside">
-                    {rec.measurement_metrics.map((metric, idx) => (
+                    {rec?.measurement_metrics?.map((metric, idx) => (
                       <li
                         key={idx}
                         className="text-gray-700 dark:text-gray-300"

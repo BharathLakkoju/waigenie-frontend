@@ -56,7 +56,7 @@ interface ComplianceSummary {
   recommended_actions_count: number;
 }
 
-export default function AccessibilityAnalysisDashboard({issues, recommendations, wcagViolations, complianceSummary}: {issues: AccessibilityIssue[], recommendations: Recommendation[], wcagViolations: WcagViolation[], complianceSummary: ComplianceSummary}) {
+export default function AccessibilityAnalysisDashboard({ issues, recommendations, wcagViolations, complianceSummary }: { issues: AccessibilityIssue[], recommendations: Recommendation[], wcagViolations: WcagViolation[], complianceSummary: ComplianceSummary }) {
 
   // Helper functions
   const getImpactColor = (impact: 'low' | 'medium' | 'high') => {
@@ -114,11 +114,11 @@ export default function AccessibilityAnalysisDashboard({issues, recommendations,
             </div>
             <Badge
               className={
-                complianceSummary.overall_status === 'compliant'
+                complianceSummary?.overall_status === 'compliant'
                   ? 'bg-green-500'
                   : 'bg-red-500'
               }
-              // size="lg"
+            // size="lg"
             >
               {complianceSummary.overall_status.toUpperCase()}
             </Badge>
@@ -198,8 +198,8 @@ export default function AccessibilityAnalysisDashboard({issues, recommendations,
                         issue.impact_level === 'high'
                           ? '#ef4444'
                           : issue.impact_level === 'medium'
-                          ? '#f59e0b'
-                          : '#3b82f6',
+                            ? '#f59e0b'
+                            : '#3b82f6',
                     }}
                   >
                     <div className="flex items-center gap-2">
