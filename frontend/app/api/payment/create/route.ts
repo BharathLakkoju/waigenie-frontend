@@ -25,13 +25,13 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { plan } = body;
+    const { plan, currency = "USD", amount } = body;
 
-    let amount;
+    let baseAmount;
     if (plan === "pro") {
-      amount = 15; // $15.00
+      baseAmount = 15; // $15.00
     } else if (plan === "enterprise") {
-      amount = 100; // $100.00 or custom amount
+      baseAmount = 100; // $100.00 or custom amount
     } else {
       return new NextResponse("Invalid plan", { status: 400 });
     }
@@ -42,13 +42,17 @@ export async function POST(req: Request) {
     const receipt = `rcpt_${shortUserId}${timestamp}`;
 
     const options = {
-      amount: amount * 100, // Amount in smallest currency unit (cents)
-      currency: "USD",
-      receipt: receipt, // This will now be under 40 chars
+      amount: (amount || baseAmount) * 100, // Amount in smallest currency unit (cents)
+      currency: currency,
+      receipt: receipt,
       notes: {
         userId: user.id,
         userEmail: user.email,
         plan: plan,
+        originalAmount: baseAmount,
+        originalCurrency: "USD",
+        convertedAmount: amount,
+        convertedCurrency: currency
       },
     };
 

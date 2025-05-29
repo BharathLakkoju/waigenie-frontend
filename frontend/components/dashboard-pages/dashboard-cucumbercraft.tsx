@@ -16,6 +16,19 @@ export default function GenerateBDD() {
   const [generatedBDD, setGeneratedBDD] = useState("");
   const { toast } = useToast();
 
+  const handleReset = () => {
+    setUserStory("");
+    setDetailLevel("Simple");
+    setGenerationMethod("direct");
+    setGherkinFeature("");
+    setManualTestCases("");
+    setGeneratedBDD("");
+    toast({
+      title: "Reset successful",
+      description: "All content has been cleared.",
+    });
+  };
+
   const generateBDD = async () => {
     if (!userStory.trim()) {
       toast({
@@ -86,8 +99,16 @@ export default function GenerateBDD() {
           className="w-full p-3 mb-4 bg-white border border-gray-300 rounded-md text-black placeholder-gray-400 focus:outline-none focus:border-gray-500"
           rows={3}
         />
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-black text-lg font-bold">Generation Method:</h3>
+          <button
+            onClick={handleReset}
+            className="px-4 py-2 rounded-full text-xs shadow-lg transition-all duration-300 bg-red-100 text-red-600 hover:bg-red-200"
+          >
+            Reset
+          </button>
+        </div>
         <div className="mb-6">
-          <h3 className="text-black text-lg font-bold mb-2">Generation Method:</h3>
           <div className="flex flex-col md:flex-row justify-center space-y-2 md:space-y-0 md:space-x-4 my-4">
             <button
               onClick={() => setGenerationMethod("direct")}
@@ -110,21 +131,19 @@ export default function GenerateBDD() {
             <div className="flex justify-center space-x-4">
               <button
                 onClick={() => setDetailLevel("Simple")}
-                className={`px-4 py-2 rounded-full text-xs shadow-lg transition-all duration-300 ${
-                  detailLevel === "Simple"
-                    ? "bg-blue-600 text-white transform scale-105"
-                    : "bg-blue-100 text-blue-600 hover:bg-blue-200"
-                }`}
+                className={`px-4 py-2 rounded-full text-xs shadow-lg transition-all duration-300 ${detailLevel === "Simple"
+                  ? "bg-blue-600 text-white transform scale-105"
+                  : "bg-blue-100 text-blue-600 hover:bg-blue-200"
+                  }`}
               >
                 Simple
               </button>
               <button
                 onClick={() => setDetailLevel("Detailed")}
-                className={`px-4 py-2 rounded-full text-xs shadow-lg transition-all duration-300 ${
-                  detailLevel === "Detailed"
-                    ? "bg-blue-600 text-white transform scale-105"
-                    : "bg-blue-100 text-blue-600 hover:bg-blue-200"
-                }`}
+                className={`px-4 py-2 rounded-full text-xs shadow-lg transition-all duration-300 ${detailLevel === "Detailed"
+                  ? "bg-blue-600 text-white transform scale-105"
+                  : "bg-blue-100 text-blue-600 hover:bg-blue-200"
+                  }`}
               >
                 Detailed
               </button>
@@ -136,17 +155,17 @@ export default function GenerateBDD() {
           onClick={generateGherkinFeature}
           disabled={loading}
           className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition duration-300 shadow-lg transform hover:scale-[1.02] text-sm"
-          >
+        >
           {loading ? "Generating..." : "Generate Gherkin Feature"}
         </button>
-          {/* Loading Spinner */}
-          {loading && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-              <div className="p-3 animate-spin drop-shadow-2xl bg-gradient-to-bl from-pink-400 via-purple-400 to-indigo-600 rounded-full">
-                <div className="rounded-full h-12 w-12 bg-white"></div>
-              </div>
+        {/* Loading Spinner */}
+        {loading && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="p-3 animate-spin bg-gradient-to-bl from-pink-400 via-purple-400 to-indigo-600 rounded-full">
+              <div className="rounded-full h-12 w-12 bg-white"></div>
             </div>
-          )}
+          </div>
+        )}
       </div>
       <div className="w-full md:w-2/3 px-6 bg-gray-50 rounded-md h-auto md:h-[calc(100vh-100px)] shadow-lg overflow-y-auto">
         {manualTestCases && (

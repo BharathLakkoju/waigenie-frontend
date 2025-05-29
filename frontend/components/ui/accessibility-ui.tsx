@@ -57,7 +57,7 @@ interface ComplianceSummary {
 }
 
 export default function AccessibilityAnalysisDashboard({ issues, recommendations, wcagViolations, complianceSummary }: { issues: AccessibilityIssue[], recommendations: Recommendation[], wcagViolations: WcagViolation[], complianceSummary: ComplianceSummary }) {
-  
+
   // Helper functions
   const getImpactColor = (impact: 'low' | 'medium' | 'high') => {
     switch (impact) {
@@ -66,7 +66,7 @@ export default function AccessibilityAnalysisDashboard({ issues, recommendations
       case 'medium':
         return 'bg-yellow-500 hover:bg-yellow-600';
       case 'low':
-        return 'bg-blue-500 hover:bg-blue-600';
+        return 'bg-green-500 hover:bg-green-600';
       default:
         return 'bg-gray-500 hover:bg-gray-600';
     }
@@ -79,7 +79,7 @@ export default function AccessibilityAnalysisDashboard({ issues, recommendations
       case 'medium':
         return <ExclamationTriangleIcon className="h-4 w-4 text-yellow-500" />;
       case 'low':
-        return <InfoCircledIcon className="h-4 w-4 text-blue-500" />;
+        return <InfoCircledIcon className="h-4 w-4 text-green-500" />;
       default:
         return null;
     }
@@ -107,13 +107,13 @@ export default function AccessibilityAnalysisDashboard({ issues, recommendations
       'AA': 2,
       'AAA': 3
     };
-    
+
     const total = wcagViolations.reduce((sum, violation) => {
       return sum + (levelValues[violation.level as keyof typeof levelValues] || 0);
     }, 0);
-    
+
     const average = total / wcagViolations.length;
-    
+
     if (average >= 2.5) return 'AAA';
     if (average >= 1.5) return 'AA';
     return 'A';
@@ -147,8 +147,8 @@ export default function AccessibilityAnalysisDashboard({ issues, recommendations
             <Badge
               className={
                 complianceSummary?.overall_status === 'compliant'
-                  ? 'bg-green-500'
-                  : 'bg-red-500'
+                  ? 'bg-green-500 hover:bg-green-600'
+                  : complianceSummary?.overall_status === 'partial' ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-red-500 hover:bg-red-600'
               }
             >
               {complianceSummary?.overall_status.toUpperCase()}
@@ -341,7 +341,7 @@ export default function AccessibilityAnalysisDashboard({ issues, recommendations
                 </TableHeader>
                 <TableBody>
                   {wcagViolations?.map((violation, index) => (
-                    < TableRow key = { index } >
+                    < TableRow key={index} >
                       <TableCell className="font-medium">
                         {violation?.criterion}
                       </TableCell>
@@ -367,21 +367,21 @@ export default function AccessibilityAnalysisDashboard({ issues, recommendations
                       </TableCell>
                     </TableRow>
                   ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-          <CardFooter className="bg-slate-50 border-t p-4">
-            <div className="flex items-center">
-              <ExclamationTriangleIcon className="h-5 w-5 text-amber-500 mr-2" />
-              <p className="text-sm text-gray-600">
-                All identified violations `Level A`, which are the most
-                basic web accessibility requirements that must be satisfied.
-              </p>
-            </div>
-          </CardFooter>
-        </Card>
-      </TabsContent>
-    </Tabs>
+                </TableBody>
+              </Table>
+            </CardContent>
+            <CardFooter className="bg-slate-50 border-t p-4">
+              <div className="flex items-center">
+                <ExclamationTriangleIcon className="h-5 w-5 text-amber-500 mr-2" />
+                <p className="text-sm text-gray-600">
+                  All identified violations `Level A`, which are the most
+                  basic web accessibility requirements that must be satisfied.
+                </p>
+              </div>
+            </CardFooter>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div >
   );
 };

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import {
   Dialog,
@@ -12,6 +12,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { Check } from "lucide-react";
+import { getExchangeRate, getCurrencySymbol, getCurrencyFromCountry } from "@/lib/currency";
 
 declare global {
   interface Window {
@@ -31,7 +32,7 @@ interface PaymentModalProps {
   onClose: () => void;
   plan: "pro" | "enterprise";
   planDetails: PlanDetails;
-  onSuccess: (newUserType: string) => void;
+  onSuccess?: (userType: string) => void;
 }
 
 export default function PaymentModal({
@@ -42,8 +43,62 @@ export default function PaymentModal({
   onSuccess,
 }: PaymentModalProps) {
   const [loading, setLoading] = useState(false);
+  const [localPrice, setLocalPrice] = useState<number | 'Custom'>(planDetails.price || planDetails.basePrice);
+  const [currency, setCurrency] = useState<string>("USD");
+  const [currencySymbol, setCurrencySymbol] = useState<string>("$");
   const { toast } = useToast();
   const router = useRouter();
+
+  useEffect(() => {
+    async function getLocationAndPrice() {
+      try {
+        // First try to get location from browser
+        const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject);
+        });
+
+        // Use reverse geocoding to get country code
+        const response = await fetch(
+          `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${position.coords.latitude}&longitude=${position.coords.longitude}`
+        );
+        const data = await response.json();
+        const countryCode = data.countryCode;
+
+        // Get currency for the country
+        const userCurrency = getCurrencyFromCountry(countryCode);
+        setCurrency(userCurrency);
+        setCurrencySymbol(getCurrencySymbol(userCurrency));
+
+        // Convert price to local currency
+        if (typeof planDetails.basePrice === 'number') {
+          const localAmount = await getExchangeRate(planDetails.basePrice, userCurrency);
+          setLocalPrice(Math.round(localAmount));
+        }
+      } catch (error) {
+        console.error('Error getting location or price:', error);
+        // Fallback to IP-based location
+        try {
+          const response = await fetch('https://ipapi.co/json/');
+          const data = await response.json();
+          const countryCode = data.country_code;
+          const userCurrency = getCurrencyFromCountry(countryCode);
+          setCurrency(userCurrency);
+          setCurrencySymbol(getCurrencySymbol(userCurrency));
+
+          if (typeof planDetails.basePrice === 'number') {
+            const localAmount = await getExchangeRate(planDetails.basePrice, userCurrency);
+            setLocalPrice(Math.round(localAmount));
+          }
+        } catch (ipError) {
+          console.error('Error with IP-based location:', ipError);
+          // Final fallback to USD
+          setLocalPrice(planDetails.basePrice);
+        }
+      }
+    }
+
+    getLocationAndPrice();
+  }, [planDetails.basePrice]);
 
   const handlePayment = async () => {
     try {
@@ -54,7 +109,11 @@ export default function PaymentModal({
       const response = await fetch("/api/payment/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan }),
+        body: JSON.stringify({
+          plan,
+          currency,
+          amount: typeof localPrice === 'number' ? localPrice : planDetails.basePrice
+        }),
       });
 
       if (!response.ok) {
@@ -120,44 +179,30 @@ export default function PaymentModal({
             console.error("Payment verification error:", error);
             toast({
               title: "Payment Verification Failed",
-              description: "Please contact support if payment was deducted.",
+              description: "Please contact support if the issue persists.",
               variant: "destructive",
             });
           }
         },
         prefill: {
-          name: "",
-          email: "",
+          name: "User",
+          email: "user@example.com",
         },
         theme: {
           color: "#4F46E5",
         },
-        modal: {
-          ondismiss: function() {
-            setLoading(false);
-          }
-        }
       };
 
-      console.log("Initializing Razorpay with options:", options);
       const razorpay = new window.Razorpay(options);
-      razorpay.on('payment.failed', function (response: any) {
-        console.error("Payment failed:", response.error);
-        toast({
-          title: "Payment Failed",
-          description: response.error.description,
-          variant: "destructive",
-        });
-        setLoading(false);
-      });
       razorpay.open();
     } catch (error) {
       console.error("Payment error:", error);
       toast({
         title: "Payment Failed",
-        description: error instanceof Error ? error.message : "Something went wrong. Please try again.",
+        description: "Please try again or contact support.",
         variant: "destructive",
       });
+    } finally {
       setLoading(false);
     }
   };
@@ -173,8 +218,8 @@ export default function PaymentModal({
         </DialogHeader>
         <div className="space-y-4">
           <div className="text-2xl font-bold">
-            {typeof planDetails.price === 'number' 
-              ? `₹${planDetails.price.toLocaleString('en-IN')}/month`
+            {typeof localPrice === 'number'
+              ? `${currencySymbol}${localPrice.toLocaleString()}/month`
               : 'Custom Pricing'}
           </div>
           <div className="space-y-2">
@@ -190,8 +235,8 @@ export default function PaymentModal({
           <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>
-          <Button onClick={handlePayment}>
-            Upgrade Now
+          <Button onClick={handlePayment} disabled={loading}>
+            {loading ? "Processing..." : "Upgrade Now"}
           </Button>
         </DialogFooter>
       </DialogContent>

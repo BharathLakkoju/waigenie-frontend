@@ -3,7 +3,7 @@ import { Check, X } from "lucide-react";
 import Link from "next/link";
 import { motion, useInView } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
-import { getExchangeRate } from "@/lib/currency";
+import { getExchangeRate, getCurrencySymbol, getCurrencyFromCountry } from "@/lib/currency";
 
 export default function PricingPage() {
   const titleRef = useRef(null);
@@ -11,6 +11,8 @@ export default function PricingPage() {
   const customRef = useRef(null);
   const [proPrice, setProPrice] = useState<string>("Loading...");
   const [isLoading, setIsLoading] = useState(true);
+  const [currency, setCurrency] = useState<string>("USD");
+  const [currencySymbol, setCurrencySymbol] = useState<string>("$");
 
   const isTitleInView = useInView(titleRef, { once: true });
   const isPlansInView = useInView(plansRef, { once: true });
@@ -19,28 +21,53 @@ export default function PricingPage() {
   const basePrice = 15; // Base price in USD
 
   useEffect(() => {
-    async function fetchPrice() {
+    async function getLocationAndPrice() {
       try {
-        const response = await fetch('https://ipapi.co/json/');
-        const data = await response.json();
-        const countryCode = data.country_code;
+        // First try to get location from browser
+        const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject);
+        });
 
-        if (countryCode === 'IN') {
-          const inrAmount = await getExchangeRate(basePrice);
-          setProPrice(`₹${Math.round(inrAmount).toLocaleString('en-IN')}`);
-        } else {
+        // Use reverse geocoding to get country code
+        const response = await fetch(
+          `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${position.coords.latitude}&longitude=${position.coords.longitude}`
+        );
+        const data = await response.json();
+        const countryCode = data.countryCode;
+
+        // Get currency for the country
+        const userCurrency = getCurrencyFromCountry(countryCode);
+        setCurrency(userCurrency);
+        setCurrencySymbol(getCurrencySymbol(userCurrency));
+
+        // Convert price to local currency
+        const localAmount = await getExchangeRate(basePrice, userCurrency);
+        setProPrice(`${currencySymbol}${Math.round(localAmount).toLocaleString()}`);
+      } catch (error) {
+        console.error('Error getting location or price:', error);
+        // Fallback to IP-based location
+        try {
+          const response = await fetch('https://ipapi.co/json/');
+          const data = await response.json();
+          const countryCode = data.country_code;
+          const userCurrency = getCurrencyFromCountry(countryCode);
+          setCurrency(userCurrency);
+          setCurrencySymbol(getCurrencySymbol(userCurrency));
+
+          const localAmount = await getExchangeRate(basePrice, userCurrency);
+          setProPrice(`${currencySymbol}${Math.round(localAmount).toLocaleString()}`);
+        } catch (ipError) {
+          console.error('Error with IP-based location:', ipError);
+          // Final fallback to USD
           setProPrice(`$${basePrice}`);
         }
-      } catch (error) {
-        console.error('Error fetching price:', error);
-        // Fallback price
-        setProPrice(`₹${Math.round(basePrice * 83).toLocaleString('en-IN')}`);
       } finally {
         setIsLoading(false);
       }
     }
-    fetchPrice();
-  }, []);
+
+    getLocationAndPrice();
+  }, [currencySymbol]);
 
   const plans = [
     {
@@ -168,11 +195,10 @@ export default function PricingPage() {
               <div className="pb-8 px-6">
                 <Link
                   href={plan.ctaLink}
-                  className={`block w-full py-3 px-6 border border-transparent rounded-md text-center font-medium ${
-                    plan.name === "Pro"
+                  className={`block w-full py-3 px-6 border border-transparent rounded-md text-center font-medium ${plan.name === "Pro"
                       ? "bg-indigo-600 text-white hover:bg-indigo-700"
                       : "bg-indigo-300/40 text-indigo-700 hover:bg-indigo-300/60"
-                  }`}
+                    }`}
                 >
                   {plan.cta}
                 </Link>

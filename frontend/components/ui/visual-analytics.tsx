@@ -114,24 +114,24 @@ export default function VisualAnalysisDashboard({ data }: { data: VisualAnalysis
   const getPriorityColor = (priority: string) => {
     switch (priority.toLowerCase()) {
       case 'high':
-        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
+        return 'bg-red-500 hover:bg-red-600';
       case 'medium':
-        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
+        return 'bg-yellow-500 hover:bg-yellow-600';
       case 'low':
-        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
+        return 'bg-green-500 hover:bg-green-600';
       default:
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300';
+        return 'bg-gray-500 hover:bg-gray-600';
     }
   };
 
   const getTypeColor = (type: string) => {
     switch (type.toLowerCase()) {
       case 'layout':
-        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
+        return 'bg-blue-500 hover:bg-blue-600';
       case 'style':
-        return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300';
+        return 'bg-purple-500 hover:bg-purple-600';
       case 'interaction':
-        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
+        return 'bg-green-500 hover:bg-green-600';
       default:
         return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300';
     }

@@ -14,6 +14,29 @@ export default function TestIdea() {
   const [mode, setMode] = useState("auto"); // 'auto' or 'manual'
   const { toast } = useToast();
 
+  const normalizeUrl = (url: string): string => {
+    if (!url) return "";
+    // Remove any whitespace
+    url = url.trim();
+    // If URL doesn't start with http:// or https://, add https://
+    if (!url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('www.')) {
+      url = 'https://' + url;
+    }
+    return url;
+  };
+
+  const handleReset = () => {
+    setSelectedElements([]);
+    setTestScenarios("");
+    setManualTestCases("");
+    setBrowserStarted(false);
+    setUrl("");
+    toast({
+      title: "Reset successful",
+      description: "All test scenarios and selections have been cleared.",
+    });
+  };
+
   const startBrowser = () => {
     setBrowserStarted(true);
   };
@@ -27,10 +50,11 @@ export default function TestIdea() {
     setTestScenarios("");
     setManualTestCases("");
     try {
+      const normalizedUrl = normalizeUrl(url);
       const response = await apiClient.post(
         "https://waigenie.onrender.com/api/generate-scenarios",
         {
-          url,
+          url: normalizedUrl,
           selectedElements,
           mode,
         }
@@ -77,23 +101,27 @@ export default function TestIdea() {
             <div className="flex justify-center space-x-4 my-4">
               <button
                 onClick={() => setMode("auto")}
-                className={`px-4 py-2 rounded-full text-xs shadow-lg transition-all duration-300 ${
-                  mode === "auto"
-                    ? "bg-blue-600 text-white transform scale-105"
-                    : "bg-blue-100 text-blue-600 hover:bg-blue-200"
-                }`}
+                className={`px-4 py-2 rounded-full text-xs shadow-lg transition-all duration-300 ${mode === "auto"
+                  ? "bg-blue-600 text-white transform scale-105"
+                  : "bg-blue-100 text-blue-600 hover:bg-blue-200"
+                  }`}
               >
                 Automated Scenarios
               </button>
               <button
                 onClick={() => setMode("manual")}
-                className={`px-4 py-2 rounded-full text-xs shadow-lg transition-all duration-300 ${
-                  mode === "manual"
-                    ? "bg-blue-600 text-white transform scale-105"
-                    : "bg-blue-100 text-blue-600 hover:bg-blue-200"
-                }`}
+                className={`px-4 py-2 rounded-full text-xs shadow-lg transition-all duration-300 ${mode === "manual"
+                  ? "bg-blue-600 text-white transform scale-105"
+                  : "bg-blue-100 text-blue-600 hover:bg-blue-200"
+                  }`}
               >
                 Manual Test Cases
+              </button>
+              <button
+                onClick={handleReset}
+                className="px-4 py-2 rounded-full text-xs shadow-lg transition-all duration-300 bg-red-100 text-red-600 hover:bg-red-200"
+              >
+                Reset
               </button>
             </div>
           )}
@@ -130,8 +158,8 @@ export default function TestIdea() {
       </div>
       {/* Loading Spinner */}
       {loading && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="p-3 animate-spin drop-shadow-2xl bg-gradient-to-bl from-pink-400 via-purple-400 to-indigo-600 rounded-full">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="p-3 animate-spin bg-gradient-to-bl from-pink-400 via-purple-400 to-indigo-600 rounded-full">
             <div className="rounded-full h-12 w-12 bg-white"></div>
           </div>
         </div>

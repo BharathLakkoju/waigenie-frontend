@@ -153,7 +153,7 @@ interface ComprehensiveAnalysis {
 }
 
 export default function IdentifyEl() {
-  const [selectedXPath, setSelectedXPath] = useState("");
+  const [selectedId, setSelectedId] = useState("");
   const [expandedRows, setExpandedRows] = useState([]);
   const [url, setUrl] = useState("");
   const [outputFileName, setOutputFileName] = useState("elements.csv");
@@ -176,7 +176,38 @@ export default function IdentifyEl() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [selectedFramework, setSelectedFramework] = useState("playwright");
   const [locators, setLocators] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const { toast } = useToast();
+
+  const normalizeUrl = (url: string): string => {
+    if (!url) return "";
+    // Remove any whitespace
+    url = url.trim();
+    // If URL doesn't start with http:// or https://, add https://
+    if (!url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('www.')) {
+      url = 'https://' + url;
+    }
+    return url;
+  };
+
+  const handleReset = () => {
+    setIdentifiedElements([]);
+    setFilterText("");
+    setSelectedCategory("all");
+    setShowOnlyVisible(false);
+    setShowOnlyInteractive(false);
+    setSelectedElements([]);
+    setCompareMode(false);
+    setAnalysis(null);
+    setCurrentPage(1);
+    setProgress(0);
+    setError("");
+    toast({
+      title: "Reset successful",
+      description: "All search results and filters have been cleared.",
+    });
+  };
 
   const toggleRow = (index: number) => {
     setExpandedRows((prev: any) => ({ ...prev, [index]: !prev[index] }));
@@ -227,16 +258,32 @@ export default function IdentifyEl() {
     return true;
   });
 
+  // Add pagination logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredElements.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredElements.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+    setExpandedRows([]); // Reset expanded rows when changing pages
+  };
+
+  const handleItemsPerPageChange = (value: string) => {
+    setItemsPerPage(Number(value));
+    setCurrentPage(1); // Reset to first page when changing items per page
+    setExpandedRows([]); // Reset expanded rows
+  };
+
   const loadUrl = async () => {
     setLoading(true);
     setError("");
     try {
+      const normalizedUrl = normalizeUrl(url);
       const response = await apiClient.post(
-        // "https://favourable-rea-bharath07-7294baab.koyeb.app/api/proxy",
-        // "https://waigenie-delpoyment-test.onrender.com/api/proxy",
         "https://waigenie.onrender.com/api/proxy",
         {
-          url,
+          url: normalizedUrl,
         },
       );
       setProxyHtml(response.data.html);
@@ -312,8 +359,6 @@ export default function IdentifyEl() {
   const downloadCsv = async () => {
     try {
       const response = await axios.post(
-        // "https://favourable-rea-bharath07-7294baab.koyeb.app/api/generate-csv",
-        // "https://waigenie-delpoyment-test.onrender.com/api/generate-csv",
         "https://waigenie.onrender.com/api/generate-csv",
         { elements: identifiedElements, filename: outputFileName },
         { responseType: "blob" },
@@ -472,7 +517,7 @@ export default function IdentifyEl() {
     };
 
     return (
-      <div className="space-y-8"> 
+      <div className="space-y-8">
         {Object.keys(analysis).map((sectionName) => (
           <div key={sectionName} className="bg-white rounded-lg">
             {renderSection(sectionName as keyof typeof analysis)}
@@ -632,6 +677,14 @@ export default function IdentifyEl() {
                     </SelectGroup>
                   </SelectContent>
                 </Select>
+                <Button
+                  onClick={handleReset}
+                  variant="outline"
+                  className="flex items-center gap-2"
+                >
+                  <FaRobot className="mr-2" />
+                  Reset
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -643,14 +696,13 @@ export default function IdentifyEl() {
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-12"></TableHead>
+                    <TableHead>ID</TableHead>
                     <TableHead>Element</TableHead>
-                    {/* <TableHead>Type</TableHead> */}
-                    <TableHead className="hidden md:table-cell">Relative XPath</TableHead>
                     <TableHead className="hidden md:table-cell">Absolute XPath</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredElements.map((element, index) => (
+                  {currentItems.map((element, index) => (
                     <React.Fragment key={`row-${index}`}>
                       <TableRow>
                         <TableCell className="p-2">
@@ -670,13 +722,10 @@ export default function IdentifyEl() {
                             )}
                           </button>
                         </TableCell>
-                        <TableCell>{element.tag.toLowerCase()}</TableCell>
-                        {/* <TableCell className="text-gray-500 text-sm">
-                          {element.className}
-                        </TableCell> */}
-                        <TableCell className="hidden md:table-cell text-gray-500 text-sm">
-                          {element.relativeXPath ? element.relativeXPath : "--"}
+                        <TableCell>
+                          {element.id}
                         </TableCell>
+                        <TableCell>{element.tag.toLowerCase()}</TableCell>
                         <TableCell className="hidden md:table-cell text-gray-500 text-sm">
                           {element.absoluteXPath ? element.absoluteXPath : "--"}
                         </TableCell>
@@ -868,6 +917,86 @@ export default function IdentifyEl() {
             </div>
           </div>
 
+          {/* Pagination Controls */}
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-4">
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-600">Items per page:</span>
+              <Select
+                value={itemsPerPage.toString()}
+                onValueChange={handleItemsPerPageChange}
+              >
+                <SelectTrigger className="w-[80px]">
+                  <SelectValue placeholder="10" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="5">5</SelectItem>
+                  <SelectItem value="10">10</SelectItem>
+                  <SelectItem value="20">20</SelectItem>
+                  <SelectItem value="50">50</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </Button>
+
+              <div className="flex items-center gap-1">
+                {Array.from({ length: totalPages }, (_, i) => i + 1)
+                  .filter(page => {
+                    // Show first page, last page, current page, and pages around current page
+                    return page === 1 ||
+                      page === totalPages ||
+                      Math.abs(page - currentPage) <= 1;
+                  })
+                  .map((page, index, array) => {
+                    // Add ellipsis if there's a gap
+                    if (index > 0 && page - array[index - 1] > 1) {
+                      return (
+                        <React.Fragment key={`ellipsis-${page}`}>
+                          <span className="px-2">...</span>
+                          <Button
+                            variant={currentPage === page ? "default" : "outline"}
+                            onClick={() => handlePageChange(page)}
+                            className="w-8 h-8 p-0"
+                          >
+                            {page}
+                          </Button>
+                        </React.Fragment>
+                      );
+                    }
+                    return (
+                      <Button
+                        key={page}
+                        variant={currentPage === page ? "default" : "outline"}
+                        onClick={() => handlePageChange(page)}
+                        className="w-8 h-8 p-0"
+                      >
+                        {page}
+                      </Button>
+                    );
+                  })}
+              </div>
+
+              <Button
+                variant="outline"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </Button>
+            </div>
+
+            <div className="text-sm text-gray-600">
+              Showing {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, filteredElements.length)} of {filteredElements.length} items
+            </div>
+          </div>
+
           {/* Actions */}
           <div className="flex flex-wrap gap-4 justify-center md:justify-start">
             <button
@@ -942,19 +1071,19 @@ export default function IdentifyEl() {
                 </SelectContent>
               </Select>
               <Select
-                value={selectedXPath}
-                onValueChange={(e) => setSelectedXPath(e)}
-                defaultValue={identifiedElements[0]?.relativeXPath}
+                value={selectedId}
+                onValueChange={(e) => setSelectedId(e)}
+                defaultValue={identifiedElements[0]?.id}
               >
                 <SelectTrigger className="max-w-[250px]">
-                  <SelectValue placeholder="Select XPath" />
+                  <SelectValue placeholder="Select ID" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectLabel>RelativeXPaths</SelectLabel>
+                    <SelectLabel>IDs</SelectLabel>
                     {identifiedElements.map((element, index) => (
-                      <SelectItem key={index} value={element.relativeXPath}>
-                        {element.tag} #{element.relativeXPath}
+                      <SelectItem key={index} value={element.id}>
+                        {element.tag} #{element.id}
                       </SelectItem>
                     ))}
                   </SelectGroup>
@@ -964,7 +1093,7 @@ export default function IdentifyEl() {
             <Button
               onClick={() => {
                 const selectedElement = identifiedElements.find(
-                  element => element.relativeXPath === selectedXPath
+                  element => element.id === selectedId
                 );
                 if (selectedElement) {
                   analyzeElement(selectedElement);
@@ -1007,8 +1136,8 @@ export default function IdentifyEl() {
 
       {/* Loading Spinner */}
       {loading && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="p-3 animate-spin drop-shadow-2xl bg-gradient-to-bl from-pink-400 via-purple-400 to-indigo-600 rounded-full">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="p-3 animate-spin bg-gradient-to-bl from-pink-400 via-purple-400 to-indigo-600 rounded-full">
             <div className="rounded-full h-12 w-12 bg-white"></div>
           </div>
         </div>

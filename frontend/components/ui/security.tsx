@@ -77,7 +77,7 @@ export default function SecurityAnalysisDashboard({ data }: { data: SecurityAnal
   };
 
   return (
-    <div className="container mx-auto py-6 px-4">
+    <div className="container mx-auto py-6 space-y-6">
       {/* Main Summary Card */}
       <Card className="mb-6 border-2 border-green-100 shadow-md">
         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
@@ -157,7 +157,7 @@ export default function SecurityAnalysisDashboard({ data }: { data: SecurityAnal
                     </AlertTitle>
                     <AlertDescription>{risk?.description}</AlertDescription>
                     <div className="mt-2">
-                      <Badge className={getSeverityColor(risk?.impact as any)}>
+                      <Badge className={getSeverityColor(risk?.impact)}>
                         {risk?.impact?.toUpperCase()} IMPACT
                       </Badge>
                     </div>

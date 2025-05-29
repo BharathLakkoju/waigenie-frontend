@@ -20,6 +20,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { CheckCircle, AlertTriangle, XCircle } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 // Define types for our data
 interface Issue {
@@ -124,9 +125,9 @@ export default function PerformanceAnalysisDashboard({ performance }: { performa
 
   // Helper function to get the appropriate color based on score
   const getScoreColor = (score: number) => {
-    if (score >= 90) return 'text-green-500';
-    if (score >= 70) return 'text-yellow-500';
-    return 'text-red-500';
+    if (score >= 90) return 'bg-green-500';
+    if (score >= 70) return 'bg-yellow-500';
+    return 'bg-red-500';
   };
 
   // Helper function to get the appropriate color for impact/priority badges
@@ -177,13 +178,9 @@ export default function PerformanceAnalysisDashboard({ performance }: { performa
                 <span className="text-xl">/100</span>
               </div>
               <Progress
-                foreColor={getScoreColor(
-                  performance?.performance_score?.overall
-                )}
+                indicatorClassName={cn(getScoreColor(performance?.performance_score?.overall))}
                 value={performance?.performance_score?.overall}
-                className={`h-3 w-full rounded-full ${getScoreColor(
-                  performance?.performance_score?.overall
-                )} bg-gray-400`}
+                className={`h-3 w-full rounded-full bg-gray-400`}
               />
             </div>
             <div className="flex-1 space-y-4">
@@ -193,6 +190,7 @@ export default function PerformanceAnalysisDashboard({ performance }: { performa
                   <span>{performance?.performance_score?.categories?.loading} %</span>
                 </div>
                 <Progress
+                  indicatorClassName={cn(getScoreColor(performance?.performance_score?.categories?.loading))}
                   value={performance?.performance_score?.categories?.loading}
                   className="h-2"
                 />
@@ -203,6 +201,7 @@ export default function PerformanceAnalysisDashboard({ performance }: { performa
                   <span>{performance?.performance_score?.categories?.rendering}%</span>
                 </div>
                 <Progress
+                  indicatorClassName={cn(getScoreColor(performance?.performance_score?.categories?.rendering))}
                   value={performance?.performance_score?.categories?.rendering}
                   className="h-2"
                 />
@@ -213,6 +212,7 @@ export default function PerformanceAnalysisDashboard({ performance }: { performa
                   <span>{performance?.performance_score?.categories?.execution}%</span>
                 </div>
                 <Progress
+                  indicatorClassName={cn(getScoreColor(performance?.performance_score?.categories?.execution))}
                   value={performance?.performance_score?.categories?.execution}
                   className="h-2"
                 />
@@ -223,6 +223,7 @@ export default function PerformanceAnalysisDashboard({ performance }: { performa
                   <span>{performance?.performance_score?.categories?.memory}%</span>
                 </div>
                 <Progress
+                  indicatorClassName={(getScoreColor(performance?.performance_score?.categories?.memory))}
                   value={performance?.performance_score?.categories?.memory}
                   className="h-2"
                 />

@@ -55,13 +55,13 @@ export default function UxStrategy({ data }: { data: DashboardData }) {
   const getImpactColor = (impact: string) => {
     switch (impact.toLowerCase()) {
       case 'high':
-        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
+        return 'bg-red-500 hover:bg-red-600';
       case 'medium':
-        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
+        return 'bg-yellow-500 hover:bg-yellow-600';
       case 'low':
-        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
+        return 'bg-green-500 hover:bg-green-600';
       default:
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300';
+        return 'bg-gray-500 hover:bg-gray-600';
     }
   };
 
@@ -72,28 +72,34 @@ export default function UxStrategy({ data }: { data: DashboardData }) {
   const getPriorityColor = (priority: string) => {
     switch (priority.toLowerCase()) {
       case 'high':
-        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
+        return 'bg-red-500 hover:bg-red-600';
       case 'medium':
-        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
+        return 'bg-yellow-500 hover:bg-yellow-600';
       case 'low':
-        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
+        return 'bg-green-500 hover:bg-green-600';
       default:
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300';
+        return 'bg-gray-500 hover:bg-gray-600';
     }
   };
 
   const getComplexityColor = (complexity: string) => {
     switch (complexity.toLowerCase()) {
       case 'high':
-        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
+        return 'bg-red-500 hover:bg-red-600';
       case 'medium':
-        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
+        return 'bg-yellow-500 hover:bg-yellow-600';
       case 'low':
-        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
+        return 'bg-green-500 hover:bg-green-600';
       default:
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300';
+        return 'bg-gray-500 hover:bg-gray-600';
     }
   };
+
+  function getProgressColor(adoption_rate: number) {
+    if (adoption_rate >= 90) return 'bg-green-500 hover:bg-green-600';
+    if (adoption_rate >= 50) return 'bg-yellow-500 hover:bg-yellow-600';
+    return 'bg-red-500 hover:bg-red-600';
+  }
 
   return (
     <div className="container mx-auto py-8">
@@ -135,6 +141,7 @@ export default function UxStrategy({ data }: { data: DashboardData }) {
                       <span className="font-medium">{trend?.adoption_rate}</span>
                     </div>
                     <Progress
+                      indicatorClassName={getProgressColor(parseInt(trend?.adoption_rate))}
                       value={getProgressValue(trend?.adoption_rate)}
                       className="h-2"
                     />
