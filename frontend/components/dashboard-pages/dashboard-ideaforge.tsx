@@ -24,6 +24,7 @@ export default function TestIdea() {
     } else if (!url.startsWith('www.')){
       url = 'https://' + url;
     }
+    console.log("normalized url", url);
     return url;
   };
 
@@ -151,7 +152,7 @@ export default function TestIdea() {
           {browserStarted && (
             <>
               <BrowserView
-                url={url}
+                url={normalizeUrl(url)}
                 onElementsSelected={handleElementsSelected}
               />
             </>

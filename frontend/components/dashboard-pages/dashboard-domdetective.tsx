@@ -1107,6 +1107,12 @@ export default function IdentifyEl() {
               <FaRobot className="mr-2" />
               {isAnalyzing ? "Analyzing..." : "Comprehensive Analysis"}
             </Button>
+            <Button
+                onClick={() => setCompareMode(!compareMode)}
+                className={`ml-4 text-white px-4 py-2 rounded-md ${compareMode ? "bg-red-600 hover:bg-red-700" : "bg-blue-600 hover:bg-blue-700"} transition-colors`}
+              >
+                {compareMode ? "Exit" : "Enter"} Compare Mode
+            </Button>
           </div>
           {analysis && (
             <div className="w-full space-y-6">

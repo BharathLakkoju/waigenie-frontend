@@ -57,6 +57,7 @@ export default function AutomationCodeGenerator() {
     } else if (!url.startsWith('www.')){
       url = 'https://' + url;
     }
+    console.log("normalized url", url)
     return url;
   };
 
