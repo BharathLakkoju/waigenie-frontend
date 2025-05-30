@@ -39,7 +39,7 @@ export default function AutomationCodeGenerator() {
     }
 
   }
-  
+
   const disconnectScreenshotStream = () => {
     if (eventSource) {
       eventSource?.close();
@@ -53,11 +53,12 @@ export default function AutomationCodeGenerator() {
     url = url.trim();
     // If URL doesn't start with http:// or https://, add https://
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
-      url = 'https://www.' + url;
-    } else if (!url.startsWith('www.')){
-      url = 'https://' + url;
+      if (url.startsWith('www.')) {
+        url = 'https://' + url;
+      } else {
+        url = 'https://www.' + url;
+      }
     }
-    console.log("normalized url", url)
     return url;
   };
 
@@ -93,6 +94,7 @@ export default function AutomationCodeGenerator() {
         }
       );
       setBrowserStarted(true);
+      connectScreenshotStream();
     } catch (error) {
       console.error("Error starting browser:", error);
       setError("An error occurred while starting the browser. Please try again.");
@@ -106,6 +108,7 @@ export default function AutomationCodeGenerator() {
       await axios.post("https://waigenie.onrender.com/api/stop-browser", {});
       setBrowserStarted(false);
       setScreenshot("");
+      disconnectScreenshotStream();
     } catch (error) {
       console.error("Error stopping browser:", error);
     }

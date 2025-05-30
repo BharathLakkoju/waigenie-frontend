@@ -31,6 +31,9 @@ import AccessibilityAnalysisDashboard from "../ui/accessibility-ui";
 import SecurityAnalysisDashboard from "../ui/security";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { ChevronDown, ChevronRight } from "lucide-react";
+import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+
 
 interface IdentifiedElement {
   id: string;
@@ -191,7 +194,7 @@ export default function IdentifyEl() {
       } else {
         url = 'https://www.' + url;
       }
-    } 
+    }
     return url;
   };
 
@@ -220,13 +223,7 @@ export default function IdentifyEl() {
   const filteredElements = identifiedElements.filter((element) => {
     if (filterText) {
       const searchText = filterText.toLowerCase();
-      const matchesSearch =
-        element.tag.toLowerCase().includes(searchText) ||
-        element.elementId.toLowerCase().includes(searchText) ||
-        element.className.toLowerCase().includes(searchText) ||
-        element.text.toLowerCase().includes(searchText) ||
-        element.cssSelector.toLowerCase().includes(searchText) ||
-        element.relativeXPath.toLowerCase().includes(searchText);
+      const matchesSearch = element.id.toString().includes(searchText);
 
       if (!matchesSearch) return false;
     }
@@ -394,16 +391,42 @@ export default function IdentifyEl() {
 
     switch (framework) {
       case "react":
-        code = `test('should interact with ${element.tag}', () => {
-  const element = screen.getByTestId('${element.customSelectors.dataTestId}');
-  expect(element).toBeInTheDocument();
-});`;
+        code = `\`\`\`typescript
+import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
+
+describe('${element.tag} Component', () => {
+  it('should render and be accessible', () => {
+    render(<YourComponent />);
+    const element = screen.getByTestId('${element.customSelectors.dataTestId}');
+    expect(element).toBeInTheDocument();
+  });
+});
+\`\`\``;
+        break;
+      case "vue":
+        code = `\`\`\`typescript
+import { mount } from '@vue/test-utils';
+import YourComponent from './YourComponent.vue';
+
+describe('${element.tag} Component', () => {
+  it('should render and be accessible', () => {
+    const wrapper = mount(YourComponent);
+    const element = wrapper.find('[data-test="${element.customSelectors.dataTestId}"]');
+    expect(element.exists()).toBe(true);
+  });
+});
+\`\`\``;
         break;
       default:
-        code = `test('should interact with ${element.tag}', () => {
-  const element = document.querySelector('${element.cssSelector}');
-  expect(element).toBeTruthy();
-});`;
+        code = `\`\`\`typescript
+describe('${element.tag} Element', () => {
+  it('should be present and accessible', () => {
+    const element = document.querySelector('${element.cssSelector}');
+    expect(element).toBeTruthy();
+  });
+});
+\`\`\``;
     }
 
     return code;
@@ -656,7 +679,7 @@ export default function IdentifyEl() {
                       type="text"
                       value={filterText}
                       onChange={(e) => setFilterText(e.target.value)}
-                      placeholder="Search elements..."
+                      placeholder="Search elements by ID..."
                       className="w-full pl-10 pr-4 py-2 border rounded-md"
                     />
                   </div>
@@ -1013,44 +1036,6 @@ export default function IdentifyEl() {
           </div>
         </div>
       )}
-
-      {/* Comparison Panel */}
-      {compareMode && selectedElements.length > 0 && (
-        <div className="bg-white rounded-lg shadow-md p-4 mt-4">
-          <h3 className="text-lg font-bold mb-4">Element Comparison</h3>
-          <div className="grid grid-cols-2 gap-4">
-            {selectedElements.map((id) => {
-              const element = identifiedElements.find((el) => el.id === id);
-              if (!element) return null;
-              return (
-                <div key={id} className="border p-4 rounded-md">
-                  <h4 className="font-bold">
-                    {element.tag} #{element.elementId}
-                  </h4>
-                  <div className="mt-2 space-y-2">
-                    <div>
-                      Accessibility Score:{" "}
-                      {
-                        Object.values(element.accessibility).filter(Boolean)
-                          .length
-                      }
-                      /7
-                    </div>
-                    <div>
-                      Performance Score:{" "}
-                      {100 - element.performance.layoutImpact}%
-                    </div>
-                    <div>Test Code:</div>
-                    <pre className="bg-gray-100 p-2 rounded text-xs">
-                      {generateTestCode(element)}
-                    </pre>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
       {identifiedElements.length > 0 && (
         <div
           className={`mt-4 p-4 bg-white rounded-lg shadow container max-w-7xl mb-10 flex flex-col justify-between w-full`}
@@ -1094,27 +1079,29 @@ export default function IdentifyEl() {
                 </SelectContent>
               </Select>
             </div>
-            <Button
-              onClick={() => {
-                const selectedElement = identifiedElements.find(
-                  element => element.id === selectedId
-                );
-                if (selectedElement) {
-                  analyzeElement(selectedElement);
-                }
-              }}
-              className="flex items-center px-4 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors justify-center"
-              disabled={isAnalyzing}
-            >
-              <FaRobot className="mr-2" />
-              {isAnalyzing ? "Analyzing..." : "Comprehensive Analysis"}
-            </Button>
-            <Button
+            <div className="flex w-1/2 gap-2 items-center justify-end">
+              <Button
+                onClick={() => {
+                  const selectedElement = identifiedElements.find(
+                    element => element.id === selectedId
+                  );
+                  if (selectedElement) {
+                    analyzeElement(selectedElement);
+                  }
+                }}
+                className="flex items-center px-4 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors justify-center"
+                disabled={isAnalyzing}
+              >
+                <FaRobot className="mr-2" />
+                {isAnalyzing ? "Analyzing..." : "Comprehensive Analysis"}
+              </Button>
+              <Button
                 onClick={() => setCompareMode(!compareMode)}
                 className={`ml-4 text-white px-4 py-2 rounded-md ${compareMode ? "bg-red-600 hover:bg-red-700" : "bg-blue-600 hover:bg-blue-700"} transition-colors`}
               >
                 {compareMode ? "Exit" : "Enter"} Compare Mode
-            </Button>
+              </Button>
+            </div>
           </div>
           {analysis && (
             <div className="w-full space-y-6">
@@ -1141,6 +1128,81 @@ export default function IdentifyEl() {
               {renderAnalysisDetails()}
             </div>
           )}
+        </div>
+      )}
+
+      {compareMode && (
+        <div className="mx-auto my-4 p-4 max-w-7xl bg-white rounded-lg shadow">
+          <h3 className="text-lg font-bold mb-4">Select Elements for Comparison</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 max-h-[60vh] overflow-y-auto">
+            {identifiedElements.map((element) => (
+              <div
+                key={element.id}
+                className={`p-3 border rounded-md cursor-pointer transition-colors ${selectedElements.includes(element.id)
+                  ? 'bg-blue-100 border-blue-500'
+                  : 'hover:bg-gray-50'
+                  }`}
+                onClick={() => {
+                  if (selectedElements.includes(element.id)) {
+                    setSelectedElements(prev => prev.filter(id => id !== element.id));
+                  } else {
+                    setSelectedElements(prev => [...prev, element.id]);
+                  }
+                }}
+              >
+                <div className="font-medium">{element.tag} #{element.id}</div>
+                {/* <div className="text-sm text-gray-600">
+                  {element.text?.substring(0, 50) || 'No text content'}
+                  {element.text && element.text.length > 50 ? '...' : ''}
+                </div> */}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Comparison Panel */}
+      {compareMode && selectedElements.length > 0 && (
+        <div className="bg-white rounded-lg shadow-md p-4 my-4 max-w-7xl mx-auto">
+          <h3 className="text-lg font-bold mb-4">Element Comparison</h3>
+          <div className="grid grid-cols-2 gap-4">
+            {selectedElements.map((id) => {
+              const element = identifiedElements.find((el) => el.id === id);
+              if (!element) return null;
+              return (
+                <div key={id} className="border p-4 rounded-md">
+                  <h4 className="font-bold">
+                    {element.tag} #{element.id}
+                  </h4>
+                  <div className="mt-2 space-y-2">
+                    <div>
+                      Accessibility Score:{" "}
+                      {
+                        Object.values(element.accessibility).filter(Boolean)
+                          .length
+                      }
+                      /7
+                    </div>
+                    <div>
+                      Performance Score:{" "}
+                      {100 - element.performance.layoutImpact}%
+                    </div>
+                    <div className="text-bold">Test Code:</div>
+                    <div className="bg-gray-700 p-2 rounded text-xs overflow-hidden text-white">
+                      <div className="overflow-x-auto py-5">
+                        <Markdown
+                          className="prose prose-sm max-w-none break-all overflow-wrap-anywhere"
+                          remarkPlugins={[remarkGfm]}
+                        >
+                          {generateTestCode(element)}
+                        </Markdown>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
 
