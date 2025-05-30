@@ -158,6 +158,21 @@ export default function IdentifyEl() {
   const [locators, setLocators] = useState("");
   const { toast } = useToast();
 
+  const normalizeUrl = (url: string): string => {
+    if (!url) return "";
+    // Remove any whitespace
+    url = url.trim();
+    // If URL doesn't start with http:// or https://, add https://
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      if (url.startsWith('www.')) {
+        url = 'https://' + url;
+      } else {
+        url = 'https://www.' + url;
+      }
+    }
+    return url;
+  };
+
   const filteredElements = identifiedElements.filter((element) => {
     if (filterText) {
       const searchText = filterText.toLowerCase();
@@ -207,12 +222,13 @@ export default function IdentifyEl() {
     setLoading(true);
     setError("");
     try {
+      const normalizedUrl = normalizeUrl(url);
       const response = await apiClient.post(
         // "https://favourable-rea-bharath07-7294baab.koyeb.app/api/proxy",
         // "https://waigenie-delpoyment-test.onrender.com/api/proxy",
         "https://waigenie.onrender.com/api/proxy",
         {
-          url,
+          url: normalizedUrl,
         }
       );
       setProxyHtml(response.data.html);

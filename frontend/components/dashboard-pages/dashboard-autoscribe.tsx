@@ -17,12 +17,28 @@ export default function AutomationCodeGenerator() {
   const [browserStarted, setBrowserStarted] = useState(false);
   const { toast } = useToast();
 
+  const normalizeUrl = (url: string): string => {
+    if (!url) return "";
+    // Remove any whitespace
+    url = url.trim();
+    // If URL doesn't start with http:// or https://, add https://
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      if (url.startsWith('www.')) {
+        url = 'https://' + url;
+      } else {
+        url = 'https://www.' + url;
+      }
+    }
+    return url;
+  };
+
   const startBrowser = async () => {
     setLoading(true);
     try {
+      const normalizedUrl = normalizeUrl(url);
       await axios.post(
         "https://waigenie.onrender.com/api/start-browser",
-        { url },
+        { url: normalizedUrl },
         {
           withCredentials: true,
           headers: {
@@ -110,21 +126,19 @@ export default function AutomationCodeGenerator() {
           <div className="flex justify-center space-x-4 mb-4">
             <button
               onClick={() => setLanguage("Python")}
-              className={`px-4 py-2 rounded-full text-xs shadow-lg transition-all duration-300 ${
-                language === "Python"
+              className={`px-4 py-2 rounded-full text-xs shadow-lg transition-all duration-300 ${language === "Python"
                   ? "bg-blue-600 text-white transform scale-105"
                   : "bg-blue-100 text-blue-600 hover:bg-blue-200"
-              }`}
+                }`}
             >
               Python
             </button>
             <button
               onClick={() => setLanguage("Java")}
-              className={`px-4 py-2 rounded-full text-xs shadow-lg transition-all duration-300 ${
-                language === "Java"
+              className={`px-4 py-2 rounded-full text-xs shadow-lg transition-all duration-300 ${language === "Java"
                   ? "bg-blue-600 text-white transform scale-105"
                   : "bg-blue-100 text-blue-600 hover:bg-blue-200"
-              }`}
+                }`}
             >
               Java
             </button>
@@ -155,9 +169,8 @@ export default function AutomationCodeGenerator() {
                 href={`data:text/plain;charset=utf-8,${encodeURIComponent(
                   generatedCode
                 )}`}
-                download={`generated_test.${
-                  language.toLowerCase() === "python" ? "py" : "java"
-                }`}
+                download={`generated_test.${language.toLowerCase() === "python" ? "py" : "java"
+                  }`}
                 className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition duration-300 shadow-lg transform hover:scale-[1.02] text-sm inline-block text-center"
               >
                 Download {language} Code

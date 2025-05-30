@@ -22,15 +22,31 @@ export default function TestIdea() {
     setSelectedElements(elements);
   };
 
+  const normalizeUrl = (url: string): string => {
+    if (!url) return "";
+    // Remove any whitespace
+    url = url.trim();
+    // If URL doesn't start with http:// or https://, add https://
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      if (url.startsWith('www.')) {
+        url = 'https://' + url;
+      } else {
+        url = 'https://www.' + url;
+      }
+    }
+    return url;
+  };
+
   const generateScenarios = async () => {
     setLoading(true);
     setTestScenarios("");
     setManualTestCases("");
     try {
+      const normalizedUrl = normalizeUrl(url);
       const response = await apiClient.post(
         "https://waigenie.onrender.com/api/generate-scenarios",
         {
-          url,
+          url: normalizedUrl,
           selectedElements,
           mode,
         }
@@ -77,21 +93,19 @@ export default function TestIdea() {
             <div className="flex justify-center space-x-4 my-4">
               <button
                 onClick={() => setMode("auto")}
-                className={`px-4 py-2 rounded-full text-xs shadow-lg transition-all duration-300 ${
-                  mode === "auto"
+                className={`px-4 py-2 rounded-full text-xs shadow-lg transition-all duration-300 ${mode === "auto"
                     ? "bg-blue-600 text-white transform scale-105"
                     : "bg-blue-100 text-blue-600 hover:bg-blue-200"
-                }`}
+                  }`}
               >
                 Automated Scenarios
               </button>
               <button
                 onClick={() => setMode("manual")}
-                className={`px-4 py-2 rounded-full text-xs shadow-lg transition-all duration-300 ${
-                  mode === "manual"
+                className={`px-4 py-2 rounded-full text-xs shadow-lg transition-all duration-300 ${mode === "manual"
                     ? "bg-blue-600 text-white transform scale-105"
                     : "bg-blue-100 text-blue-600 hover:bg-blue-200"
-                }`}
+                  }`}
               >
                 Manual Test Cases
               </button>
@@ -121,7 +135,7 @@ export default function TestIdea() {
           {browserStarted && (
             <>
               <BrowserView
-                url={url}
+                url={normalizeUrl(url)}
                 onElementsSelected={handleElementsSelected}
               />
             </>
