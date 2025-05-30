@@ -5,6 +5,7 @@ import apiClient from "@/lib/api-client";
 import { useToast } from "@/hooks/use-toast";
 import ReactMarkdown from "react-markdown";
 import axios from "axios";
+import { Button } from "../ui/button";
 
 export default function AutomationCodeGenerator() {
   const [url, setUrl] = useState("");
@@ -131,17 +132,17 @@ export default function AutomationCodeGenerator() {
             placeholder="Enter URL"
             className="w-full p-3 mb-4 bg-white border border-gray-300 rounded-md text-black placeholder-gray-400 focus:outline-none focus:border-gray-500"
           />
-          <div className="flex gap-2 mb-4">
+          <div className="flex gap-2 mb-4 items-center">
             <button
               onClick={browserStarted ? stopBrowser : startBrowser}
               disabled={loading}
-              className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition duration-300 shadow-lg transform hover:scale-[1.02] text-sm mb-4"
+              className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition duration-300 shadow-lg transform hover:scale-[1.02] text-sm"
             >
               {browserStarted ? "Stop Browser" : "Start Browser"}
             </button>
             <button
               onClick={handleReset}
-              className="px-4 py-2 rounded-full text-xs shadow-lg transition-all duration-300 bg-red-100 text-red-600 hover:bg-red-200"
+              className="px-6 rounded-lg text-xs shadow-lg transition-all duration-300 bg-red-100 text-red-600 hover:bg-red-200 h-11"
             >
               Reset
             </button>

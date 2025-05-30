@@ -576,21 +576,21 @@ export default function IdentifyEl() {
             placeholder="Output CSV file name"
             className="w-full p-2 mb-2 bg-white border border-gray-300 rounded-md text-black placeholder-gray-400 focus:outline-none focus:border-gray-500 text-sm"
           />
-          <button
-            onClick={loadUrl}
-            disabled={loading}
-            className="mb-2 w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition duration-300 shadow-lg transform hover:scale-[1.02] text-sm"
-          >
-            {loading ? "Loading..." : "Load URL"}
-          </button>
-          <Button
-            onClick={handleReset}
-            variant={"destructive"}
-            className="flex items-center gap-2"
-          >
-            <FaRobot className="mr-2" />
-            Reset
-          </Button>
+          <div className="flex gap-2">
+            <button
+              onClick={loadUrl}
+              disabled={loading}
+              className="mb-2 w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition duration-300 shadow-lg transform hover:scale-[1.02] text-sm"
+            >
+              {loading ? "Loading..." : "Load URL"}
+            </button>
+            <button
+              onClick={handleReset}
+              className="px-6 rounded-lg text-xs shadow-lg transition-all duration-300 bg-red-100 text-red-600 hover:bg-red-200 h-11"
+            >
+              Reset
+            </button>
+          </div>
           {proxyHtml && (
             <button
               onClick={identifyElements}
@@ -638,7 +638,7 @@ export default function IdentifyEl() {
       </div>
       {loading ? (
         <div className="flex justify-center items-center h-32">
-          <div className="p-3 animate-spin drop-shadow-2xl bg-gradient-to-bl from-pink-400 via-purple-400 to-indigo-600 size-24 aspect-square rounded-full">
+          <div className="p-3 animate-spin bg-gradient-to-bl from-pink-400 via-purple-400 to-indigo-600 size-24 aspect-square rounded-full">
             <div className="rounded-full h-full w-full bg-slate-100 dark:bg-zinc-900 backdrop-blur-md"></div>
           </div>
         </div>
@@ -1237,7 +1237,7 @@ export default function IdentifyEl() {
           )}
           {loading && (
             <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-              <div className="p-3 animate-spin drop-shadow-2xl bg-gradient-to-bl from-pink-400 via-purple-400 to-indigo-600 rounded-full">
+              <div className="p-3 animate-spin bg-gradient-to-bl from-pink-400 via-purple-400 to-indigo-600 rounded-full">
                 <div className="rounded-full h-12 w-12 bg-white"></div>
               </div>
             </div>

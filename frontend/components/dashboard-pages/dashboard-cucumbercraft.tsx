@@ -132,8 +132,8 @@ export default function GenerateBDD() {
               <button
                 onClick={() => setDetailLevel("Simple")}
                 className={`px-4 py-2 rounded-full text-xs shadow-lg transition-all duration-300 ${detailLevel === "Simple"
-                    ? "bg-blue-600 text-white transform scale-105"
-                    : "bg-blue-100 text-blue-600 hover:bg-blue-200"
+                  ? "bg-blue-600 text-white transform scale-105"
+                  : "bg-blue-100 text-blue-600 hover:bg-blue-200"
                   }`}
               >
                 Simple
@@ -141,8 +141,8 @@ export default function GenerateBDD() {
               <button
                 onClick={() => setDetailLevel("Detailed")}
                 className={`px-4 py-2 rounded-full text-xs shadow-lg transition-all duration-300 ${detailLevel === "Detailed"
-                    ? "bg-blue-600 text-white transform scale-105"
-                    : "bg-blue-100 text-blue-600 hover:bg-blue-200"
+                  ? "bg-blue-600 text-white transform scale-105"
+                  : "bg-blue-100 text-blue-600 hover:bg-blue-200"
                   }`}
               >
                 Detailed
@@ -161,7 +161,7 @@ export default function GenerateBDD() {
         {/* Loading Spinner */}
         {loading && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div className="p-3 animate-spin drop-shadow-2xl bg-gradient-to-bl from-pink-400 via-purple-400 to-indigo-600 rounded-full">
+            <div className="p-3 animate-spin bg-gradient-to-bl from-pink-400 via-purple-400 to-indigo-600 rounded-full">
               <div className="rounded-full h-12 w-12 bg-white"></div>
             </div>
           </div>
