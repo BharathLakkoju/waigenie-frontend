@@ -13,6 +13,8 @@ import {
 } from "react-icons/fa";
 import apiClient from "@/lib/api-client";
 import { useToast } from "@/hooks/use-toast";
+import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface IdentifiedElement {
   id: string;
@@ -542,8 +544,6 @@ export default function IdentifyEl() {
       <div className="container mx-auto px-4 py-8 w-screen flex justify-center items-center gap-8">
         <div className="w-1/3 bg-purple-50 p-8 rounded-md h-[calc(100vh-100px)] shadow-lg">
           <h1 className="text-xl font-bold text-black mb-4">DomDetective</h1>
-
-
           <input
             type="text"
             value={url}
@@ -1145,9 +1145,16 @@ export default function IdentifyEl() {
                             {100 - element.performance.layoutImpact}%
                           </div>
                           <div>Test Code:</div>
-                          <pre className="bg-gray-100 p-2 rounded text-xs">
-                            {generateTestCode(element)}
-                          </pre>
+                          <div className="bg-gray-700 p-2 rounded text-xs overflow-hidden text-white">
+                            <div className="overflow-x-auto py-5">
+                              <Markdown
+                                className="prose prose-sm max-w-none break-all overflow-wrap-anywhere"
+                                remarkPlugins={[remarkGfm]}
+                              >
+                                {generateTestCode(element)}
+                              </Markdown>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     );
