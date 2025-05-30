@@ -15,6 +15,7 @@ import apiClient from "@/lib/api-client";
 import { useToast } from "@/hooks/use-toast";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { Button } from "../ui/button";
 
 interface IdentifiedElement {
   id: string;
@@ -416,6 +417,23 @@ export default function IdentifyEl() {
     }
   };
 
+  const handleReset = () => {
+    setIdentifiedElements([]);
+    setFilterText("");
+    setSelectedCategory("all");
+    setShowOnlyVisible(false);
+    setShowOnlyInteractive(false);
+    setSelectedElements([]);
+    setCompareMode(false);
+    setAnalysis(null);
+    setProgress(0);
+    setError("");
+    toast({
+      title: "Reset successful",
+      description: "All search results and filters have been cleared.",
+    });
+  };
+
   const renderValue = (value: unknown): React.ReactNode => {
     if (
       typeof value === "string" ||
@@ -565,6 +583,14 @@ export default function IdentifyEl() {
           >
             {loading ? "Loading..." : "Load URL"}
           </button>
+          <Button
+            onClick={handleReset}
+            variant={"destructive"}
+            className="flex items-center gap-2"
+          >
+            <FaRobot className="mr-2" />
+            Reset
+          </Button>
           {proxyHtml && (
             <button
               onClick={identifyElements}

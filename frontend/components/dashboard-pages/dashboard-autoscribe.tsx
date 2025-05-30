@@ -32,6 +32,22 @@ export default function AutomationCodeGenerator() {
     return url;
   };
 
+  const handleReset = async () => {
+    if (browserStarted) {
+      await stopBrowser();
+    }
+    setUrl("");
+    setFeatureContent("");
+    setLanguage("Python");
+    setGeneratedCode("");
+    setError("");
+    setScreenshot("");
+    toast({
+      title: "Reset successful",
+      description: "All content has been cleared.",
+    });
+  };
+
   const startBrowser = async () => {
     setLoading(true);
     try {
@@ -115,20 +131,28 @@ export default function AutomationCodeGenerator() {
             placeholder="Enter URL"
             className="w-full p-3 mb-4 bg-white border border-gray-300 rounded-md text-black placeholder-gray-400 focus:outline-none focus:border-gray-500"
           />
-          <button
-            onClick={browserStarted ? stopBrowser : startBrowser}
-            disabled={loading}
-            className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition duration-300 shadow-lg transform hover:scale-[1.02] text-sm mb-4"
-          >
-            {browserStarted ? "Stop Browser" : "Start Browser"}
-          </button>
+          <div className="flex gap-2 mb-4">
+            <button
+              onClick={browserStarted ? stopBrowser : startBrowser}
+              disabled={loading}
+              className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition duration-300 shadow-lg transform hover:scale-[1.02] text-sm mb-4"
+            >
+              {browserStarted ? "Stop Browser" : "Start Browser"}
+            </button>
+            <button
+              onClick={handleReset}
+              className="px-4 py-2 rounded-full text-xs shadow-lg transition-all duration-300 bg-red-100 text-red-600 hover:bg-red-200"
+            >
+              Reset
+            </button>
+          </div>
 
           <div className="flex justify-center space-x-4 mb-4">
             <button
               onClick={() => setLanguage("Python")}
               className={`px-4 py-2 rounded-full text-xs shadow-lg transition-all duration-300 ${language === "Python"
-                  ? "bg-blue-600 text-white transform scale-105"
-                  : "bg-blue-100 text-blue-600 hover:bg-blue-200"
+                ? "bg-blue-600 text-white transform scale-105"
+                : "bg-blue-100 text-blue-600 hover:bg-blue-200"
                 }`}
             >
               Python
@@ -136,8 +160,8 @@ export default function AutomationCodeGenerator() {
             <button
               onClick={() => setLanguage("Java")}
               className={`px-4 py-2 rounded-full text-xs shadow-lg transition-all duration-300 ${language === "Java"
-                  ? "bg-blue-600 text-white transform scale-105"
-                  : "bg-blue-100 text-blue-600 hover:bg-blue-200"
+                ? "bg-blue-600 text-white transform scale-105"
+                : "bg-blue-100 text-blue-600 hover:bg-blue-200"
                 }`}
             >
               Java

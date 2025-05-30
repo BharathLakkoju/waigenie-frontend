@@ -14,6 +14,18 @@ export default function TestIdea() {
   const [mode, setMode] = useState("auto"); // 'auto' or 'manual'
   const { toast } = useToast();
 
+  const handleReset = () => {
+    setSelectedElements([]);
+    setTestScenarios("");
+    setManualTestCases("");
+    setBrowserStarted(false);
+    setUrl("");
+    toast({
+      title: "Reset successful",
+      description: "All test scenarios and selections have been cleared.",
+    });
+  };
+
   const startBrowser = () => {
     setBrowserStarted(true);
   };
@@ -94,8 +106,8 @@ export default function TestIdea() {
               <button
                 onClick={() => setMode("auto")}
                 className={`px-4 py-2 rounded-full text-xs shadow-lg transition-all duration-300 ${mode === "auto"
-                    ? "bg-blue-600 text-white transform scale-105"
-                    : "bg-blue-100 text-blue-600 hover:bg-blue-200"
+                  ? "bg-blue-600 text-white transform scale-105"
+                  : "bg-blue-100 text-blue-600 hover:bg-blue-200"
                   }`}
               >
                 Automated Scenarios
@@ -103,11 +115,17 @@ export default function TestIdea() {
               <button
                 onClick={() => setMode("manual")}
                 className={`px-4 py-2 rounded-full text-xs shadow-lg transition-all duration-300 ${mode === "manual"
-                    ? "bg-blue-600 text-white transform scale-105"
-                    : "bg-blue-100 text-blue-600 hover:bg-blue-200"
+                  ? "bg-blue-600 text-white transform scale-105"
+                  : "bg-blue-100 text-blue-600 hover:bg-blue-200"
                   }`}
               >
                 Manual Test Cases
+              </button>
+              <button
+                onClick={handleReset}
+                className="px-4 py-2 rounded-full text-xs shadow-lg transition-all duration-300 bg-red-100 text-red-600 hover:bg-red-200"
+              >
+                Reset
               </button>
             </div>
           )}
