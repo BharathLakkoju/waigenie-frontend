@@ -20,10 +20,12 @@ export default function TestIdea() {
     url = url.trim();
     // If URL doesn't start with http:// or https://, add https://
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
-      url = 'https://www.' + url;
-    } else if (!url.startsWith('www.')){
-      url = 'https://' + url;
-    }
+      if (url.startsWith('www.')){
+        url = 'https://' + url;
+      } else {
+        url = 'https://www.' + url;
+      }
+    } 
     console.log("normalized url", url);
     return url;
   };
