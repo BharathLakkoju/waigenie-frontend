@@ -91,5 +91,5 @@ Commercial use of WaiGENIE, its frontend code, branding, UI/UX, or logo is stric
 
 **Bharath Lakkoju** - [GitHub Profile](https://github.com/BharathLakkoju)
 
-**Project Link**: [https://github.com/BharathLakkoju/waigenie-frontend](https://github.com/BharathLakkoju/waigenie-frontend)
+**Project Link**: [Waigenie.tech](https://www.waigenie.tech)
 
